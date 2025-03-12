@@ -43,11 +43,10 @@ public abstract class InjectEnderChestBlockEntity extends BlockEntity implements
 		super(type, pos, state);
 	}
 
-	@SuppressWarnings("InvalidInjectorMethodSignature")
 	@Inject(
 		method = "lidAnimateTick",
 		at = @At("TAIL"))
-	private static void randomlyOpen(Level world, BlockPos pos, BlockState state, InjectEnderChestBlockEntity blockEntity, CallbackInfo ci)
+	private static void randomlyOpen(Level world, BlockPos pos, BlockState state, EnderChestBlockEntity blockEntity, CallbackInfo ci)
 	{
 		if (!ParticularConfig.soulSandBubbles()) { return; }
 
@@ -58,29 +57,31 @@ public abstract class InjectEnderChestBlockEntity extends BlockEntity implements
 			return;
 		}
 
-		if (--blockEntity.ticksUntilNextSwitch <= 0)
+		 InjectEnderChestBlockEntity injected = (InjectEnderChestBlockEntity)(Object)blockEntity;
+
+		if (--injected.ticksUntilNextSwitch <= 0)
 		{
 			ContainerOpenersCounter manager = ((AccessorEnderChestBlockEntity) blockEntity).getStateManager();
-			if (blockEntity.isOpen)
+			if (injected.isOpen)
 			{
-				blockEntity.isOpen = false;
-				blockEntity.ticksUntilNextSwitch = world.random.nextIntBetweenInclusive(minClosedTime, maxClosedTime);
+				injected.isOpen = false;
+				injected.ticksUntilNextSwitch = world.random.nextIntBetweenInclusive(minClosedTime, maxClosedTime);
 				((AccessorEnderChestBlockEntity) blockEntity).getLidAnimator().shouldBeOpen(false);
 				((InvokerViewerCountManager)manager).invokeOnContainerClose(world, pos, blockEntity.getBlockState());
 			}
 			else
 			{
-				blockEntity.isOpen = true;
-				blockEntity.ticksUntilNextSwitch = world.random.nextIntBetweenInclusive(minOpenTime, maxOpenTime);
+				injected.isOpen = true;
+				injected.ticksUntilNextSwitch = world.random.nextIntBetweenInclusive(minOpenTime, maxOpenTime);
 				((AccessorEnderChestBlockEntity) blockEntity).getLidAnimator().shouldBeOpen(true);
 				((InvokerViewerCountManager)manager).invokeOnContainerOpen(world, pos, blockEntity.getBlockState());
 				world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.AMBIENT, 1f, 1f, true);
 			}
 		}
 
-		if (blockEntity.isOpen &&
-			blockEntity.ticksUntilNextSwitch > 10 &&
-			blockEntity.ticksUntilNextSwitch % 2 == 0)
+		if (injected.isOpen &&
+				injected.ticksUntilNextSwitch > 10 &&
+				injected.ticksUntilNextSwitch % 2 == 0)
 		{
 			Main.spawnBubble(Particles.ENDER_BUBBLE.get(), world, pos);
 		}

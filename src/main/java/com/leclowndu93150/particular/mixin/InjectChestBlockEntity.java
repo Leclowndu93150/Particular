@@ -62,51 +62,44 @@ public abstract class InjectChestBlockEntity extends RandomizableContainerBlockE
 		return false;
 	}
 
-	@SuppressWarnings("InvalidInjectorMethodSignature")
 	@Inject(
-		method = "lidAnimateTick",
-		at = @At("TAIL"))
-	private static void randomlyOpen(Level world, BlockPos pos, BlockState state, InjectChestBlockEntity blockEntity, CallbackInfo ci)
-	{
+			method = "lidAnimateTick",
+			at = @At("TAIL"))
+	private static void randomlyOpen(Level world, BlockPos pos, BlockState state, ChestBlockEntity blockEntity, CallbackInfo ci) {
 		if (!ParticularConfig.soulSandBubbles()) { return; }
 
 		if (!state.getValue(BlockStateProperties.WATERLOGGED) ||
-			state.getValue(BlockStateProperties.CHEST_TYPE) == ChestType.LEFT ||
-			!getSoulSand(world, pos, state))
+				state.getValue(BlockStateProperties.CHEST_TYPE) == ChestType.LEFT ||
+				!getSoulSand(world, pos, state))
 		{
 			return;
 		}
 
-		if (--blockEntity.ticksUntilNextSwitch <= 0)
-		{
+		InjectChestBlockEntity injected = (InjectChestBlockEntity)(Object)blockEntity;
+
+		if (--injected.ticksUntilNextSwitch <= 0) {
 			ContainerOpenersCounter manager = ((AccessorChestBlockEntity) blockEntity).getStateManager();
-			if (blockEntity.isOpen)
-			{
-				blockEntity.isOpen = false;
-				blockEntity.ticksUntilNextSwitch = world.random.nextIntBetweenInclusive(minClosedTime, maxClosedTime);
+			if (injected.isOpen) {
+				injected.isOpen = false;
+				injected.ticksUntilNextSwitch = world.random.nextIntBetweenInclusive(minClosedTime, maxClosedTime);
 				((AccessorChestBlockEntity) blockEntity).getLidAnimator().shouldBeOpen(false);
 				((InvokerViewerCountManager)manager).invokeOnContainerClose(world, pos, blockEntity.getBlockState());
-			}
-			else
-			{
-				blockEntity.isOpen = true;
-				blockEntity.ticksUntilNextSwitch = world.random.nextIntBetweenInclusive(minOpenTime, maxOpenTime);
+			} else {
+				injected.isOpen = true;
+				injected.ticksUntilNextSwitch = world.random.nextIntBetweenInclusive(minOpenTime, maxOpenTime);
 				((AccessorChestBlockEntity) blockEntity).getLidAnimator().shouldBeOpen(true);
 				((InvokerViewerCountManager)manager).invokeOnContainerOpen(world, pos, blockEntity.getBlockState());
 				world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.AMBIENT, 1f, 1f, true);
 			}
 		}
 
-		if (blockEntity.isOpen &&
-			blockEntity.ticksUntilNextSwitch > 10 &&
-			blockEntity.ticksUntilNextSwitch % 2 == 0)
+		if (injected.isOpen &&
+				injected.ticksUntilNextSwitch > 10 &&
+				injected.ticksUntilNextSwitch % 2 == 0)
 		{
-			if (state.getValue(BlockStateProperties.CHEST_TYPE) == ChestType.SINGLE)
-			{
+			if (state.getValue(BlockStateProperties.CHEST_TYPE) == ChestType.SINGLE) {
 				Main.spawnBubble(ParticleTypes.BUBBLE_COLUMN_UP, world, pos);
-			}
-			else
-			{
+			} else {
 				Main.spawnDoubleBubbles(ParticleTypes.BUBBLE_COLUMN_UP, world, pos, state);
 			}
 		}

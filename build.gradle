@@ -16,7 +16,7 @@ repositories {
 }
 
 base {
-    archivesName = mod_id
+    archivesName = mod_id+"1.21.4-NeoForge"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -99,7 +99,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
 dependencies {
-    implementation "curse.maven:owo-lib-532610:6204967"
+    //implementation "curse.maven:owo-lib-532610:6204967"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
