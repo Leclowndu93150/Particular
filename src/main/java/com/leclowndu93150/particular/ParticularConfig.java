@@ -1,9 +1,9 @@
 package com.leclowndu93150.particular;
 
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
@@ -11,63 +11,59 @@ import java.util.List;
 
 public class ParticularConfig {
 	public static final CommonConfig COMMON;
-	public static final ModConfigSpec COMMON_SPEC;
+	public static final ForgeConfigSpec COMMON_SPEC;
 
 	static {
-		final Pair<CommonConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(CommonConfig::new);
+		final Pair<CommonConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(CommonConfig::new);
 		COMMON = specPair.getLeft();
 		COMMON_SPEC = specPair.getRight();
 	}
 
-	public static void register(ModContainer modContainer) {
-		modContainer.registerConfig(ModConfig.Type.COMMON, COMMON_SPEC);
-	}
-
 	public static class CommonConfig {
 		// Enabled Effects
-		public final ModConfigSpec.BooleanValue waterSplash;
-		public final ModConfigSpec.BooleanValue cascades;
-		public final ModConfigSpec.BooleanValue waterfallSpray;
-		public final ModConfigSpec.BooleanValue fireflies;
-		public final ModConfigSpec.BooleanValue fallingLeaves;
-		public final ModConfigSpec.BooleanValue caveDust;
-		public final ModConfigSpec.BooleanValue chestBubbles;
-		public final ModConfigSpec.BooleanValue soulSandBubbles;
-		public final ModConfigSpec.BooleanValue barrelBubbles;
-		public final ModConfigSpec.BooleanValue poppingBubbles;
-		public final ModConfigSpec.BooleanValue rainRipples;
-		public final ModConfigSpec.BooleanValue waterDripRipples;
-		public final ModConfigSpec.BooleanValue cakeEatingParticles;
-		public final ModConfigSpec.BooleanValue emissiveLavaDrips;
+		public final ForgeConfigSpec.BooleanValue waterSplash;
+		public final ForgeConfigSpec.BooleanValue cascades;
+		public final ForgeConfigSpec.BooleanValue waterfallSpray;
+		public final ForgeConfigSpec.BooleanValue fireflies;
+		public final ForgeConfigSpec.BooleanValue fallingLeaves;
+		public final ForgeConfigSpec.BooleanValue caveDust;
+		public final ForgeConfigSpec.BooleanValue chestBubbles;
+		public final ForgeConfigSpec.BooleanValue soulSandBubbles;
+		public final ForgeConfigSpec.BooleanValue barrelBubbles;
+		public final ForgeConfigSpec.BooleanValue poppingBubbles;
+		public final ForgeConfigSpec.BooleanValue rainRipples;
+		public final ForgeConfigSpec.BooleanValue waterDripRipples;
+		public final ForgeConfigSpec.BooleanValue cakeEatingParticles;
+		public final ForgeConfigSpec.BooleanValue emissiveLavaDrips;
 
 		// Firefly Settings
-		public final ModConfigSpec.IntValue fireflyStartTime;
-		public final ModConfigSpec.IntValue fireflyEndTime;
-		public final ModConfigSpec.DoubleValue fireflyMinTemp;
-		public final ModConfigSpec.DoubleValue fireflyMaxTemp;
-		public final ModConfigSpec.BooleanValue fireflyCanSpawnInRain;
-		public final ModConfigSpec.ConfigValue<List<? extends Double>> fireflyDailyRandom;
-		public final ModConfigSpec.DoubleValue fireflyGrassFrequency;
-		public final ModConfigSpec.DoubleValue fireflyTallGrassFrequency;
-		public final ModConfigSpec.DoubleValue fireflyFlowersFrequency;
-		public final ModConfigSpec.DoubleValue fireflyTallFlowersFrequency;
+		public final ForgeConfigSpec.IntValue fireflyStartTime;
+		public final ForgeConfigSpec.IntValue fireflyEndTime;
+		public final ForgeConfigSpec.DoubleValue fireflyMinTemp;
+		public final ForgeConfigSpec.DoubleValue fireflyMaxTemp;
+		public final ForgeConfigSpec.BooleanValue fireflyCanSpawnInRain;
+		public final ForgeConfigSpec.ConfigValue<List<? extends Double>> fireflyDailyRandom;
+		public final ForgeConfigSpec.DoubleValue fireflyGrassFrequency;
+		public final ForgeConfigSpec.DoubleValue fireflyTallGrassFrequency;
+		public final ForgeConfigSpec.DoubleValue fireflyFlowersFrequency;
+		public final ForgeConfigSpec.DoubleValue fireflyTallFlowersFrequency;
 
 		// Falling Leaves Settings
-		public final ModConfigSpec.IntValue fallingLeavesSpawnChance;
-		public final ModConfigSpec.BooleanValue fallingLeavesSpawnRipples;
-		public final ModConfigSpec.BooleanValue fallingLeavesLayFlatOnGround;
-		public final ModConfigSpec.BooleanValue fallingLeavesLayFlatRightAngles;
+		public final ForgeConfigSpec.IntValue fallingLeavesSpawnChance;
+		public final ForgeConfigSpec.BooleanValue fallingLeavesSpawnRipples;
+		public final ForgeConfigSpec.BooleanValue fallingLeavesLayFlatOnGround;
+		public final ForgeConfigSpec.BooleanValue fallingLeavesLayFlatRightAngles;
 
 		// Cave Dust Settings
-		public final ModConfigSpec.IntValue caveDustSpawnChance;
-		public final ModConfigSpec.IntValue caveDustBaseMaxAge;
-		public final ModConfigSpec.IntValue caveDustColor;
-		public final ModConfigSpec.IntValue caveDustFadeDuration;
-		public final ModConfigSpec.DoubleValue caveDustMaxAcceleration;
-		public final ModConfigSpec.IntValue caveDustAccelChangeChance;
-		public final ModConfigSpec.ConfigValue<List<? extends String>> caveDustExcludeBiomes;
+		public final ForgeConfigSpec.IntValue caveDustSpawnChance;
+		public final ForgeConfigSpec.IntValue caveDustBaseMaxAge;
+		public final ForgeConfigSpec.IntValue caveDustColor;
+		public final ForgeConfigSpec.IntValue caveDustFadeDuration;
+		public final ForgeConfigSpec.DoubleValue caveDustMaxAcceleration;
+		public final ForgeConfigSpec.IntValue caveDustAccelChangeChance;
+		public final ForgeConfigSpec.ConfigValue<List<? extends String>> caveDustExcludeBiomes;
 
-		CommonConfig(ModConfigSpec.Builder builder) {
+		CommonConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment("Particular Mod Configuration").push("general");
 
 			// Enabled Effects Section
@@ -167,7 +163,7 @@ public class ParticularConfig {
 	// Helper methods to convert biome string list to ResourceLocation list
 	public static List<ResourceLocation> getCaveDustExcludeBiomes() {
 		return COMMON.caveDustExcludeBiomes.get().stream()
-				.map(ResourceLocation::parse)
+				.map(ResourceLocation::tryParse)
 				.toList();
 	}
 }

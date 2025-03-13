@@ -4,7 +4,7 @@ import net.minecraft.client.particle.SingleQuadParticle;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(SingleQuadParticle.class)
+@Mixin(value = SingleQuadParticle.class, remap = false)
 public interface AccessorBillboardParticle
 {
 	@Accessor

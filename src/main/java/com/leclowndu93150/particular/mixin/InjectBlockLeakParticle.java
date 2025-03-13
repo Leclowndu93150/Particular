@@ -14,7 +14,7 @@ public class InjectBlockLeakParticle
 	@Inject(
 		method = "getLightColor",
 		at = @At("HEAD"),
-		cancellable = true)
+		cancellable = true, remap = false)
 	public void getBrightness(float tint, CallbackInfoReturnable<Integer> cir)
 	{
 		if (!ParticularConfig.emissiveLavaDrips()) { return; }

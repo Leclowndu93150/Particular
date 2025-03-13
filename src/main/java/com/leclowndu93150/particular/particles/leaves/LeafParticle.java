@@ -13,11 +13,12 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.Nullable;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+
+import javax.annotation.Nullable;
 
 public class LeafParticle extends TextureSheetParticle
 {
@@ -205,10 +206,10 @@ public class LeafParticle extends TextureSheetParticle
 			m = temp;
 		}
 		
-		vertexConsumer.addVertex(vector3fs[0].x(), vector3fs[0].y(), vector3fs[0].z()).setUv(m, o).setColor(rCol, gCol, bCol, alpha).setLight(p);
-		vertexConsumer.addVertex(vector3fs[1].x(), vector3fs[1].y(), vector3fs[1].z()).setUv(m, n).setColor(rCol, gCol, bCol, alpha).setLight(p);
-		vertexConsumer.addVertex(vector3fs[2].x(), vector3fs[2].y(), vector3fs[2].z()).setUv(l, n).setColor(rCol, gCol, bCol, alpha).setLight(p);
-		vertexConsumer.addVertex(vector3fs[3].x(), vector3fs[3].y(), vector3fs[3].z()).setUv(l, o).setColor(rCol, gCol, bCol, alpha).setLight(p);
+		vertexConsumer.vertex(vector3fs[0].x(), vector3fs[0].y(), vector3fs[0].z()).uv(m, o).color(rCol, gCol, bCol, alpha).uv2(p);
+		vertexConsumer.vertex(vector3fs[1].x(), vector3fs[1].y(), vector3fs[1].z()).uv(m, n).color(rCol, gCol, bCol, alpha).uv2(p);
+		vertexConsumer.vertex(vector3fs[2].x(), vector3fs[2].y(), vector3fs[2].z()).uv(l, n).color(rCol, gCol, bCol, alpha).uv2(p);
+		vertexConsumer.vertex(vector3fs[3].x(), vector3fs[3].y(), vector3fs[3].z()).uv(l, o).color(rCol, gCol, bCol, alpha).uv2(p);
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -22,17 +22,18 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.event.level.ChunkEvent;
-import net.neoforged.neoforge.event.level.LevelEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.level.ChunkEvent;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,9 +54,10 @@ public class Main {
 
 	private static Map<Block, LeafData> leavesData = new HashMap<>();
 
-	public Main(IEventBus modEventBus, ModContainer modContainer) {
+	public Main() {
+		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		LOGGER.info("I am quite particular about the effects I choose to add :3");
-		ParticularConfig.register(modContainer);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ParticularConfig.COMMON_SPEC);
 		Particles.register(modEventBus);
 		modEventBus.addListener(this::clientSetup);
 		modEventBus.addListener(Particles::registerFactories);
@@ -291,13 +293,13 @@ public class Main {
 		}
 	}
 
-	@EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+	@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
 	public static class ClientEvents {
 
 		@SubscribeEvent
-		public static void onClientTick(ClientTickEvent.Pre event) {
+		public static void onClientTick(TickEvent.ClientTickEvent event) {
 			Level world = Minecraft.getInstance().level;
-			if (world == null) return;
+			if (world == null || event.phase != TickEvent.Phase.START) return;
 
 			RandomSource random = world.random;
 

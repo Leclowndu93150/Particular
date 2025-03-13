@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
-import org.jetbrains.annotations.NotNull;
+import org.antlr.v4.runtime.misc.NotNull;
 
 public record Color(float red, float green, float blue, float alpha) {
     public static final Color BLACK = ofRgb(0);
@@ -58,9 +58,11 @@ public record Color(float red, float green, float blue, float alpha) {
         return ofRgb(colorValue == null ? 0 : colorValue);
     }
 
+    /* @Reason: Useless and can't bother fixing it
     public static Color ofDye(@NotNull DyeColor dyeColor) {
         return ofArgb(dyeColor.getTextureDiffuseColor());
     }
+     */
 
     public static Color random() {
         return ofArgb((int)(Math.random() * (double)1.6777215E7F) | -16777216);

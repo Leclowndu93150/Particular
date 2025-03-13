@@ -30,7 +30,7 @@ public class InjectBlock
 		return key.map(biomeRegistryKey -> !ParticularConfig.COMMON.caveDustExcludeBiomes.get().contains(biomeRegistryKey.location())).orElse(true);
 	}
 
-	@Inject(at = @At("TAIL"), method = "animateTick")
+	@Inject(at = @At("TAIL"), method = "animateTick", remap = false)
 	public void spawnParticles(BlockState state, Level world, BlockPos pos, RandomSource random, CallbackInfo ci)
 	{
 		Block block = state.getBlock();

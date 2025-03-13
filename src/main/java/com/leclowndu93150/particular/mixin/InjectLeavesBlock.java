@@ -24,7 +24,7 @@ public class InjectLeavesBlock
 {
 	@Inject(
 		method = "animateTick",
-		at = @At("HEAD"))
+		at = @At("HEAD"), remap = false)
 	private void dropLeaves(BlockState state, Level world, BlockPos pos, RandomSource random, CallbackInfo ci)
 	{
 		if (!ParticularConfig.fallingLeaves()) { return; }

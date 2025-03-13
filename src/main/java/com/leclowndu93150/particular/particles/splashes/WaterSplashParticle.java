@@ -10,8 +10,8 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Vector3f;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
@@ -92,15 +92,15 @@ public class WaterSplashParticle extends TextureSheetParticle
 	}
 	private void renderSide(VertexConsumer vertexConsumer, Vector3f[] vector3fs, int a, int b, float height, float l, float m, float n, float o, int light, int color)
 	{
-		vertexConsumer.addVertex(vector3fs[a].x(), vector3fs[a].y(), vector3fs[a].z()).setUv(l, o).setColor(color).setLight(light);
-		vertexConsumer.addVertex(vector3fs[b].x(), vector3fs[b].y(), vector3fs[b].z()).setUv(m, o).setColor(color).setLight(light);
-		vertexConsumer.addVertex(vector3fs[b].x(), vector3fs[b].y() + height, vector3fs[b].z()).setUv(m, n).setColor(color).setLight(light);
-		vertexConsumer.addVertex(vector3fs[a].x(), vector3fs[a].y() + height, vector3fs[a].z()).setUv(l, n).setColor(color).setLight(light);
+		vertexConsumer.vertex(vector3fs[a].x(), vector3fs[a].y(), vector3fs[a].z()).uv(l, o).color(color).uv2(light);
+		vertexConsumer.vertex(vector3fs[b].x(), vector3fs[b].y(), vector3fs[b].z()).uv(m, o).color(color).uv2(light);
+		vertexConsumer.vertex(vector3fs[b].x(), vector3fs[b].y() + height, vector3fs[b].z()).uv(m, n).color(color).uv2(light);
+		vertexConsumer.vertex(vector3fs[a].x(), vector3fs[a].y() + height, vector3fs[a].z()).uv(l, n).color(color).uv2(light);
 
-		vertexConsumer.addVertex(vector3fs[b].x(), vector3fs[b].y(), vector3fs[b].z()).setUv(m, o).setColor(color).setLight(light);
-		vertexConsumer.addVertex(vector3fs[a].x(), vector3fs[a].y(), vector3fs[a].z()).setUv(l, o).setColor(color).setLight(light);
-		vertexConsumer.addVertex(vector3fs[a].x(), vector3fs[a].y() + height, vector3fs[a].z()).setUv(l, n).setColor(color).setLight(light);
-		vertexConsumer.addVertex(vector3fs[b].x(), vector3fs[b].y() + height, vector3fs[b].z()).setUv(m, n).setColor(color).setLight(light);
+		vertexConsumer.vertex(vector3fs[b].x(), vector3fs[b].y(), vector3fs[b].z()).uv(m, o).color(color).uv2(light);
+		vertexConsumer.vertex(vector3fs[a].x(), vector3fs[a].y(), vector3fs[a].z()).uv(l, o).color(color).uv2(light);
+		vertexConsumer.vertex(vector3fs[a].x(), vector3fs[a].y() + height, vector3fs[a].z()).uv(l, n).color(color).uv2(light);
+		vertexConsumer.vertex(vector3fs[b].x(), vector3fs[b].y() + height, vector3fs[b].z()).uv(m, n).color(color).uv2(light);
 	}
 
 	@OnlyIn(Dist.CLIENT)

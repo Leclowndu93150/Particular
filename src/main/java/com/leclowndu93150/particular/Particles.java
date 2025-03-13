@@ -12,17 +12,17 @@ import com.leclowndu93150.particular.particles.splashes.WaterSplashRingParticle;
 import net.minecraft.client.particle.BubblePopParticle;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.core.registries.Registries;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
 public class Particles {
-	private static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, Main.MOD_ID);
+	private static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(Registries.PARTICLE_TYPE, Main.MOD_ID);
 
 	// Vanilla leaves
 	public static final Supplier<SimpleParticleType> OAK_LEAF = registerParticle("oak_leaf");

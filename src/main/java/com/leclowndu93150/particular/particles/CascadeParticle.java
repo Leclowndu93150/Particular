@@ -5,8 +5,8 @@ import net.minecraft.client.particle.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class CascadeParticle extends TextureSheetParticle
 {
@@ -16,6 +16,7 @@ public class CascadeParticle extends TextureSheetParticle
 	{
 		super(clientWorld, x, y, z);
 		this.provider = provider;
+		//this.sprite = provider.get(random);
 		lifetime = 9;
 		quadSize = 1f;
 		gravity = 0.4f;

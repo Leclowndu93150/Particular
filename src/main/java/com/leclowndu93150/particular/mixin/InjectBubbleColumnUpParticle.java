@@ -22,7 +22,7 @@ public abstract class InjectBubbleColumnUpParticle extends TextureSheetParticle
 
 	@Inject(
 		method = "tick",
-		at = @At("TAIL"))
+		at = @At("TAIL"), remap = false)
 	private void releaseBubbles(CallbackInfo ci)
 	{
 		if (!ParticularConfig.poppingBubbles()) { return; }

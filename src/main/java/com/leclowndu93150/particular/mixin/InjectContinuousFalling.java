@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(DripParticle.FallAndLandParticle.class)
+@Mixin(value = DripParticle.FallAndLandParticle.class, remap = false)
 public abstract class InjectContinuousFalling extends TextureSheetParticle
 {
 	@Shadow @Final protected ParticleOptions landParticle;
@@ -30,7 +30,7 @@ public abstract class InjectContinuousFalling extends TextureSheetParticle
 
 	@Inject(
 		method = "postMoveUpdate",
-		at = @At("TAIL"))
+		at = @At("TAIL"), remap = false)
 	private void addRipples(CallbackInfo ci)
 	{
 		if (!ParticularConfig.waterDripRipples()) { return; }

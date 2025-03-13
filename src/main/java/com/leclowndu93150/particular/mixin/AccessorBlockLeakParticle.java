@@ -5,7 +5,7 @@ import net.minecraft.world.level.material.Fluid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(DripParticle.class)
+@Mixin(value = DripParticle.class, remap = false)
 public interface AccessorBlockLeakParticle
 {
 	@Accessor("type")

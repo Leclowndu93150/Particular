@@ -18,7 +18,7 @@ public class InjectFlowableFluid
 {
 	@Inject(
 		method = "tick",
-		at = @At("TAIL"))
+		at = @At("TAIL"), remap = false)
 	protected void spawnCascades(Level level, BlockPos pos, FluidState state, CallbackInfo ci)
 	{
 		if (!ParticularConfig.cascades()) { return; }

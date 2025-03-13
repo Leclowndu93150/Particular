@@ -24,7 +24,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 
-@Mixin(Entity.class)
+@Mixin(value = Entity.class, remap = false)
 public abstract class InjectEntity
 {
 	@Shadow private Vec3 deltaMovement;
@@ -45,7 +45,7 @@ public abstract class InjectEntity
 
 	@Inject(
 		method = "tick",
-		at = @At("TAIL")
+		at = @At("TAIL"), remap = false
 	)
 	private void onSetVelocity(CallbackInfo ci)
 	{
@@ -60,7 +60,7 @@ public abstract class InjectEntity
 
 	@Inject(
 		method = "doWaterSplashEffect",
-		at = @At("TAIL"))
+		at = @At("TAIL"), remap = false)
 	private void waterParticles(CallbackInfo ci)
 	{
 		if (!ParticularConfig.waterSplash()) { return; }
@@ -89,6 +89,6 @@ public abstract class InjectEntity
 		if (!foundSurface) { return; }
 
 		// 3D splash
-		level().addParticle(Particles.WATER_SPLASH_EMITTER.get(), getX(), baseY + prevState.getOwnHeight(), getZ(), dimensions.width(), Collections.max(velocities), 0.0);
+		level().addParticle(Particles.WATER_SPLASH_EMITTER.get(), getX(), baseY + prevState.getOwnHeight(), getZ(), dimensions.width, Collections.max(velocities), 0.0);
 	}
 }
