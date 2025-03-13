@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 
-@Mixin(value = EnderChestBlockEntity.class, remap = false)
+@Mixin(value = EnderChestBlockEntity.class)
 public interface AccessorEnderChestBlockEntity
 {
 	@Accessor("openersCounter")

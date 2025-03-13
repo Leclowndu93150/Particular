@@ -12,9 +12,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class InjectBlockLeakParticle
 {
 	@Inject(
-		method = "getLightColor",
-		at = @At("HEAD"),
-		cancellable = true, remap = false)
+			method = "getLightColor",
+			at = @At("HEAD"),
+			cancellable = true)
 	public void getBrightness(float tint, CallbackInfoReturnable<Integer> cir)
 	{
 		if (!ParticularConfig.emissiveLavaDrips()) { return; }

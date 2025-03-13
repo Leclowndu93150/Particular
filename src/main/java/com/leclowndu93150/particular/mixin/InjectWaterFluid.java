@@ -21,7 +21,7 @@ public class InjectWaterFluid
 {
 	@Inject(
 		method = "animateTick",
-		at = @At("TAIL"), remap = false)
+		at = @At("TAIL"))
 	private void waterParticles(Level world, BlockPos pos, FluidState state, RandomSource random, CallbackInfo ci)
 	{
 		if (!ParticularConfig.waterfallSpray()) { return; }

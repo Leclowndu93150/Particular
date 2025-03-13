@@ -1,6 +1,5 @@
 package com.leclowndu93150.particular.mixin;
 
-import com.leclowndu93150.particular.Main;
 import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -18,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = DripParticle.FallAndLandParticle.class, remap = false)
+@Mixin(DripParticle.FallAndLandParticle.class)
 public abstract class InjectContinuousFalling extends TextureSheetParticle
 {
 	@Shadow @Final protected ParticleOptions landParticle;
@@ -29,8 +28,8 @@ public abstract class InjectContinuousFalling extends TextureSheetParticle
 	}
 
 	@Inject(
-		method = "postMoveUpdate",
-		at = @At("TAIL"), remap = false)
+			method = "postMoveUpdate",
+			at = @At("TAIL"))
 	private void addRipples(CallbackInfo ci)
 	{
 		if (!ParticularConfig.waterDripRipples()) { return; }

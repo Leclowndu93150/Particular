@@ -73,10 +73,10 @@ public class WaterSplashRingParticle extends TextureSheetParticle
 		float n = getV0();
 		float o = getV1();
 		int p = getLightColor(tickDelta);
-		vertexConsumer.vertex(vector3fs[0].x(), vector3fs[0].y(), vector3fs[0].z()).uv(m, o).color(rCol, gCol, bCol, alpha).uv2(p);
-		vertexConsumer.vertex(vector3fs[1].x(), vector3fs[1].y(), vector3fs[1].z()).uv(m, n).color(rCol, gCol, bCol, alpha).uv2(p);
-		vertexConsumer.vertex(vector3fs[2].x(), vector3fs[2].y(), vector3fs[2].z()).uv(l, n).color(rCol, gCol, bCol, alpha).uv2(p);
-		vertexConsumer.vertex(vector3fs[3].x(), vector3fs[3].y(), vector3fs[3].z()).uv(l, o).color(rCol, gCol, bCol, alpha).uv2(p);
+		vertexConsumer.vertex(vector3fs[0].x(), vector3fs[0].y(), vector3fs[0].z()).uv(m, o).color(rCol, gCol, bCol, alpha).uv2(p).endVertex();
+		vertexConsumer.vertex(vector3fs[1].x(), vector3fs[1].y(), vector3fs[1].z()).uv(m, n).color(rCol, gCol, bCol, alpha).uv2(p).endVertex();
+		vertexConsumer.vertex(vector3fs[2].x(), vector3fs[2].y(), vector3fs[2].z()).uv(l, n).color(rCol, gCol, bCol, alpha).uv2(p).endVertex();
+		vertexConsumer.vertex(vector3fs[3].x(), vector3fs[3].y(), vector3fs[3].z()).uv(l, o).color(rCol, gCol, bCol, alpha).uv2(p).endVertex();
 	}
 
 	@OnlyIn(Dist.CLIENT)

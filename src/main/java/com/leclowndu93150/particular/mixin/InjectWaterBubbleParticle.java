@@ -23,7 +23,7 @@ public abstract class InjectWaterBubbleParticle extends TextureSheetParticle
 
 	@Inject(
 		method = "tick",
-		at = @At("TAIL"),remap = false)
+		at = @At("TAIL"))
 	private void releaseBubbles(CallbackInfo ci)
 	{
 		if (!ParticularConfig.poppingBubbles()) { return; }

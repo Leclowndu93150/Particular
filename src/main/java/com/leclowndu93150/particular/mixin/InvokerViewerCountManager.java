@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(value = ContainerOpenersCounter.class, remap = false)
+@Mixin(value = ContainerOpenersCounter.class)
 public interface InvokerViewerCountManager {
     @Invoker("onOpen")
     void invokeOnContainerOpen(Level level, BlockPos pos, BlockState state);

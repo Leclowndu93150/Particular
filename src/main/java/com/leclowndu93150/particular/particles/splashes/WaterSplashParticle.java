@@ -92,15 +92,15 @@ public class WaterSplashParticle extends TextureSheetParticle
 	}
 	private void renderSide(VertexConsumer vertexConsumer, Vector3f[] vector3fs, int a, int b, float height, float l, float m, float n, float o, int light, int color)
 	{
-		vertexConsumer.vertex(vector3fs[a].x(), vector3fs[a].y(), vector3fs[a].z()).uv(l, o).color(color).uv2(light);
-		vertexConsumer.vertex(vector3fs[b].x(), vector3fs[b].y(), vector3fs[b].z()).uv(m, o).color(color).uv2(light);
-		vertexConsumer.vertex(vector3fs[b].x(), vector3fs[b].y() + height, vector3fs[b].z()).uv(m, n).color(color).uv2(light);
-		vertexConsumer.vertex(vector3fs[a].x(), vector3fs[a].y() + height, vector3fs[a].z()).uv(l, n).color(color).uv2(light);
+		vertexConsumer.vertex(vector3fs[a].x(), vector3fs[a].y(), vector3fs[a].z()).uv(l, o).color(color).uv2(light).endVertex();
+		vertexConsumer.vertex(vector3fs[b].x(), vector3fs[b].y(), vector3fs[b].z()).uv(m, o).color(color).uv2(light).endVertex();
+		vertexConsumer.vertex(vector3fs[b].x(), vector3fs[b].y() + height, vector3fs[b].z()).uv(m, n).color(color).uv2(light).endVertex();
+		vertexConsumer.vertex(vector3fs[a].x(), vector3fs[a].y() + height, vector3fs[a].z()).uv(l, n).color(color).uv2(light).endVertex();
 
-		vertexConsumer.vertex(vector3fs[b].x(), vector3fs[b].y(), vector3fs[b].z()).uv(m, o).color(color).uv2(light);
-		vertexConsumer.vertex(vector3fs[a].x(), vector3fs[a].y(), vector3fs[a].z()).uv(l, o).color(color).uv2(light);
-		vertexConsumer.vertex(vector3fs[a].x(), vector3fs[a].y() + height, vector3fs[a].z()).uv(l, n).color(color).uv2(light);
-		vertexConsumer.vertex(vector3fs[b].x(), vector3fs[b].y() + height, vector3fs[b].z()).uv(m, n).color(color).uv2(light);
+		vertexConsumer.vertex(vector3fs[b].x(), vector3fs[b].y(), vector3fs[b].z()).uv(m, o).color(color).uv2(light).endVertex();
+		vertexConsumer.vertex(vector3fs[a].x(), vector3fs[a].y(), vector3fs[a].z()).uv(l, o).color(color).uv2(light).endVertex();
+		vertexConsumer.vertex(vector3fs[a].x(), vector3fs[a].y() + height, vector3fs[a].z()).uv(l, n).color(color).uv2(light).endVertex();
+		vertexConsumer.vertex(vector3fs[b].x(), vector3fs[b].y() + height, vector3fs[b].z()).uv(m, n).color(color).uv2(light).endVertex();
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -114,11 +114,16 @@ public class LeafParticle extends TextureSheetParticle
 			// Float on top of water
 			yd = 0;
 			gravity = 0;
-			// investigate this
 		}
 		else if (age >= fadeInDuration)
 		{
 			gravity = gravityFactor;
+			/*
+			if (gravity > 0) {
+				yd -= gravity;
+			}
+			 */
+
 			if (!onGround)
 			{
 				roll = getAngle();
@@ -145,7 +150,7 @@ public class LeafParticle extends TextureSheetParticle
 
 		if (!expiring || !ParticularConfig.COMMON.fallingLeavesLayFlatOnGround.get())
 		{
-			vector3fs = new Vector3f[]{new Vector3f(1.0F, -1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(-1.0F, -1.0F, 0.0F)};
+			vector3fs = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
 
 			Quaternionf quaternionf;
 			if (roll == 0.0F)
@@ -186,7 +191,7 @@ public class LeafParticle extends TextureSheetParticle
 		}
 		else if (age > lifetime - fadeOutDuration)
 		{
-			//++ageDelta;
+			++ageDelta;
 			alpha = (lifetime - ageDelta) / (float)fadeOutDuration;
 		}
 		else
@@ -205,11 +210,11 @@ public class LeafParticle extends TextureSheetParticle
 			l = m;
 			m = temp;
 		}
-		
-		vertexConsumer.vertex(vector3fs[0].x(), vector3fs[0].y(), vector3fs[0].z()).uv(m, o).color(rCol, gCol, bCol, alpha).uv2(p);
-		vertexConsumer.vertex(vector3fs[1].x(), vector3fs[1].y(), vector3fs[1].z()).uv(m, n).color(rCol, gCol, bCol, alpha).uv2(p);
-		vertexConsumer.vertex(vector3fs[2].x(), vector3fs[2].y(), vector3fs[2].z()).uv(l, n).color(rCol, gCol, bCol, alpha).uv2(p);
-		vertexConsumer.vertex(vector3fs[3].x(), vector3fs[3].y(), vector3fs[3].z()).uv(l, o).color(rCol, gCol, bCol, alpha).uv2(p);
+
+		vertexConsumer.vertex(vector3fs[0].x(), vector3fs[0].y(), vector3fs[0].z()).uv(l, o).color(rCol, gCol, bCol, alpha).uv2(p).endVertex();
+		vertexConsumer.vertex(vector3fs[1].x(), vector3fs[1].y(), vector3fs[1].z()).uv(l, n).color(rCol, gCol, bCol, alpha).uv2(p).endVertex();
+		vertexConsumer.vertex(vector3fs[2].x(), vector3fs[2].y(), vector3fs[2].z()).uv(m, n).color(rCol, gCol, bCol, alpha).uv2(p).endVertex();
+		vertexConsumer.vertex(vector3fs[3].x(), vector3fs[3].y(), vector3fs[3].z()).uv(m, o).color(rCol, gCol, bCol, alpha).uv2(p).endVertex();
 	}
 
 	@OnlyIn(Dist.CLIENT)

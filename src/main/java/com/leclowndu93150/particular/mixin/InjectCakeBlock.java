@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(CakeBlock.class)
 public class InjectCakeBlock
 {
-	@Inject(at = @At("TAIL"), method = "eat", remap = false)
+	@Inject(at = @At("TAIL"), method = "eat")
 	private static void makeSounds(LevelAccessor world, BlockPos pos, BlockState state, Player player, CallbackInfoReturnable<InteractionResult> cir)
 	{
 		if (!ParticularConfig.cakeEatingParticles()) { return; }

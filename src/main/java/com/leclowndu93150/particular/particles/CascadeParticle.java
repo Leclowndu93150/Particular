@@ -16,7 +16,7 @@ public class CascadeParticle extends TextureSheetParticle
 	{
 		super(clientWorld, x, y, z);
 		this.provider = provider;
-		//this.sprite = provider.get(random);
+		//this.setSprite(provider.get(random));
 		lifetime = 9;
 		quadSize = 1f;
 		gravity = 0.4f;

@@ -64,7 +64,7 @@ public abstract class InjectChestBlockEntity extends RandomizableContainerBlockE
 
 	@Inject(
 			method = "lidAnimateTick",
-			at = @At("TAIL"), remap = false)
+			at = @At("TAIL"))
 	private static void randomlyOpen(Level world, BlockPos pos, BlockState state, ChestBlockEntity blockEntity, CallbackInfo ci) {
 		if (!ParticularConfig.soulSandBubbles()) { return; }
 

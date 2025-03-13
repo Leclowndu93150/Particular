@@ -5,7 +5,7 @@ import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(value = LivingEntity.class, remap = false)
+@Mixin(value = LivingEntity.class)
 public interface InvokerLivingEntity
 {
 	@Invoker("spawnItemParticles")

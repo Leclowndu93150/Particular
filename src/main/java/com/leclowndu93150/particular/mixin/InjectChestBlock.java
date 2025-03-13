@@ -23,7 +23,7 @@ public class InjectChestBlock
 {
 	@Inject(
 		method = "use",
-		at = @At("HEAD"), remap = false)
+		at = @At("HEAD"))
 	private void releaseBubbles(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir)
 	{
 		if (!ParticularConfig.chestBubbles()) { return; }
