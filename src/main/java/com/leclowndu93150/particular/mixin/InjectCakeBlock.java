@@ -24,7 +24,7 @@ public class InjectCakeBlock
 		if (!ParticularConfig.cakeEatingParticles()) { return; }
 
 		ItemStack cake = Items.CAKE.getDefaultInstance();
-		player.playSound(SoundEvents.GENERIC_EAT.value(), 1f, 1f);
+		player.playSound(SoundEvents.GENERIC_EAT, 1f, 1f);
 		((InvokerLivingEntity) player).spawnParticles(cake, 5);
 	}
 }

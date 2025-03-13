@@ -16,7 +16,7 @@ repositories {
 }
 
 base {
-    archivesName = mod_id+"-1.21.4-NeoForge"
+    archivesName = mod_id+"-1.21.1NeoForge"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -55,16 +55,6 @@ neoForge {
         gameTestServer {
             type = "gameTestServer"
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-        }
-
-        data {
-            clientData()
-
-            // example of overriding the workingDirectory set in configureEach above, uncomment if you want to use it
-            // gameDirectory = project.file('run-data')
-
-            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
 
         // applies to all the run configs above

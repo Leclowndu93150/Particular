@@ -29,8 +29,8 @@
     "InjectBlockLeakParticle",
     "InjectBubbleColumnUpParticle",
     "InjectContinuousFalling",
-    "InjectWaterBubbleParticle",
-    "InjectWeatherRendering"
+    "InjectLevelRenderer",
+    "InjectWaterBubbleParticle"
   ],
   "injectors": {
     "defaultRequire": 1

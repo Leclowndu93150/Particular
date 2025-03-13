@@ -54,7 +54,7 @@ public abstract class InjectChestBlockEntity extends RandomizableContainerBlockE
 
 		if (state.getValue(BlockStateProperties.CHEST_TYPE) == ChestType.RIGHT)
 		{
-			BlockPos pos2 = pos.offset(state.getValue(BlockStateProperties.HORIZONTAL_FACING).getCounterClockWise(Direction.Axis.Y).getUnitVec3i());
+			BlockPos pos2 = pos.offset(state.getValue(BlockStateProperties.HORIZONTAL_FACING).getCounterClockWise(Direction.Axis.Y).getNormal());
 
 			return world.getBlockState(pos2).getBlock() == Blocks.SOUL_SAND;
 		}

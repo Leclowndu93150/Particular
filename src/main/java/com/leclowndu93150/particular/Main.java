@@ -64,8 +64,8 @@ public class Main {
 	private void clientSetup(final FMLClientSetupEvent event) {
 		// Populate leaves data
 		leavesData.put(Blocks.OAK_LEAVES, new LeafData(Particles.OAK_LEAF.get()));
-		leavesData.put(Blocks.BIRCH_LEAVES, new LeafData(Particles.BIRCH_LEAF.get(), new Color(FoliageColor.FOLIAGE_BIRCH)));
-		leavesData.put(Blocks.SPRUCE_LEAVES, new LeafData(Particles.SPRUCE_LEAF.get(), new Color(FoliageColor.FOLIAGE_EVERGREEN)));
+		leavesData.put(Blocks.BIRCH_LEAVES, new LeafData(Particles.BIRCH_LEAF.get(), new Color(FoliageColor.getBirchColor())));
+		leavesData.put(Blocks.SPRUCE_LEAVES, new LeafData(Particles.SPRUCE_LEAF.get(), new Color(FoliageColor.getEvergreenColor())));
 		leavesData.put(Blocks.JUNGLE_LEAVES, new LeafData(Particles.JUNGLE_LEAF.get()));
 		leavesData.put(Blocks.ACACIA_LEAVES, new LeafData(Particles.ACACIA_LEAF.get()));
 		leavesData.put(Blocks.DARK_OAK_LEAVES, new LeafData(Particles.DARK_OAK_LEAF.get()));
@@ -73,7 +73,6 @@ public class Main {
 		leavesData.put(Blocks.FLOWERING_AZALEA_LEAVES, new LeafData(Particles.AZALEA_LEAF.get(), Color.white));
 		leavesData.put(Blocks.MANGROVE_LEAVES, new LeafData(Particles.MANGROVE_LEAF.get()));
 		leavesData.put(Blocks.CHERRY_LEAVES, new LeafData(null));
-		leavesData.put(Blocks.PALE_OAK_LEAVES, new LeafData(null));
 
 		// Mod compat
 		if (ModList.get().isLoaded("traverse")) {
@@ -350,7 +349,7 @@ public class Main {
 			BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
-					for (int y = world.getMinY(); y < world.getMaxY(); y++) {
+					for (int y = world.getMinBuildHeight(); y < world.getMaxBuildHeight(); y++) {
 						mutablePos.set(chunk.getPos().getMinBlockX() + x, y, chunk.getPos().getMinBlockZ() + z);
 						BlockState blockState = chunk.getBlockState(mutablePos);
 						if (blockState.getFluidState().is(Fluids.WATER)) {

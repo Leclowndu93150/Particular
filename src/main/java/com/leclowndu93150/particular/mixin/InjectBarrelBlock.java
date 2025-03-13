@@ -32,7 +32,7 @@ public class InjectBarrelBlock
 
 		Direction direction = state.getValue(BlockStateProperties.FACING);
 
-		if (direction == Direction.DOWN || !world.getFluidState(pos.offset(direction.getUnitVec3i())).is(FluidTags.WATER))
+		if (direction == Direction.DOWN || !world.getFluidState(pos.offset(direction.getNormal())).is(FluidTags.WATER))
 		{
 			return;
 		}
