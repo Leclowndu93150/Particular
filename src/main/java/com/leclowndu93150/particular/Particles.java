@@ -17,10 +17,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
+@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Particles {
 	private static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(Registries.PARTICLE_TYPE, Main.MOD_ID);
 
@@ -78,6 +81,7 @@ public class Particles {
 		PARTICLE_TYPES.register(modEventBus);
 	}
 
+	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void registerFactories(RegisterParticleProvidersEvent event) {
 		event.registerSpriteSet(OAK_LEAF.get(), LeafParticle.Factory::new);
