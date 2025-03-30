@@ -7,28 +7,27 @@ import java.util.stream.Stream;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.DyeColor;
 import org.antlr.v4.runtime.misc.NotNull;
 
-public record Color(float red, float green, float blue, float alpha) {
-    public static final Color BLACK = ofRgb(0);
-    public static final Color WHITE = ofRgb(16777215);
-    public static final Color RED = ofRgb(16711680);
-    public static final Color GREEN = ofRgb(65280);
-    public static final Color BLUE = ofRgb(255);
-    private static final Map<String, Color> NAMED_TEXT_COLORS = Stream.of(ChatFormatting.values())
+public record OwOColor(float red, float green, float blue, float alpha) {
+    public static final OwOColor BLACK = ofRgb(0);
+    public static final OwOColor WHITE = ofRgb(16777215);
+    public static final OwOColor RED = ofRgb(16711680);
+    public static final OwOColor GREEN = ofRgb(65280);
+    public static final OwOColor BLUE = ofRgb(255);
+    private static final Map<String, OwOColor> NAMED_TEXT_COLORS = Stream.of(ChatFormatting.values())
             .filter(ChatFormatting::isColor)
             .collect(Collectors.toMap(
                     formatting -> formatting.getName().toLowerCase(Locale.ROOT).replace("_", "-"),
-                    Color::ofFormatting
+                    OwOColor::ofFormatting
             ));
 
-    public Color(float red, float green, float blue) {
+    public OwOColor(float red, float green, float blue) {
         this(red, green, blue, 1.0F);
     }
 
-    public static Color ofArgb(int argb) {
-        return new Color(
+    public static OwOColor ofArgb(int argb) {
+        return new OwOColor(
                 (float)(argb >> 16 & 255) / 255.0F,
                 (float)(argb >> 8 & 255) / 255.0F,
                 (float)(argb & 255) / 255.0F,
@@ -36,8 +35,8 @@ public record Color(float red, float green, float blue, float alpha) {
         );
     }
 
-    public static Color ofRgb(int rgb) {
-        return new Color(
+    public static OwOColor ofRgb(int rgb) {
+        return new OwOColor(
                 (float)(rgb >> 16 & 255) / 255.0F,
                 (float)(rgb >> 8 & 255) / 255.0F,
                 (float)(rgb & 255) / 255.0F,
@@ -45,26 +44,26 @@ public record Color(float red, float green, float blue, float alpha) {
         );
     }
 
-    public static Color ofHsv(float hue, float saturation, float value) {
+    public static OwOColor ofHsv(float hue, float saturation, float value) {
         return ofRgb(Mth.hsvToRgb(hue - 5.0E-8F, saturation, value));
     }
 
-    public static Color ofHsv(float hue, float saturation, float value, float alpha) {
+    public static OwOColor ofHsv(float hue, float saturation, float value, float alpha) {
         return ofArgb((int)(alpha * 255.0F) << 24 | Mth.hsvToRgb(hue - 5.0E-8F, saturation, value));
     }
 
-    public static Color ofFormatting(@NotNull ChatFormatting formatting) {
+    public static OwOColor ofFormatting(@NotNull ChatFormatting formatting) {
         Integer colorValue = formatting.getColor();
         return ofRgb(colorValue == null ? 0 : colorValue);
     }
 
     /* @Reason: Useless and can't bother fixing it
-    public static Color ofDye(@NotNull DyeColor dyeColor) {
+    public static OwOColor ofDye(@NotNull DyeColor dyeColor) {
         return ofArgb(dyeColor.getTextureDiffuseColor());
     }
      */
 
-    public static Color random() {
+    public static OwOColor random() {
         return ofArgb((int)(Math.random() * (double)1.6777215E7F) | -16777216);
     }
 
@@ -114,8 +113,8 @@ public record Color(float red, float green, float blue, float alpha) {
         return includeAlpha ? String.format("#%08X", this.argb()) : String.format("#%06X", this.rgb());
     }
 
-    public Color interpolate(Color next, float delta) {
-        return new Color(
+    public OwOColor interpolate(OwOColor next, float delta) {
+        return new OwOColor(
                 Mth.lerp(delta, this.red, next.red),
                 Mth.lerp(delta, this.green, next.green),
                 Mth.lerp(delta, this.blue, next.blue),
@@ -123,9 +122,9 @@ public record Color(float red, float green, float blue, float alpha) {
         );
     }
 
-    public static Color fromHexString(String hexString) {
+    public static OwOColor fromHexString(String hexString) {
         if (!hexString.startsWith("#")) {
-            Color color = NAMED_TEXT_COLORS.get(hexString);
+            OwOColor color = NAMED_TEXT_COLORS.get(hexString);
             if (color != null) {
                 return color;
             } else {

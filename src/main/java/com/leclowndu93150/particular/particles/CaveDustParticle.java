@@ -1,7 +1,7 @@
 package com.leclowndu93150.particular.particles;
 
 import com.leclowndu93150.particular.ParticularConfig;
-import com.leclowndu93150.particular.utils.Color;
+import com.leclowndu93150.particular.utils.OwOColor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -14,7 +14,7 @@ public class CaveDustParticle extends BaseAshSmokeParticle
 	{
 		super(world, x, y, z, 0, 0, 0, velocityX, velocityY, velocityZ, scaleMultiplier, spriteProvider, 0, ParticularConfig.COMMON.caveDustBaseMaxAge.get(), 0, true);
 
-		Color color = Color.ofArgb(ParticularConfig.COMMON.caveDustColor.get());
+		OwOColor color = OwOColor.ofArgb(ParticularConfig.COMMON.caveDustColor.get());
 		rCol = color.red();
 		gCol = color.green();
 		bCol = color.blue();

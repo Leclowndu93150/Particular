@@ -3,9 +3,11 @@ package com.leclowndu93150.particular;
 import com.leclowndu93150.particular.compat.RegionsUnexplored;
 import com.leclowndu93150.particular.compat.Traverse;
 import com.leclowndu93150.particular.compat.WilderWild;
+import net.minecraft.client.renderer.BiomeColors;
+import org.apache.commons.lang3.tuple.Pair;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -16,6 +18,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.level.chunk.PalettedContainer;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
@@ -27,8 +33,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 
 import static com.leclowndu93150.particular.Main.*;
@@ -104,6 +113,7 @@ public class ClientStuff {
             if (ModList.get().isLoaded("wilderwild")) {
                 WilderWild.addLeaves();
             }
+
         }
 
         @SubscribeEvent
@@ -113,13 +123,11 @@ public class ClientStuff {
 
             RandomSource random = world.random;
 
-            // Set firefly frequency
             if (world.getDayTime() == ParticularConfig.COMMON.fireflyStartTime.get()) {
                 var dailyRandomList = ParticularConfig.COMMON.fireflyDailyRandom.get();
                 fireflyFrequency = dailyRandomList.get(random.nextInt(dailyRandomList.size())).floatValue();
             }
 
-            // Cascades
             if (!ParticularConfig.waterSplash()) return;
 
             cascades.forEach((pos, strength) -> {
@@ -149,27 +157,60 @@ public class ClientStuff {
             Level world = (Level) event.getLevel();
             if (!ParticularConfig.cascades() || !world.isClientSide()) return;
 
-            // Changing dimensions doesn't count as unloading chunks so I need to do this test
             ResourceLocation newDimension = world.dimensionType().effectsLocation();
             if (newDimension != currentDimension) {
                 currentDimension = newDimension;
                 cascades.clear();
             }
 
-            var chunk = event.getChunk();
-            // Iterate through blocks in the chunk to find water
-            BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
-            for (int x = 0; x < 16; x++) {
-                for (int z = 0; z < 16; z++) {
-                    for (int y = world.getMinBuildHeight(); y < world.getMaxBuildHeight(); y++) {
-                        mutablePos.set(chunk.getPos().getMinBlockX() + x, y, chunk.getPos().getMinBlockZ() + z);
-                        BlockState blockState = chunk.getBlockState(mutablePos);
-                        if (blockState.getFluidState().is(Fluids.WATER)) {
-                            Main.updateCascade(world, mutablePos.immutable(), blockState.getFluidState());
+            CompletableFuture.runAsync(() -> {
+                ChunkAccess chunk = event.getChunk();
+                final int minX = chunk.getPos().getMinBlockX();
+                final int minZ = chunk.getPos().getMinBlockZ();
+                BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+
+                List<Pair<BlockPos, FluidState>> waterBlocks = new ArrayList<>();
+
+                for (int sectionIndex = 0; sectionIndex < chunk.getSectionsCount(); sectionIndex++) {
+                    LevelChunkSection section = chunk.getSection(sectionIndex);
+
+                    if (section == null || section.hasOnlyAir()) continue;
+                    if (!section.maybeHas(state -> state.getFluidState().is(Fluids.WATER))) continue;
+
+                    int sectionY = chunk.getSectionYFromSectionIndex(sectionIndex);
+                    int baseY = sectionY << 4;
+
+                    PalettedContainer<BlockState> states = section.getStates();
+
+                    for (int y = 0; y < 16; y++) {
+                        for (int z = 0; z < 16; z++) {
+                            for (int x = 0; x < 16; x++) {
+                                BlockState state = states.get(x, y, z);
+                                FluidState fluidState = state.getFluidState();
+
+                                if (fluidState.is(Fluids.WATER)) {
+                                    int worldX = minX + x;
+                                    int worldY = baseY + y;
+                                    int worldZ = minZ + z;
+
+                                    waterBlocks.add(Pair.of(
+                                            new BlockPos(worldX, worldY, worldZ),
+                                            fluidState
+                                    ));
+                                }
+                            }
                         }
                     }
                 }
-            }
+
+                if (!waterBlocks.isEmpty()) {
+                    Minecraft.getInstance().execute(() -> {
+                        for (Pair<BlockPos, FluidState> pair : waterBlocks) {
+                            Main.updateCascade(world, pair.getLeft(), pair.getRight());
+                        }
+                    });
+                }
+            }, Util.backgroundExecutor());
         }
 
         @SubscribeEvent

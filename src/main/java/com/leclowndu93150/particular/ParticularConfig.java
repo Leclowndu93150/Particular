@@ -123,7 +123,7 @@ public class ParticularConfig {
 					.defineInRange("spawnChance", 700, 1, Integer.MAX_VALUE);
 			caveDustBaseMaxAge = builder.comment("Base maximum age of cave dust particles")
 					.defineInRange("baseMaxAge", 200, 1, Integer.MAX_VALUE);
-			caveDustColor = builder.comment("Color of cave dust particles (RGB hex)")
+			caveDustColor = builder.comment("OwOColor of cave dust particles (RGB hex)")
 					.defineInRange("color", 0x808080, 0, 0xFFFFFF);
 			caveDustFadeDuration = builder.comment("Duration of fade effect for cave dust particles")
 					.defineInRange("fadeDuration", 20, 0, Integer.MAX_VALUE);
