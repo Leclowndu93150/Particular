@@ -50,14 +50,12 @@ public abstract class TFCMixingFluidMixin extends ForgeFlowingFluid {
                         z += random.nextDouble();
                     }
                     level.addParticle(Particles.WATERFALL_SPRAY.get(), x, y, z, 0.0, 0.0, 0.0);
-                    System.out.println("TRYING TO SPAWN CASCADE");
                 } else {
                     double x = (double) pos.getX() + random.nextDouble();
                     double y = (double) pos.getY() + (random.nextDouble() * state.getOwnHeight());
                     double z = (double) pos.getZ() + random.nextDouble();
                     Vec3 vel = state.getFlow(level, pos).scale(0.075);
                     level.addParticle(Particles.WATERFALL_SPRAY.get(), x, y, z, vel.x, 0.0, vel.z);
-                    System.out.println("TRYING TO SPAWN CASCADE");
                 }
             }
         }
