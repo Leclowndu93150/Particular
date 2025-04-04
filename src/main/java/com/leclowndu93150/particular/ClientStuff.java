@@ -3,7 +3,11 @@ package com.leclowndu93150.particular;
 import com.leclowndu93150.particular.compat.RegionsUnexplored;
 import com.leclowndu93150.particular.compat.Traverse;
 import com.leclowndu93150.particular.compat.WilderWild;
+import com.leclowndu93150.particular.utils.LeafColorUtil;
+import com.leclowndu93150.particular.utils.TextureCache;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -46,6 +50,20 @@ public class ClientStuff {
 
     public static Map<Block, LeafData> leavesData = new HashMap<>();
 
+    public static Color extractLeafColor(Level world, BlockPos pos, Block block) {
+        BlockState state = block.defaultBlockState();
+        try {
+            if (world.getBlockState(pos).getBlock() == block) {
+                state = world.getBlockState(pos);
+            }
+            double[] colorValues = LeafColorUtil.getBlockTextureColor(state, world, pos);
+            return LeafColorUtil.getColorFromValues(colorValues);
+        } catch (Exception e) {
+            LOGGER.error("Failed to extract leaf color", e);
+            return new Color(BiomeColors.getAverageFoliageColor(world, pos));
+        }
+    }
+
     public static void registerLeafData(Block block, LeafData leafData) {
         leavesData.put(block, leafData);
     }
@@ -72,8 +90,12 @@ public class ClientStuff {
         }
 
         public LeafData(ParticleOptions particle) {
-            this(particle, (world, pos) -> new Color(BiomeColors.getAverageFoliageColor(world, pos)));
+            this(particle, (world, pos) -> {
+                Block block = world.getBlockState(pos).getBlock();
+                return extractLeafColor(world, pos, block);
+            });
         }
+
 
         public ParticleOptions getParticle() {
             return particle;
@@ -114,6 +136,49 @@ public class ClientStuff {
                 WilderWild.addLeaves();
             }
 
+            event.enqueueWork(() -> {
+                for (Block block : ForgeRegistries.BLOCKS) {
+                    ResourceLocation id = ForgeRegistries.BLOCKS.getKey(block);
+
+                    // Skip blocks we've already registered
+                    if (leavesData.containsKey(block)) {
+                        continue;
+                    }
+
+                    boolean isLeafBlock = block instanceof LeavesBlock ||
+                            id.getPath().contains("leaves") ||
+                            id.getPath().contains("leaf");
+
+                    if (isLeafBlock) {
+
+                        ParticleOptions particle = Particles.OAK_LEAF.get(); // Default fallback
+
+                        if (id.getPath().contains("spruce") || id.getPath().contains("pine") ||
+                                id.getPath().contains("fir") || id.getPath().contains("conifer")) {
+                            particle = Particles.SPRUCE_LEAF.get();
+                        } else if (id.getPath().contains("birch")) {
+                            particle = Particles.BIRCH_LEAF.get();
+                        } else if (id.getPath().contains("jungle")) {
+                            particle = Particles.JUNGLE_LEAF.get();
+                        } else if (id.getPath().contains("acacia")) {
+                            particle = Particles.ACACIA_LEAF.get();
+                        } else if (id.getPath().contains("dark_oak")) {
+                            particle = Particles.DARK_OAK_LEAF.get();
+                        } else if (id.getPath().contains("mangrove")) {
+                            particle = Particles.MANGROVE_LEAF.get();
+                        }
+
+                        LeafData leafData = new LeafData(particle);
+                        leavesData.put(block, leafData);
+                    }
+                }
+
+            });
+        }
+
+        @SubscribeEvent
+        public static void onResourcesReloaded(net.minecraftforge.client.event.TextureStitchEvent.Post event) {
+            TextureCache.clear();
         }
 
         @SubscribeEvent
@@ -232,5 +297,4 @@ public class ClientStuff {
             }
         }
     }
-
 }

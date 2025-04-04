@@ -7,8 +7,6 @@
   "mixins": [
   ],
   "client": [
-    "compat.TFCMixingFluidMixin",
-    "compat.TFCWaterMixin",
     "AccessorBillboardParticle",
     "AccessorBiome",
     "AccessorBlockLeakParticle",
@@ -32,7 +30,10 @@
     "InjectWaterBubbleParticle",
     "InjectWaterFluid",
     "InvokerLivingEntity",
-    "InvokerViewerCountManager"
+    "InvokerViewerCountManager",
+    "NativeImageAccessor",
+    "compat.TFCMixingFluidMixin",
+    "compat.TFCWaterMixin"
   ],
   "injectors": {
     "defaultRequire": 1
