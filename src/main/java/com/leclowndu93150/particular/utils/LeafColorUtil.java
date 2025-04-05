@@ -1,21 +1,23 @@
 package com.leclowndu93150.particular.utils;
 
-import com.leclowndu93150.particular.Main;
 import com.leclowndu93150.particular.mixin.NativeImageAccessor;
 import com.mojang.blaze3d.platform.NativeImage;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelDataManager;
 import org.lwjgl.system.MemoryUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,11 +86,16 @@ public class LeafColorUtil {
      */
     public static double[] getBlockTextureColor(BlockState state, Level world, BlockPos pos) {
         Minecraft client = Minecraft.getInstance();
-        BakedModel model = client.getBlockRenderer().getBlockModel(state);
-        ModelData modelData = model.getModelData(world, pos, state, ModelData.EMPTY);
+        BlockStateModel model = client.getBlockRenderer().getBlockModel(state);
+        ModelDataManager modelDataManager = world.getModelDataManager();
+        ModelData modelData = modelDataManager.getAt(pos);
 
+        List<BlockModelPart> parts = model.collectParts(world, pos, state, renderRandom);
         renderRandom.setSeed(state.getSeed(pos));
-        List<BakedQuad> quads = model.getQuads(state, Direction.DOWN, renderRandom, modelData, RenderType.cutout());
+        List<BakedQuad> quads = new ObjectArrayList<>();
+        for (BlockModelPart part : parts) {
+            quads.addAll(part.getQuads(Direction.DOWN));
+        }
 
         TextureAtlasSprite sprite;
         boolean shouldColor;
@@ -96,11 +103,11 @@ public class LeafColorUtil {
         // Read data from the first bottom quad if possible
         if (!quads.isEmpty()) {
             BakedQuad quad = quads.get(0);
-            sprite = quad.getSprite();
+            sprite = quad.sprite();
             shouldColor = quad.isTinted();
         } else {
             // Fall back to block breaking particle
-            sprite = model.getParticleIcon(modelData);
+            sprite = model.particleIcon();
             shouldColor = true;
         }
 

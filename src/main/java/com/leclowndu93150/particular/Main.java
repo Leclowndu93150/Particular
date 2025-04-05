@@ -364,10 +364,12 @@ public class Main {
 	@EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
 	public static class ClientEvents {
 
+		/*
 		@SubscribeEvent
 		public static void onResourcesReloaded(TextureAtlasStitchedEvent event) {
 			TextureCache.clear();
 		}
+		 */
 
 		@SubscribeEvent
 		public static void onClientTick(ClientTickEvent.Pre event) {
