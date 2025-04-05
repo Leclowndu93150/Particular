@@ -4,6 +4,10 @@ import com.leclowndu93150.particular.compat.RegionsUnexplored;
 import com.leclowndu93150.particular.compat.Traverse;
 import com.leclowndu93150.particular.compat.WilderWild;
 import com.leclowndu93150.particular.mixin.AccessorBiome;
+import com.leclowndu93150.particular.utils.LeafColorUtil;
+import com.leclowndu93150.particular.utils.TextureCache;
+import com.mojang.datafixers.util.Pair;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BiomeColors;
@@ -17,9 +21,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.api.distmarker.Dist;
@@ -31,14 +39,18 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
@@ -87,6 +99,60 @@ public class Main {
 		if (ModList.get().isLoaded("wilderwild")) {
 			WilderWild.addLeaves();
 		}
+
+		event.enqueueWork(() -> {
+			for (Block block : BuiltInRegistries.BLOCK) {
+				ResourceLocation id = BuiltInRegistries.BLOCK.getKey(block);
+
+				// Skip blocks we've already registered
+				if (leavesData.containsKey(block)) {
+					continue;
+				}
+
+				boolean isLeafBlock = block instanceof LeavesBlock ||
+						id.getPath().contains("leaves") ||
+						id.getPath().contains("leaf");
+
+				if (isLeafBlock) {
+
+					ParticleOptions particle = Particles.OAK_LEAF.get(); // Default fallback
+
+					if (id.getPath().contains("spruce") || id.getPath().contains("pine") ||
+							id.getPath().contains("fir") || id.getPath().contains("conifer")) {
+						particle = Particles.SPRUCE_LEAF.get();
+					} else if (id.getPath().contains("birch")) {
+						particle = Particles.BIRCH_LEAF.get();
+					} else if (id.getPath().contains("jungle")) {
+						particle = Particles.JUNGLE_LEAF.get();
+					} else if (id.getPath().contains("acacia")) {
+						particle = Particles.ACACIA_LEAF.get();
+					} else if (id.getPath().contains("dark_oak")) {
+						particle = Particles.DARK_OAK_LEAF.get();
+					} else if (id.getPath().contains("mangrove")) {
+						particle = Particles.MANGROVE_LEAF.get();
+					}
+
+					LeafData leafData = new LeafData(particle);
+					leavesData.put(block, leafData);
+				}
+			}
+
+		});
+
+	}
+
+	public static Color extractLeafColor(Level world, BlockPos pos, Block block) {
+		BlockState state = block.defaultBlockState();
+		try {
+			if (world.getBlockState(pos).getBlock() == block) {
+				state = world.getBlockState(pos);
+			}
+			double[] colorValues = LeafColorUtil.getBlockTextureColor(state, world, pos);
+			return LeafColorUtil.getColorFromValues(colorValues);
+		} catch (Exception e) {
+			LOGGER.error("Failed to extract leaf color", e);
+			return new Color(BiomeColors.getAverageFoliageColor(world, pos));
+		}
 	}
 
 	public static void registerLeafData(Block block, LeafData leafData) {
@@ -115,7 +181,10 @@ public class Main {
 		}
 
 		public LeafData(ParticleOptions particle) {
-			this(particle, (world, pos) -> new Color(BiomeColors.getAverageFoliageColor(world, pos)));
+			this(particle, (world, pos) -> {
+				Block block = world.getBlockState(pos).getBlock();
+				return extractLeafColor(world, pos, block);
+			});
 		}
 
 		public ParticleOptions getParticle() {
@@ -296,6 +365,11 @@ public class Main {
 	public static class ClientEvents {
 
 		@SubscribeEvent
+		public static void onResourcesReloaded(TextureAtlasStitchedEvent event) {
+			TextureCache.clear();
+		}
+
+		@SubscribeEvent
 		public static void onClientTick(ClientTickEvent.Pre event) {
 			Level world = Minecraft.getInstance().level;
 			if (world == null) return;
@@ -338,27 +412,60 @@ public class Main {
 			Level world = (Level) event.getLevel();
 			if (!ParticularConfig.cascades() || !world.isClientSide()) return;
 
-			// Changing dimensions doesn't count as unloading chunks so I need to do this test
 			ResourceLocation newDimension = world.dimensionType().effectsLocation();
 			if (newDimension != currentDimension) {
 				currentDimension = newDimension;
 				cascades.clear();
 			}
 
-			var chunk = event.getChunk();
-			// Iterate through blocks in the chunk to find water
-			BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
-			for (int x = 0; x < 16; x++) {
-				for (int z = 0; z < 16; z++) {
-					for (int y = world.getMinY(); y < world.getMaxY(); y++) {
-						mutablePos.set(chunk.getPos().getMinBlockX() + x, y, chunk.getPos().getMinBlockZ() + z);
-						BlockState blockState = chunk.getBlockState(mutablePos);
-						if (blockState.getFluidState().is(Fluids.WATER)) {
-							updateCascade(world, mutablePos.immutable(), blockState.getFluidState());
+			CompletableFuture.runAsync(() -> {
+				ChunkAccess chunk = event.getChunk();
+				final int minX = chunk.getPos().getMinBlockX();
+				final int minZ = chunk.getPos().getMinBlockZ();
+				BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+
+				List<Pair<BlockPos, FluidState>> waterBlocks = new ArrayList<>();
+
+				for (int sectionIndex = 0; sectionIndex < chunk.getSectionsCount(); sectionIndex++) {
+					LevelChunkSection section = chunk.getSection(sectionIndex);
+
+					if (section == null || section.hasOnlyAir()) continue;
+					if (!section.maybeHas(state -> state.getFluidState().is(Fluids.WATER))) continue;
+
+					int sectionY = chunk.getSectionYFromSectionIndex(sectionIndex);
+					int baseY = sectionY << 4;
+
+					PalettedContainer<BlockState> states = section.getStates();
+
+					for (int y = 0; y < 16; y++) {
+						for (int z = 0; z < 16; z++) {
+							for (int x = 0; x < 16; x++) {
+								BlockState state = states.get(x, y, z);
+								FluidState fluidState = state.getFluidState();
+
+								if (fluidState.is(Fluids.WATER)) {
+									int worldX = minX + x;
+									int worldY = baseY + y;
+									int worldZ = minZ + z;
+
+									waterBlocks.add(Pair.of(
+											new BlockPos(worldX, worldY, worldZ),
+											fluidState
+									));
+								}
+							}
 						}
 					}
 				}
-			}
+
+				if (!waterBlocks.isEmpty()) {
+					Minecraft.getInstance().execute(() -> {
+						for (Pair<BlockPos, FluidState> pair : waterBlocks) {
+							Main.updateCascade(world, pair.getFirst(), pair.getSecond());
+						}
+					});
+				}
+			}, Util.backgroundExecutor());
 		}
 
 		@SubscribeEvent

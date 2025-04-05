@@ -88,7 +88,9 @@ public abstract class InjectEntity
 
 		if (!foundSurface) { return; }
 
+		double velocityValue = velocities.isEmpty() ? 0.0f : Collections.max(velocities);
+
 		// 3D splash
-		level().addParticle(Particles.WATER_SPLASH_EMITTER.get(), getX(), baseY + prevState.getOwnHeight(), getZ(), dimensions.width(), Collections.max(velocities), 0.0);
+		level().addParticle(Particles.WATER_SPLASH_EMITTER.get(), getX(), baseY + prevState.getOwnHeight(), getZ(), dimensions.width(), velocityValue, 0.0);
 	}
 }
