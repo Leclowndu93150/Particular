@@ -30,7 +30,8 @@
     "InjectBubbleColumnUpParticle",
     "InjectContinuousFalling",
     "InjectLevelRenderer",
-    "InjectWaterBubbleParticle"
+    "InjectWaterBubbleParticle",
+    "NativeImageAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

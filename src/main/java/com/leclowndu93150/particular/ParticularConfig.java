@@ -1,8 +1,11 @@
 package com.leclowndu93150.particular;
 
+import com.leclowndu93150.particular.utils.IrisCompat;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -21,6 +24,7 @@ public class ParticularConfig {
 
 	public static void register(ModContainer modContainer) {
 		modContainer.registerConfig(ModConfig.Type.COMMON, COMMON_SPEC);
+		modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 	}
 
 	public static class CommonConfig {
@@ -159,10 +163,23 @@ public class ParticularConfig {
 	public static boolean soulSandBubbles() { return COMMON.soulSandBubbles.get(); }
 	public static boolean barrelBubbles() { return COMMON.barrelBubbles.get(); }
 	public static boolean poppingBubbles() { return COMMON.poppingBubbles.get(); }
-	public static boolean rainRipples() { return COMMON.rainRipples.get(); }
-	public static boolean waterDripRipples() { return COMMON.waterDripRipples.get(); }
 	public static boolean cakeEatingParticles() { return COMMON.cakeEatingParticles.get(); }
 	public static boolean emissiveLavaDrips() { return COMMON.emissiveLavaDrips.get(); }
+
+	public static boolean rainRipples() {
+		if (IrisCompat.areShadersEnabled()) {
+			return false; // Override: Disable if shaders are on
+		}
+		return COMMON.rainRipples.get();
+	}
+
+	public static boolean waterDripRipples() {
+		if (IrisCompat.areShadersEnabled()) {
+			return false; // Override: Disable if shaders are on
+		}
+		return COMMON.waterDripRipples.get();
+	}
+
 
 	// Helper methods to convert biome string list to ResourceLocation list
 	public static List<ResourceLocation> getCaveDustExcludeBiomes() {

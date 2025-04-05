@@ -16,7 +16,7 @@ repositories {
 }
 
 base {
-    archivesName = mod_id+"-1.21.1NeoForge"
+    archivesName = mod_id+"-1.21.1-NeoForge"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -89,7 +89,11 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
 dependencies {
-    //implementation "curse.maven:owo-lib-532610:6204967"
+
+    runtimeOnly "curse.maven:irisshaders-455508:6213632"
+    runtimeOnly "curse.maven:sodium-394468:6382651"
+
+    compileOnlyApi "curse.maven:irisshaders-455508:6213632"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
