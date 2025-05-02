@@ -191,8 +191,7 @@ public class LeafParticle extends TextureSheetParticle
 		}
 		else if (age > lifetime - fadeOutDuration)
 		{
-			++ageDelta;
-			alpha = (lifetime - ageDelta) / (float)fadeOutDuration;
+			alpha = Math.max(0.0f, (lifetime - ageDelta) / (float)fadeOutDuration);
 		}
 		else
 		{

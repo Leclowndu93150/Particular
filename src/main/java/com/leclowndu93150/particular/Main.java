@@ -1,7 +1,7 @@
 package com.leclowndu93150.particular;
 
 import com.leclowndu93150.particular.mixin.AccessorBiome;
-import com.leclowndu93150.particular.utils.TextureCache;
+import com.leclowndu93150.particular.network.NetworkHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.ResourceLocation;
@@ -13,13 +13,12 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,8 +38,13 @@ public class Main {
 		LOGGER.info("I am quite particular about the effects I choose to add :3");
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ParticularConfig.COMMON_SPEC);
 		Particles.register(modEventBus);
+		modEventBus.addListener(this::commonSetup);
 		//modEventBus.addListener(this::clientSetup);
 		//modEventBus.addListener(Particles::registerFactories);
+	}
+
+	private void commonSetup(final FMLCommonSetupEvent event) {
+		event.enqueueWork(NetworkHandler::init);
 	}
 
 	public static void updateCascade(Level world, BlockPos pos, FluidState state) {
