@@ -76,8 +76,8 @@ public class Main {
 	private void clientSetup(final FMLClientSetupEvent event) {
 		// Populate leaves data
 		leavesData.put(Blocks.OAK_LEAVES, new LeafData(Particles.OAK_LEAF.get()));
-		leavesData.put(Blocks.BIRCH_LEAVES, new LeafData(Particles.BIRCH_LEAF.get(), new Color(FoliageColor.getBirchColor())));
-		leavesData.put(Blocks.SPRUCE_LEAVES, new LeafData(Particles.SPRUCE_LEAF.get(), new Color(FoliageColor.getEvergreenColor())));
+		leavesData.put(Blocks.BIRCH_LEAVES, new LeafData(Particles.BIRCH_LEAF.get(), new Color(FoliageColor.FOLIAGE_BIRCH)));
+		leavesData.put(Blocks.SPRUCE_LEAVES, new LeafData(Particles.SPRUCE_LEAF.get(), new Color(FoliageColor.FOLIAGE_EVERGREEN)));
 		leavesData.put(Blocks.JUNGLE_LEAVES, new LeafData(Particles.JUNGLE_LEAF.get()));
 		leavesData.put(Blocks.ACACIA_LEAVES, new LeafData(Particles.ACACIA_LEAF.get()));
 		leavesData.put(Blocks.DARK_OAK_LEAVES, new LeafData(Particles.DARK_OAK_LEAF.get()));
@@ -139,10 +139,12 @@ public class Main {
 		});
 	}
 
+	/*
 	@SubscribeEvent
 	public static void onResourcesReloaded(TextureAtlasStitchedEvent event) {
 		TextureCache.clear();
 	}
+	 */
 
 	public static Color extractLeafColor(Level world, BlockPos pos, Block block) {
 		BlockState state = block.defaultBlockState();
