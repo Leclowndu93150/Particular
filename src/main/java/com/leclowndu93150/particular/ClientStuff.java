@@ -181,6 +181,9 @@ public class ClientStuff {
             TextureCache.clear();
         }
 
+        private static int cascadeCleanupTicks = 0;
+
+
         @SubscribeEvent
         public static void onClientTick(TickEvent.ClientTickEvent event) {
             Level world = Minecraft.getInstance().level;
@@ -195,7 +198,29 @@ public class ClientStuff {
 
             if (!ParticularConfig.waterSplash()) return;
 
-            cascades.forEach((pos, strength) -> {
+            Minecraft mc = Minecraft.getInstance();
+            int renderDistance = mc.options.renderDistance().get();
+            BlockPos playerPos = mc.player.blockPosition();
+
+            cascades.entrySet().removeIf(entry -> {
+                BlockPos pos = entry.getKey();
+                int strength = entry.getValue();
+
+                int chunkDistance = Math.max(
+                        Math.abs((pos.getX() >> 4) - (playerPos.getX() >> 4)),
+                        Math.abs((pos.getZ() >> 4) - (playerPos.getZ() >> 4))
+                );
+
+                if (chunkDistance > renderDistance) {
+                    return false;
+                }
+
+                if (!world.getFluidState(pos).is(Fluids.WATER) ||
+                        !world.getFluidState(pos.above()).is(Fluids.FLOWING_WATER) ||
+                        !world.getFluidState(pos.below()).is(Fluids.WATER)) {
+                    return true;
+                }
+
                 float height = world.getFluidState(pos.above()).getOwnHeight();
                 double x = pos.getX();
                 double y = (double) pos.getY() + random.nextDouble() * height + 1;
@@ -209,12 +234,19 @@ public class ClientStuff {
                     z += random.nextDouble();
                 }
 
-                Particle cascade = Minecraft.getInstance().particleEngine.createParticle(Particles.CASCADE.get(), x, y, z, 0, 0, 0);
+                Particle cascade = mc.particleEngine.createParticle(Particles.CASCADE.get(), x, y, z, 0, 0, 0);
                 if (cascade != null) {
                     float size = strength / 4f * height;
                     cascade.scale(1f - (1f - size) / 2f);
                 }
+
+                return false;
             });
+
+            if (++cascadeCleanupTicks >= 100) {
+                cascadeCleanupTicks = 0;
+                cleanupInvalidCascades(world);
+            }
         }
 
         @SubscribeEvent
@@ -223,10 +255,11 @@ public class ClientStuff {
             if (!ParticularConfig.cascades() || !world.isClientSide()) return;
 
             ResourceLocation newDimension = world.dimensionType().effectsLocation();
-            if (newDimension != currentDimension) {
-                currentDimension = newDimension;
+            if (currentDimension != null && !newDimension.equals(currentDimension)) {
+                Main.LOGGER.debug("Dimension changed from {} to {}, clearing cascades", currentDimension, newDimension);
                 cascades.clear();
             }
+            currentDimension = newDimension;
 
             CompletableFuture.runAsync(() -> {
                 ChunkAccess chunk = event.getChunk();
@@ -283,10 +316,15 @@ public class ClientStuff {
             if (!ParticularConfig.cascades() || !event.getLevel().isClientSide()) return;
 
             var chunkPos = event.getChunk().getPos();
+            int minX = chunkPos.getMinBlockX();
+            int maxX = chunkPos.getMaxBlockX();
+            int minZ = chunkPos.getMinBlockZ();
+            int maxZ = chunkPos.getMaxBlockZ();
+
             cascades.entrySet().removeIf(entry -> {
                 BlockPos pos = entry.getKey();
-                return chunkPos.getMinBlockX() <= pos.getX() && pos.getX() < chunkPos.getMinBlockX() + 16 &&
-                        chunkPos.getMinBlockZ() <= pos.getZ() && pos.getZ() < chunkPos.getMinBlockZ() + 16;
+                return pos.getX() >= minX && pos.getX() <= maxX &&
+                        pos.getZ() >= minZ && pos.getZ() <= maxZ;
             });
         }
 
@@ -296,5 +334,34 @@ public class ClientStuff {
                 cascades.clear();
             }
         }
+    }
+
+    private static void cleanupInvalidCascades(Level world) {
+        if (!ParticularConfig.cascades()) {
+            cascades.clear();
+            return;
+        }
+
+        cascades.entrySet().removeIf(entry -> {
+            BlockPos pos = entry.getKey();
+
+            if (!world.hasChunkAt(pos)) {
+                return true;
+            }
+
+            FluidState currentState = world.getFluidState(pos);
+            FluidState aboveState = world.getFluidState(pos.above());
+            FluidState belowState = world.getFluidState(pos.below());
+
+            boolean isValid = currentState.is(Fluids.WATER) &&
+                    aboveState.is(Fluids.FLOWING_WATER) &&
+                    belowState.is(Fluids.WATER);
+
+            if (!isValid) {
+                return true;
+            }
+
+            return false;
+        });
     }
 }

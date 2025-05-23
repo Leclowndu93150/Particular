@@ -48,9 +48,13 @@ public class Main {
 	}
 
 	public static void updateCascade(Level world, BlockPos pos, FluidState state) {
-		if (state.is(Fluids.WATER) &&
+		BlockPos cascadePos = new BlockPos(pos.getX(), pos.getY(), pos.getZ());
+
+		boolean shouldHaveCascade = state.is(Fluids.WATER) &&
 				world.getFluidState(pos.above()).is(Fluids.FLOWING_WATER) &&
-				world.getFluidState(pos.below()).is(Fluids.WATER)) {
+				world.getFluidState(pos.below()).is(Fluids.WATER);
+
+		if (shouldHaveCascade) {
 			int strength = 0;
 			if (world.getFluidState(pos.north()).is(Fluids.WATER)) { ++strength; }
 			if (world.getFluidState(pos.east()).is(Fluids.WATER)) { ++strength; }
@@ -58,27 +62,22 @@ public class Main {
 			if (world.getFluidState(pos.west()).is(Fluids.WATER)) { ++strength; }
 
 			if (strength > 0) {
-				// Check if encased
-				if (!world.getBlockState(pos.above().north()).isAir() &&
+				boolean isEncased = !world.getBlockState(pos.above().north()).isAir() &&
 						!world.getBlockState(pos.above().east()).isAir() &&
 						!world.getBlockState(pos.above().south()).isAir() &&
-						!world.getBlockState(pos.above().west()).isAir()) {
-					return;
-				}
+						!world.getBlockState(pos.above().west()).isAir();
 
-				// This wouldn't be needed in Rust
-				pos = new BlockPos(pos.getX(), pos.getY(), pos.getZ());
+				if (!isEncased) {
 
-				if (cascades.contains(pos)) {
-					cascades.replace(pos, strength);
+					cascades.put(cascadePos, strength);
 				} else {
-					cascades.put(pos, strength);
+					cascades.remove(cascadePos);
 				}
 			} else {
-				cascades.remove(pos);
+				cascades.remove(cascadePos);
 			}
 		} else {
-			cascades.remove(pos);
+			cascades.remove(cascadePos);
 		}
 	}
 

@@ -33,7 +33,8 @@
     "InvokerViewerCountManager",
     "NativeImageAccessor",
     "compat.TFCMixingFluidMixin",
-    "compat.TFCWaterMixin"
+    "compat.TFCWaterMixin",
+    "InjectSpongeBlock"
   ],
   "injectors": {
     "defaultRequire": 1
