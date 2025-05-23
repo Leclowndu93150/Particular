@@ -5,6 +5,17 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "particular.refmap.json",
   "mixins": [
+  ],
+  "client": [
+    "AccessorBillboardParticle",
+    "AccessorBlockLeakParticle",
+    "AccessorParticle",
+    "InjectBlockLeakParticle",
+    "InjectBubbleColumnUpParticle",
+    "InjectContinuousFalling",
+    "InjectLevelRenderer",
+    "InjectWaterBubbleParticle",
+    "NativeImageAccessor",
     "AccessorBiome",
     "AccessorChestBlockEntity",
     "AccessorEnderChestBlockEntity",
@@ -18,20 +29,10 @@
     "InjectEntity",
     "InjectFlowableFluid",
     "InjectLeavesBlock",
+    "InjectSpongeBlock",
     "InjectWaterFluid",
     "InvokerLivingEntity",
     "InvokerViewerCountManager"
-  ],
-  "client": [
-    "AccessorBillboardParticle",
-    "AccessorBlockLeakParticle",
-    "AccessorParticle",
-    "InjectBlockLeakParticle",
-    "InjectBubbleColumnUpParticle",
-    "InjectContinuousFalling",
-    "InjectLevelRenderer",
-    "InjectWaterBubbleParticle",
-    "NativeImageAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
