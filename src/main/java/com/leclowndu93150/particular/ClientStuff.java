@@ -3,6 +3,7 @@ package com.leclowndu93150.particular;
 import com.leclowndu93150.particular.compat.RegionsUnexplored;
 import com.leclowndu93150.particular.compat.Traverse;
 import com.leclowndu93150.particular.compat.WilderWild;
+import com.leclowndu93150.particular.utils.CascadeData;
 import com.leclowndu93150.particular.utils.LeafColorUtil;
 import com.leclowndu93150.particular.utils.TextureCache;
 import net.minecraft.client.renderer.BiomeColors;
@@ -201,18 +202,25 @@ public class ClientStuff {
             Minecraft mc = Minecraft.getInstance();
             int renderDistance = mc.options.renderDistance().get();
             BlockPos playerPos = mc.player.blockPosition();
+            long currentTime = world.getGameTime();
 
             cascades.entrySet().removeIf(entry -> {
                 BlockPos pos = entry.getKey();
-                int strength = entry.getValue();
+                CascadeData cascadeData = entry.getValue();
 
                 int chunkDistance = Math.max(
                         Math.abs((pos.getX() >> 4) - (playerPos.getX() >> 4)),
                         Math.abs((pos.getZ() >> 4) - (playerPos.getZ() >> 4))
                 );
 
+                // Remove distant cascades
                 if (chunkDistance > renderDistance) {
-                    return false;
+                    return true;
+                }
+
+                // Remove old cascades (expire after 5 seconds)
+                if (currentTime - cascadeData.createdTime > 100) {
+                    return true;
                 }
 
                 if (!world.getFluidState(pos).is(Fluids.WATER) ||
@@ -236,7 +244,7 @@ public class ClientStuff {
 
                 Particle cascade = mc.particleEngine.createParticle(Particles.CASCADE.get(), x, y, z, 0, 0, 0);
                 if (cascade != null) {
-                    float size = strength / 4f * height;
+                    float size = cascadeData.strength / 4f * height;
                     cascade.scale(1f - (1f - size) / 2f);
                 }
 
@@ -342,10 +350,17 @@ public class ClientStuff {
             return;
         }
 
+        long currentTime = world.getGameTime();
+
         cascades.entrySet().removeIf(entry -> {
             BlockPos pos = entry.getKey();
+            CascadeData cascadeData = entry.getValue();
 
             if (!world.hasChunkAt(pos)) {
+                return true;
+            }
+
+            if (currentTime - cascadeData.createdTime > 100) {
                 return true;
             }
 
@@ -357,11 +372,7 @@ public class ClientStuff {
                     aboveState.is(Fluids.FLOWING_WATER) &&
                     belowState.is(Fluids.WATER);
 
-            if (!isValid) {
-                return true;
-            }
-
-            return false;
+            return !isValid;
         });
     }
 }

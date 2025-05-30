@@ -2,6 +2,7 @@ package com.leclowndu93150.particular;
 
 import com.leclowndu93150.particular.mixin.AccessorBiome;
 import com.leclowndu93150.particular.network.NetworkHandler;
+import com.leclowndu93150.particular.utils.CascadeData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.ResourceLocation;
@@ -30,7 +31,7 @@ public class Main {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	public static ResourceLocation currentDimension;
-	public static ConcurrentHashMap<BlockPos, Integer> cascades = new ConcurrentHashMap<>();
+	public static ConcurrentHashMap<BlockPos, CascadeData> cascades = new ConcurrentHashMap<>();
 	public static float fireflyFrequency = 1f;
 
 	public Main() {
@@ -69,7 +70,8 @@ public class Main {
 
 				if (!isEncased) {
 
-					cascades.put(cascadePos, strength);
+					int finalStrength = strength;
+					cascades.computeIfAbsent(pos, k -> new CascadeData(finalStrength, world.getGameTime()));
 				} else {
 					cascades.remove(cascadePos);
 				}
