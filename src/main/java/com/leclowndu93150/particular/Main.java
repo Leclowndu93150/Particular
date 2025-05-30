@@ -4,6 +4,7 @@ import com.leclowndu93150.particular.compat.RegionsUnexplored;
 import com.leclowndu93150.particular.compat.Traverse;
 import com.leclowndu93150.particular.compat.WilderWild;
 import com.leclowndu93150.particular.mixin.AccessorBiome;
+import com.leclowndu93150.particular.utils.CascadeData;
 import com.leclowndu93150.particular.utils.LeafColorUtil;
 import com.leclowndu93150.particular.utils.TextureCache;
 import com.mojang.datafixers.util.Pair;
@@ -60,7 +61,7 @@ public class Main {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	public static ResourceLocation currentDimension;
-	public static ConcurrentHashMap<BlockPos, Integer> cascades = new ConcurrentHashMap<>();
+	public static ConcurrentHashMap<BlockPos, CascadeData> cascades = new ConcurrentHashMap<>();
 	private static float fireflyFrequency = 1f;
 
 	private static Map<Block, LeafData> leavesData = new HashMap<>();
@@ -222,8 +223,8 @@ public class Main {
 						!world.getBlockState(pos.above().west()).isAir();
 
 				if (!isEncased) {
-
-					cascades.put(cascadePos, strength);
+					int finalStrength = strength;
+					cascades.computeIfAbsent(pos, k -> new CascadeData(finalStrength, world.getGameTime()));
 				} else {
 					cascades.remove(cascadePos);
 				}
@@ -387,10 +388,11 @@ public class Main {
 			Minecraft mc = Minecraft.getInstance();
 			int renderDistance = mc.options.renderDistance().get();
 			BlockPos playerPos = mc.player.blockPosition();
+			long currentTime = world.getGameTime();
 
 			cascades.entrySet().removeIf(entry -> {
 				BlockPos pos = entry.getKey();
-				int strength = entry.getValue();
+				CascadeData cascadeData = entry.getValue();
 
 				int chunkDistance = Math.max(
 						Math.abs((pos.getX() >> 4) - (playerPos.getX() >> 4)),
@@ -398,7 +400,12 @@ public class Main {
 				);
 
 				if (chunkDistance > renderDistance) {
-					return false;
+					return true;
+				}
+
+				// Remove old cascades (expire after 5 seconds)
+				if (currentTime - cascadeData.createdTime > 100) {
+					return true;
 				}
 
 				if (!world.getFluidState(pos).is(Fluids.WATER) ||
@@ -422,7 +429,7 @@ public class Main {
 
 				Particle cascade = mc.particleEngine.createParticle(Particles.CASCADE.get(), x, y, z, 0, 0, 0);
 				if (cascade != null) {
-					float size = strength / 4f * height;
+					float size = cascadeData.strength / 4f * height;
 					cascade.scale(1f - (1f - size) / 2f);
 				}
 
@@ -529,10 +536,17 @@ public class Main {
 			return;
 		}
 
+		long currentTime = world.getGameTime();
+
 		cascades.entrySet().removeIf(entry -> {
 			BlockPos pos = entry.getKey();
+			CascadeData cascadeData = entry.getValue();
 
 			if (!world.hasChunkAt(pos)) {
+				return true;
+			}
+
+			if (currentTime - cascadeData.createdTime > 100) {
 				return true;
 			}
 
@@ -544,11 +558,7 @@ public class Main {
 					aboveState.is(Fluids.FLOWING_WATER) &&
 					belowState.is(Fluids.WATER);
 
-			if (!isValid) {
-				return true;
-			}
-
-			return false;
+			return !isValid;
 		});
 	}
 }
