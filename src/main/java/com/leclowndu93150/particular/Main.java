@@ -535,10 +535,17 @@ public class Main {
 			return;
 		}
 
+		long currentTime = world.getGameTime();
+
 		cascades.entrySet().removeIf(entry -> {
 			BlockPos pos = entry.getKey();
+			CascadeData cascadeData = entry.getValue();
 
 			if (!world.hasChunkAt(pos)) {
+				return true;
+			}
+
+			if (currentTime - cascadeData.createdTime > 100) {
 				return true;
 			}
 
@@ -550,11 +557,7 @@ public class Main {
 					aboveState.is(Fluids.FLOWING_WATER) &&
 					belowState.is(Fluids.WATER);
 
-			if (!isValid) {
-				return true;
-			}
-
-			return false;
+			return !isValid;
 		});
 	}
 }
