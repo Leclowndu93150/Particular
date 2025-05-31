@@ -10,6 +10,8 @@ import com.leclowndu93150.particular.utils.TextureCache;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
@@ -39,7 +41,9 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
@@ -403,8 +407,29 @@ public class Main {
 					return true;
 				}
 
-				// Remove old cascades (expire after 5 seconds)
 				if (currentTime - cascadeData.createdTime > 100) {
+					if (world.getFluidState(pos).is(Fluids.WATER) &&
+							world.getFluidState(pos.above()).is(Fluids.FLOWING_WATER) &&
+							world.getFluidState(pos.below()).is(Fluids.WATER)) {
+
+						int strength = 0;
+						if (world.getFluidState(pos.north()).is(Fluids.WATER)) { ++strength; }
+						if (world.getFluidState(pos.east()).is(Fluids.WATER)) { ++strength; }
+						if (world.getFluidState(pos.south()).is(Fluids.WATER)) { ++strength; }
+						if (world.getFluidState(pos.west()).is(Fluids.WATER)) { ++strength; }
+
+						if (strength > 0) {
+							boolean isEncased = !world.getBlockState(pos.above().north()).isAir() &&
+									!world.getBlockState(pos.above().east()).isAir() &&
+									!world.getBlockState(pos.above().south()).isAir() &&
+									!world.getBlockState(pos.above().west()).isAir();
+
+							if (!isEncased) {
+								cascades.put(pos, new CascadeData(strength, currentTime));
+								return false;
+							}
+						}
+					}
 					return true;
 				}
 
@@ -440,6 +465,25 @@ public class Main {
 				cascadeCleanupTicks = 0;
 				cleanupInvalidCascades(world);
 			}
+		}
+
+		@SubscribeEvent
+		public static void onRenderHUD(RenderGuiEvent.Post event) {
+			if(FMLLoader.isProduction()) return;
+			Minecraft mc = Minecraft.getInstance();
+			if (mc.player == null || mc.level == null) return;
+
+			GuiGraphics guiGraphics = event.getGuiGraphics();
+			Font font = mc.font;
+
+			String cascadeText = "Cascades: " + cascades.size();
+			int textWidth = font.width(cascadeText);
+			int x = 10;
+			int y = 10;
+
+			guiGraphics.fill(x - 2, y - 2, x + textWidth + 2, y + font.lineHeight + 2, 0x80000000);
+
+			guiGraphics.drawString(font, cascadeText, x, y, 0xFFFFFF);
 		}
 
 		@SubscribeEvent
