@@ -6,8 +6,12 @@ import com.leclowndu93150.particular.compat.WilderWild;
 import com.leclowndu93150.particular.utils.CascadeData;
 import com.leclowndu93150.particular.utils.LeafColorUtil;
 import com.leclowndu93150.particular.utils.TextureCache;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import net.minecraft.Util;
@@ -213,13 +217,33 @@ public class ClientStuff {
                         Math.abs((pos.getZ() >> 4) - (playerPos.getZ() >> 4))
                 );
 
-                // Remove distant cascades
                 if (chunkDistance > renderDistance) {
                     return true;
                 }
 
-                // Remove old cascades (expire after 5 seconds)
                 if (currentTime - cascadeData.createdTime > 100) {
+                    if (world.getFluidState(pos).is(Fluids.WATER) &&
+                            world.getFluidState(pos.above()).is(Fluids.FLOWING_WATER) &&
+                            world.getFluidState(pos.below()).is(Fluids.WATER)) {
+
+                        int strength = 0;
+                        if (world.getFluidState(pos.north()).is(Fluids.WATER)) { ++strength; }
+                        if (world.getFluidState(pos.east()).is(Fluids.WATER)) { ++strength; }
+                        if (world.getFluidState(pos.south()).is(Fluids.WATER)) { ++strength; }
+                        if (world.getFluidState(pos.west()).is(Fluids.WATER)) { ++strength; }
+
+                        if (strength > 0) {
+                            boolean isEncased = !world.getBlockState(pos.above().north()).isAir() &&
+                                    !world.getBlockState(pos.above().east()).isAir() &&
+                                    !world.getBlockState(pos.above().south()).isAir() &&
+                                    !world.getBlockState(pos.above().west()).isAir();
+
+                            if (!isEncased) {
+                                cascades.put(pos, new CascadeData(strength, currentTime));
+                                return false;
+                            }
+                        }
+                    }
                     return true;
                 }
 
@@ -255,6 +279,25 @@ public class ClientStuff {
                 cascadeCleanupTicks = 0;
                 cleanupInvalidCascades(world);
             }
+        }
+
+        @SubscribeEvent
+        public static void onRenderHUD(RenderGuiOverlayEvent.Post event) {
+            if(FMLLoader.isProduction()) return;
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.player == null || mc.level == null) return;
+
+            GuiGraphics guiGraphics = event.getGuiGraphics();
+            Font font = mc.font;
+
+            String cascadeText = "Cascades: " + cascades.size();
+            int textWidth = font.width(cascadeText);
+            int x = 10;
+            int y = 10;
+
+            guiGraphics.fill(x - 2, y - 2, x + textWidth + 2, y + font.lineHeight + 2, 0x80000000);
+
+            guiGraphics.drawString(font, cascadeText, x, y, 0xFFFFFF);
         }
 
         @SubscribeEvent
