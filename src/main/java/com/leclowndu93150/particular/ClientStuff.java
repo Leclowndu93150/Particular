@@ -217,7 +217,7 @@ public class ClientStuff {
                         Math.abs((pos.getZ() >> 4) - (playerPos.getZ() >> 4))
                 );
 
-                if (chunkDistance > renderDistance) {
+                if (chunkDistance > renderDistance + 2) {
                     return true;
                 }
 
@@ -354,9 +354,11 @@ public class ClientStuff {
 
                 if (!waterBlocks.isEmpty()) {
                     Minecraft.getInstance().execute(() -> {
-                        for (Pair<BlockPos, FluidState> pair : waterBlocks) {
-                            Main.updateCascade(world, pair.getLeft(), pair.getRight());
-                        }
+                        Minecraft.getInstance().tell(() -> {
+                            for (Pair<BlockPos, FluidState> pair : waterBlocks) {
+                                Main.updateCascade(world, pair.getLeft(), pair.getRight());
+                            }
+                        });
                     });
                 }
             }, Util.backgroundExecutor());
