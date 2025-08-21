@@ -49,7 +49,10 @@ public class Main {
 	}
 
 	public static void updateCascade(Level world, BlockPos pos, FluidState state) {
-		BlockPos cascadePos = new BlockPos(pos.getX(), pos.getY(), pos.getZ());
+		BlockPos immutablePos = pos.immutable();
+		if (cascades.containsKey(immutablePos)) {
+			return;
+		}
 
 		boolean shouldHaveCascade = state.is(Fluids.WATER) &&
 				world.getFluidState(pos.above()).is(Fluids.FLOWING_WATER) &&
@@ -69,17 +72,9 @@ public class Main {
 						!world.getBlockState(pos.above().west()).isAir();
 
 				if (!isEncased) {
-
-					int finalStrength = strength;
-					cascades.computeIfAbsent(pos, k -> new CascadeData(finalStrength, world.getGameTime()));
-				} else {
-					cascades.remove(cascadePos);
+					cascades.put(immutablePos, new CascadeData(strength, world.getGameTime() - 101));
 				}
-			} else {
-				cascades.remove(cascadePos);
 			}
-		} else {
-			cascades.remove(cascadePos);
 		}
 	}
 
