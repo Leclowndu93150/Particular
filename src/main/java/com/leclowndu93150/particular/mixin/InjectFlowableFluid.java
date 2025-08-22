@@ -23,7 +23,7 @@ public class InjectFlowableFluid
 	{
 		if (!ParticularConfig.cascades()) { return; }
 
-		if (p_230609_.nextInt(20) == 0 && p_230608_.is(Fluids.WATER)) {
+		if (p_230609_.nextInt(10) == 0 && p_230608_.is(Fluids.WATER)) {
 			Main.updateCascade(p_230606_, p_230607_, p_230608_);
 		}
 	}
