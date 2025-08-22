@@ -312,56 +312,56 @@ public class ClientStuff {
             }
             currentDimension = newDimension;
 
-            CompletableFuture.runAsync(() -> {
-                ChunkAccess chunk = event.getChunk();
-                final int minX = chunk.getPos().getMinBlockX();
-                final int minZ = chunk.getPos().getMinBlockZ();
-                BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
-
-                List<Pair<BlockPos, FluidState>> waterBlocks = new ArrayList<>();
-
-                for (int sectionIndex = 0; sectionIndex < chunk.getSectionsCount(); sectionIndex++) {
-                    LevelChunkSection section = chunk.getSection(sectionIndex);
-
-                    if (section == null || section.hasOnlyAir()) continue;
-                    if (!section.maybeHas(state -> state.getFluidState().is(Fluids.WATER))) continue;
-
-                    int sectionY = chunk.getSectionYFromSectionIndex(sectionIndex);
-                    int baseY = sectionY << 4;
-
-                    PalettedContainer<BlockState> states = section.getStates();
-
-                    for (int y = 0; y < 16; y++) {
-                        for (int z = 0; z < 16; z++) {
-                            for (int x = 0; x < 16; x++) {
-                                BlockState state = states.get(x, y, z);
-                                FluidState fluidState = state.getFluidState();
-
-                                if (fluidState.is(Fluids.WATER)) {
-                                    int worldX = minX + x;
-                                    int worldY = baseY + y;
-                                    int worldZ = minZ + z;
-
-                                    waterBlocks.add(Pair.of(
-                                            new BlockPos(worldX, worldY, worldZ),
-                                            fluidState
-                                    ));
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (!waterBlocks.isEmpty()) {
-                    Minecraft.getInstance().execute(() -> {
-                        Minecraft.getInstance().tell(() -> {
-                            for (Pair<BlockPos, FluidState> pair : waterBlocks) {
-                                Main.updateCascade(world, pair.getLeft(), pair.getRight());
-                            }
-                        });
-                    });
-                }
-            }, Util.backgroundExecutor());
+//            CompletableFuture.runAsync(() -> {
+//                ChunkAccess chunk = event.getChunk();
+//                final int minX = chunk.getPos().getMinBlockX();
+//                final int minZ = chunk.getPos().getMinBlockZ();
+//                BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+//
+//                List<Pair<BlockPos, FluidState>> waterBlocks = new ArrayList<>();
+//
+//                for (int sectionIndex = 0; sectionIndex < chunk.getSectionsCount(); sectionIndex++) {
+//                    LevelChunkSection section = chunk.getSection(sectionIndex);
+//
+//                    if (section == null || section.hasOnlyAir()) continue;
+//                    if (!section.maybeHas(state -> state.getFluidState().is(Fluids.WATER))) continue;
+//
+//                    int sectionY = chunk.getSectionYFromSectionIndex(sectionIndex);
+//                    int baseY = sectionY << 4;
+//
+//                    PalettedContainer<BlockState> states = section.getStates();
+//
+//                    for (int y = 0; y < 16; y++) {
+//                        for (int z = 0; z < 16; z++) {
+//                            for (int x = 0; x < 16; x++) {
+//                                BlockState state = states.get(x, y, z);
+//                                FluidState fluidState = state.getFluidState();
+//
+//                                if (fluidState.is(Fluids.WATER)) {
+//                                    int worldX = minX + x;
+//                                    int worldY = baseY + y;
+//                                    int worldZ = minZ + z;
+//
+//                                    waterBlocks.add(Pair.of(
+//                                            new BlockPos(worldX, worldY, worldZ),
+//                                            fluidState
+//                                    ));
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                if (!waterBlocks.isEmpty()) {
+//                    Minecraft.getInstance().execute(() -> {
+//                        Minecraft.getInstance().tell(() -> {
+//                            for (Pair<BlockPos, FluidState> pair : waterBlocks) {
+//                                Main.updateCascade(world, pair.getLeft(), pair.getRight());
+//                            }
+//                        });
+//                    });
+//                }
+//            }, Util.backgroundExecutor());
         }
 
         @SubscribeEvent
