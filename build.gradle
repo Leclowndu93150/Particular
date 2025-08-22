@@ -90,8 +90,6 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
 
-    runtimeOnly "curse.maven:irisshaders-455508:6661598"
-
     compileOnly "curse.maven:irisshaders-455508:6661598"
 
 }
