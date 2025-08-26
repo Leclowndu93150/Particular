@@ -76,6 +76,9 @@ public class Particles {
 	public static final Supplier<SimpleParticleType> WATER_SPLASH = registerParticle("water_splash", true);
 	public static final Supplier<SimpleParticleType> WATER_SPLASH_FOAM = registerParticle("water_splash_foam", true);
 	public static final Supplier<SimpleParticleType> WATER_SPLASH_RING = registerParticle("water_splash_ring", true);
+	
+	// Fireball particles
+	public static final Supplier<SimpleParticleType> FIREBALL_FLAME = registerParticle("fireball_flame", true);
 
 	public static void register(IEventBus modEventBus) {
 		PARTICLE_TYPES.register(modEventBus);
@@ -127,6 +130,8 @@ public class Particles {
 		event.registerSpriteSet(WATER_SPLASH.get(), WaterSplashParticle.Factory::new);
 		event.registerSpriteSet(WATER_SPLASH_FOAM.get(), WaterSplashFoamParticle.Factory::new);
 		event.registerSpriteSet(WATER_SPLASH_RING.get(), WaterSplashRingParticle.Factory::new);
+		
+		event.registerSpriteSet(FIREBALL_FLAME.get(), FireballFlameParticle.Factory::new);
 	}
 
 	private static Supplier<SimpleParticleType> registerParticle(String name) {

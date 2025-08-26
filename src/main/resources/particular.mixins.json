@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "particular.refmap.json",
   "mixins": [
+    "honey.HoneyBlockMixin",
+    "projectiles.AbstractHurtingProjectileMixin"
   ],
   "client": [
     "AccessorBillboardParticle",
@@ -27,6 +29,7 @@
     "InjectFlowableFluid",
     "InjectLeavesBlock",
     "InjectLevelRenderer",
+    "InjectSpongeBlock",
     "InjectWaterBubbleParticle",
     "InjectWaterFluid",
     "InvokerLivingEntity",
@@ -34,7 +37,7 @@
     "NativeImageAccessor",
     "compat.TFCMixingFluidMixin",
     "compat.TFCWaterMixin",
-    "InjectSpongeBlock"
+    "projectiles.ThrownItemRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

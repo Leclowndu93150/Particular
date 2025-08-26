@@ -2,8 +2,6 @@ package com.leclowndu93150.particular;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
@@ -35,6 +33,8 @@ public class ParticularConfig {
 		public final ForgeConfigSpec.BooleanValue waterDripRipples;
 		public final ForgeConfigSpec.BooleanValue cakeEatingParticles;
 		public final ForgeConfigSpec.BooleanValue emissiveLavaDrips;
+		public final ForgeConfigSpec.BooleanValue honeyDrips;
+		public final ForgeConfigSpec.BooleanValue fireballFlames;
 
 		// Firefly Settings
 		public final ForgeConfigSpec.IntValue fireflyStartTime;
@@ -82,6 +82,8 @@ public class ParticularConfig {
 			waterDripRipples = builder.comment("Enable water drip ripples").define("waterDripRipples", true);
 			cakeEatingParticles = builder.comment("Enable cake eating particles").define("cakeEatingParticles", true);
 			emissiveLavaDrips = builder.comment("Enable emissive lava drips").define("emissiveLavaDrips", true);
+			honeyDrips = builder.comment("Enable honey drips").define("honeyDrips", true);
+			fireballFlames = builder.comment("Enable custom fireball flame trails").define("fireballFlames", true);
 			builder.pop();
 
 			// Advanced Settings Section
@@ -159,6 +161,8 @@ public class ParticularConfig {
 	public static boolean waterDripRipples() { return COMMON.waterDripRipples.get(); }
 	public static boolean cakeEatingParticles() { return COMMON.cakeEatingParticles.get(); }
 	public static boolean emissiveLavaDrips() { return COMMON.emissiveLavaDrips.get(); }
+	public static boolean honeyDrips() { return COMMON.honeyDrips.get(); }
+	public static boolean fireballFlames() { return COMMON.fireballFlames.get(); }
 
 	// Helper methods to convert biome string list to ResourceLocation list
 	public static List<ResourceLocation> getCaveDustExcludeBiomes() {
