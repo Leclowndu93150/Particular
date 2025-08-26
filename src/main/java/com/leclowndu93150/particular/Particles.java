@@ -20,6 +20,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
+import team.lodestar.lodestone.systems.particle.world.type.LodestoneWorldParticleType;
 
 import java.util.function.Supplier;
 
@@ -76,9 +77,9 @@ public class Particles {
 	public static final Supplier<SimpleParticleType> WATER_SPLASH = registerParticle("water_splash", true);
 	public static final Supplier<SimpleParticleType> WATER_SPLASH_FOAM = registerParticle("water_splash_foam", true);
 	public static final Supplier<SimpleParticleType> WATER_SPLASH_RING = registerParticle("water_splash_ring", true);
-	
-	// Fireball particles
-	public static final Supplier<SimpleParticleType> FIREBALL_FLAME = registerParticle("fireball_flame", true);
+
+	// Lodestone particles
+	public static final Supplier<FireballFlameParticleType> FIREBALL_FLAME_LODESTONE = PARTICLE_TYPES.register("fireball_flame_lodestone", FireballFlameParticleType::new);
 
 	public static void register(IEventBus modEventBus) {
 		PARTICLE_TYPES.register(modEventBus);
@@ -130,8 +131,8 @@ public class Particles {
 		event.registerSpriteSet(WATER_SPLASH.get(), WaterSplashParticle.Factory::new);
 		event.registerSpriteSet(WATER_SPLASH_FOAM.get(), WaterSplashFoamParticle.Factory::new);
 		event.registerSpriteSet(WATER_SPLASH_RING.get(), WaterSplashRingParticle.Factory::new);
-		
-		event.registerSpriteSet(FIREBALL_FLAME.get(), FireballFlameParticle.Factory::new);
+
+		event.registerSpriteSet(FIREBALL_FLAME_LODESTONE.get(), FireballFlameParticleType.Factory::new);
 	}
 
 	private static Supplier<SimpleParticleType> registerParticle(String name) {

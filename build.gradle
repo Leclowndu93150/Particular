@@ -13,6 +13,24 @@ repositories {
     maven {
         url = "https://cursemaven.com"
     }
+    mavenCentral()
+    maven {
+        name = "Curios maven"
+        url = uri("https://maven.theillusivec4.top/")
+    }
+    maven {
+        name = "JEI maven"
+        url = uri("https://dvs1.progwml6.com/files/maven")
+    }
+    maven {
+        name = "tterrag maven"
+        url = uri("https://maven.tterrag.com/")
+    }
+    maven {
+        name = "BlameJared maven"
+        url = uri("https://maven.blamejared.com/")
+    }
+
 }
 
 base {
@@ -95,6 +113,9 @@ dependencies {
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1"))
 
     modRuntimeOnly "curse.maven:jade-324717:6855440"
+
+    modImplementation "team.lodestar.lodestone:lodestone:1.20.1-1.6.4.1.256"
+
     compileOnly "curse.maven:terrafirmacraft-302973:6187491"
 }
 

@@ -22,6 +22,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import team.lodestar.lodestone.mixin.client.GuiGraphicsMixin;
 
 import java.util.concurrent.ConcurrentHashMap;
 

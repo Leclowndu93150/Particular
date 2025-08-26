@@ -20,4 +20,13 @@ public class AbstractHurtingProjectileMixin {
         }
         level.addParticle(particleOptions, x, y, z, xSpeed, ySpeed, zSpeed);
     }
+    
+    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/AbstractHurtingProjectile;setSecondsOnFire(I)V"))
+    private void cancelFireEffect(AbstractHurtingProjectile instance, int i) {
+        AbstractHurtingProjectile self = (AbstractHurtingProjectile) (Object) this;
+        if (self instanceof Fireball && ParticularConfig.fireballFlames()) {
+            return;
+        }
+        instance.setSecondsOnFire(i);
+    }
 }
