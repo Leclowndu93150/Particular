@@ -34,7 +34,7 @@ public class ParticularConfig {
 		public final ForgeConfigSpec.BooleanValue cakeEatingParticles;
 		public final ForgeConfigSpec.BooleanValue emissiveLavaDrips;
 		public final ForgeConfigSpec.BooleanValue honeyDrips;
-		public final ForgeConfigSpec.BooleanValue fireballFlames;
+		public final ForgeConfigSpec.BooleanValue enderPearlTrails;
 
 		// Firefly Settings
 		public final ForgeConfigSpec.IntValue fireflyStartTime;
@@ -83,7 +83,7 @@ public class ParticularConfig {
 			cakeEatingParticles = builder.comment("Enable cake eating particles").define("cakeEatingParticles", true);
 			emissiveLavaDrips = builder.comment("Enable emissive lava drips").define("emissiveLavaDrips", true);
 			honeyDrips = builder.comment("Enable honey drips").define("honeyDrips", true);
-			fireballFlames = builder.comment("Enable custom fireball flame trails").define("fireballFlames", true);
+			enderPearlTrails = builder.comment("Enable ender pearl trail particles").define("enderPearlTrails", true);
 			builder.pop();
 
 			// Advanced Settings Section
@@ -162,7 +162,7 @@ public class ParticularConfig {
 	public static boolean cakeEatingParticles() { return COMMON.cakeEatingParticles.get(); }
 	public static boolean emissiveLavaDrips() { return COMMON.emissiveLavaDrips.get(); }
 	public static boolean honeyDrips() { return COMMON.honeyDrips.get(); }
-	public static boolean fireballFlames() { return COMMON.fireballFlames.get(); }
+	public static boolean enderPearlTrails() { return COMMON.enderPearlTrails.get(); }
 
 	// Helper methods to convert biome string list to ResourceLocation list
 	public static List<ResourceLocation> getCaveDustExcludeBiomes() {

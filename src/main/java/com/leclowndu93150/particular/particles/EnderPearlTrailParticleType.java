@@ -15,9 +15,9 @@ import team.lodestar.lodestone.systems.particle.world.options.WorldParticleOptio
 
 import javax.annotation.Nullable;
 
-public class FireballFlameParticleType extends ParticleType<WorldParticleOptions> {
+public class EnderPearlTrailParticleType extends ParticleType<WorldParticleOptions> {
     
-    public FireballFlameParticleType() {
+    public EnderPearlTrailParticleType() {
         super(true, new ParticleOptions.Deserializer<WorldParticleOptions>() {
             @Override
             public WorldParticleOptions fromCommand(ParticleType<WorldParticleOptions> type, StringReader reader) {

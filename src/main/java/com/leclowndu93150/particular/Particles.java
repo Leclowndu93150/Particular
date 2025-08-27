@@ -1,6 +1,7 @@
 package com.leclowndu93150.particular;
 
 import com.leclowndu93150.particular.particles.*;
+import com.leclowndu93150.particular.particles.EnderPearlTrailParticleType;
 import com.leclowndu93150.particular.particles.leaves.BigLeafParticle;
 import com.leclowndu93150.particular.particles.leaves.ConiferLeafParticle;
 import com.leclowndu93150.particular.particles.leaves.LeafParticle;
@@ -78,8 +79,7 @@ public class Particles {
 	public static final Supplier<SimpleParticleType> WATER_SPLASH_FOAM = registerParticle("water_splash_foam", true);
 	public static final Supplier<SimpleParticleType> WATER_SPLASH_RING = registerParticle("water_splash_ring", true);
 
-	// Lodestone particles
-	public static final Supplier<FireballFlameParticleType> FIREBALL_FLAME_LODESTONE = PARTICLE_TYPES.register("fireball_flame_lodestone", FireballFlameParticleType::new);
+	public static final Supplier<EnderPearlTrailParticleType> ENDER_PEARL_TRAIL = PARTICLE_TYPES.register("ender_pearl_trail", EnderPearlTrailParticleType::new);
 
 	public static void register(IEventBus modEventBus) {
 		PARTICLE_TYPES.register(modEventBus);
@@ -132,7 +132,7 @@ public class Particles {
 		event.registerSpriteSet(WATER_SPLASH_FOAM.get(), WaterSplashFoamParticle.Factory::new);
 		event.registerSpriteSet(WATER_SPLASH_RING.get(), WaterSplashRingParticle.Factory::new);
 
-		event.registerSpriteSet(FIREBALL_FLAME_LODESTONE.get(), FireballFlameParticleType.Factory::new);
+		event.registerSpriteSet(ENDER_PEARL_TRAIL.get(), EnderPearlTrailParticleType.Factory::new);
 	}
 
 	private static Supplier<SimpleParticleType> registerParticle(String name) {
