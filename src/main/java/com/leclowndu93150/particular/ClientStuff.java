@@ -201,7 +201,7 @@ public class ClientStuff {
                 fireflyFrequency = dailyRandomList.get(random.nextInt(dailyRandomList.size())).floatValue();
             }
 
-            if (!ParticularConfig.waterSplash()) return;
+            if (!ParticularConfig.cascades()) return;
 
             Minecraft mc = Minecraft.getInstance();
             int renderDistance = mc.options.renderDistance().get();
