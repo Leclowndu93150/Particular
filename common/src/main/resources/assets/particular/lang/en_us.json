@@ -1,0 +1,141 @@
+{
+  "particular.configuration.title": "Particular Configuration",
+
+  "particular.configuration.general": "General Settings",
+  "particular.configuration.general.tooltip": "Main configuration options for Particular",
+
+  "particular.configuration.section.particular-common.toml": "Particular Settings",
+  "particular.configuration.section.particular-common.toml.button": "Configure",
+
+  "particular.configuration.waterSplash": "Water Splash",
+  "particular.configuration.waterSplash.tooltip": "Enable water splash particles when entities hit water",
+
+  "particular.configuration.cascades": "Cascades",
+  "particular.configuration.cascades.tooltip": "Enable cascade particles for flowing water",
+
+  "particular.configuration.waterfallSpray": "Waterfall Spray",
+  "particular.configuration.waterfallSpray.tooltip": "Enable spray particles at the bottom of waterfalls",
+
+  "particular.configuration.fireflies": "Fireflies",
+  "particular.configuration.fireflies.tooltip": "Enable firefly particles in suitable biomes at night",
+
+  "particular.configuration.fallingLeaves": "Falling Leaves",
+  "particular.configuration.fallingLeaves.tooltip": "Enable leaves falling from trees",
+
+  "particular.configuration.caveDust": "Cave Dust",
+  "particular.configuration.caveDust.tooltip": "Enable floating dust particles in caves",
+
+  "particular.configuration.chestBubbles": "Chest Bubbles",
+  "particular.configuration.chestBubbles.tooltip": "Enable bubbles rising from underwater chests",
+
+  "particular.configuration.soulSandBubbles": "Soul Sand Bubbles",
+  "particular.configuration.soulSandBubbles.tooltip": "Enable bubbles rising from soul sand underwater",
+
+  "particular.configuration.barrelBubbles": "Barrel Bubbles",
+  "particular.configuration.barrelBubbles.tooltip": "Enable bubbles rising from underwater barrels",
+
+  "particular.configuration.poppingBubbles": "Popping Bubbles",
+  "particular.configuration.poppingBubbles.tooltip": "Enable bubble popping effects at the water surface",
+
+  "particular.configuration.rainRipples": "Rain Ripples",
+  "particular.configuration.rainRipples.tooltip": "Enable ripple effects when rain hits water\n\nAutomatically disabled when shaders are active",
+
+  "particular.configuration.waterDripRipples": "Water Drip Ripples",
+  "particular.configuration.waterDripRipples.tooltip": "Enable ripple effects when water drips onto water surfaces\n\nAutomatically disabled when shaders are active",
+
+  "particular.configuration.cakeEatingParticles": "Cake Eating Particles",
+  "particular.configuration.cakeEatingParticles.tooltip": "Enable particles when eating cake",
+
+  "particular.configuration.emissiveLavaDrips": "Emissive Lava Drips",
+  "particular.configuration.emissiveLavaDrips.tooltip": "Enable glowing lava drip particles",
+
+  "particular.configuration.startTime": "Start Time",
+  "particular.configuration.startTime.tooltip": "Game time when fireflies begin spawning (in ticks)\n\n12000 = sunset (6:00 PM)\nRange: 0 to 23999",
+
+  "particular.configuration.endTime": "End Time",
+  "particular.configuration.endTime.tooltip": "Game time when fireflies stop spawning (in ticks)\n\n23000 = late night (11:00 PM)\nRange: 0 to 23999",
+
+  "particular.configuration.minTemp": "Minimum Temperature",
+  "particular.configuration.minTemp.tooltip": "Minimum biome temperature for fireflies to spawn\n\n0.5 = temperate climate\nRange: 0.0 to 2.0",
+
+  "particular.configuration.maxTemp": "Maximum Temperature",
+  "particular.configuration.maxTemp.tooltip": "Maximum biome temperature for fireflies to spawn\n\n0.99 = warm but not hot\nRange: 0.0 to 2.0",
+
+  "particular.configuration.canSpawnInRain": "Spawn in Rain",
+  "particular.configuration.canSpawnInRain.tooltip": "Allow fireflies to spawn during rainy weather\n\nFireflies typically hide during rain",
+
+  "particular.configuration.dailyRandom": "Daily Random",
+  "particular.configuration.dailyRandom.tooltip": "Random factors affecting firefly spawn rates throughout the day\n\nList of values representing spawn probability at different times",
+
+  "particular.configuration.grass": "Grass Frequency",
+  "particular.configuration.grass.tooltip": "Spawn frequency modifier near grass blocks\n\nRange: 0.0 to 1.0",
+
+  "particular.configuration.tallGrass": "Tall Grass Frequency",
+  "particular.configuration.tallGrass.tooltip": "Spawn frequency modifier near tall grass\n\nRange: 0.0 to 1.0",
+
+  "particular.configuration.flowers": "Flowers Frequency",
+  "particular.configuration.flowers.tooltip": "Spawn frequency modifier near flowers\n\nRange: 0.0 to 1.0",
+
+  "particular.configuration.tallFlowers": "Tall Flowers Frequency",
+  "particular.configuration.tallFlowers.tooltip": "Spawn frequency modifier near tall flowers\n\nRange: 0.0 to 1.0",
+
+  "particular.configuration.spawnChance": "Spawn Chance",
+  "particular.configuration.spawnChance.tooltip": "Inverse spawn chance\n\nHigher values = less frequent spawning",
+
+  "particular.configuration.spawnRipples": "Spawn Ripples",
+  "particular.configuration.spawnRipples.tooltip": "Create ripple effects when leaves land on water",
+
+  "particular.configuration.layFlatOnGround": "Lay Flat on Ground",
+  "particular.configuration.layFlatOnGround.tooltip": "Make leaves lay flat when they land on the ground",
+
+  "particular.configuration.layFlatRightAngles": "Lay at Right Angles",
+  "particular.configuration.layFlatRightAngles.tooltip": "Snap leaf rotation to 90-degree angles when laying flat",
+
+  "particular.configuration.baseMaxAge": "Base Max Age",
+  "particular.configuration.baseMaxAge.tooltip": "Base lifetime of cave dust particles in ticks\n\n200 ticks = 10 seconds",
+
+  "particular.configuration.color": "Color",
+  "particular.configuration.color.tooltip": "RGB color value for cave dust particles\n\n0x808080 = gray\nRange: 0x000000 to 0xFFFFFF",
+
+  "particular.configuration.fadeDuration": "Fade Duration",
+  "particular.configuration.fadeDuration.tooltip": "How long dust particles take to fade out in ticks\n\n20 ticks = 1 second",
+
+  "particular.configuration.maxAcceleration": "Max Acceleration",
+  "particular.configuration.maxAcceleration.tooltip": "Maximum acceleration for dust particle movement\n\nRange: 0.0 to 1.0",
+
+  "particular.configuration.accelChangeChance": "Acceleration Change Chance",
+  "particular.configuration.accelChangeChance.tooltip": "Inverse chance of changing dust particle acceleration\n\nHigher values = less frequent changes\n180 means 1 in 180 chance per tick",
+
+  "particular.configuration.excludeBiomes": "Excluded Biomes",
+  "particular.configuration.excludeBiomes.tooltip": "List of biome IDs where cave dust will not spawn\n\nFormat: minecraft:biome_name",
+
+  "neoforge.configuration.uitext.section": "Section: %s",
+  "neoforge.configuration.uitext.sectiontext": "Open",
+
+  "particular.configuration.enabledEffects": "Enabled Effects",
+  "particular.configuration.enabledEffects.tooltip": "Toggle various particle effects on or off",
+
+  "particular.configuration.advancedSettings": "Advanced Settings",
+  "particular.configuration.advancedSettings.tooltip": "Fine-tune particle behavior and appearance",
+
+  "particular.configuration.fireflySettings": "Firefly Settings",
+  "particular.configuration.fireflySettings.tooltip": "Configure firefly spawning conditions and behavior",
+
+  "particular.configuration.frequencyModifiers": "Frequency Modifiers",
+  "particular.configuration.frequencyModifiers.tooltip": "Control how often fireflies spawn near different plants",
+
+  "particular.configuration.fallingLeavesSettings": "Falling Leaves Settings",
+  "particular.configuration.fallingLeavesSettings.tooltip": "Configure falling leaf particle behavior",
+
+  "particular.configuration.caveDustSettings": "Cave Dust Settings",
+  "particular.configuration.caveDustSettings.tooltip": "Configure cave dust particle properties",
+
+  "particular.configuration.waterSplashSettings": "Water Splash Settings",
+  "particular.configuration.waterSplashSettings.tooltip": "Configure water splash particle behavior",
+
+  "particular.configuration.minFallDistance": "Minimum Fall Distance",
+  "particular.configuration.minFallDistance.tooltip": "Minimum distance (in blocks) an entity must fall before creating water splash particles\n\n0.0 = always create splashes\nRange: 0.0 to 100.0",
+
+  "particular.configuration.smallDroplets": "Small Splash Droplets",
+  "particular.configuration.smallDroplets.tooltip": "Enable water droplet particles for small splashes\n\nAdds visual detail to gentle water entries"
+}

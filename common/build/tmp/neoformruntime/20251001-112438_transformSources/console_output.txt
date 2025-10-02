@@ -1,0 +1,26 @@
+--------------------------------------------------------------------------------
+
+Command-Line:
+ - C:\Program Files\Eclipse Adoptium\jdk-21.0.5.11-hotspot\bin\java.exe
+ - -jar
+ - C:\Users\xdra1\.gradle\caches\modules-2\files-2.1\net.neoforged.jst\jst-cli-bundle\1.0.74\4b55f9a755ff69d480d3fb5d68c40662f5265b7e\jst-cli-bundle-1.0.74.jar
+ - --problems-report
+ - C:\Users\xdra1\IdeaProjects\ParticularReforgedMultiloader\common\build\tmp\neoformruntime\20251001-112438_transformSources\problems.json
+ - --libraries-list
+ - ./libraries.txt
+ - --in-format
+ - ARCHIVE
+ - --out-format
+ - ARCHIVE
+ - --enable-accesstransformers
+ - --access-transformer
+ - C:\Users\xdra1\IdeaProjects\ParticularReforgedMultiloader\common\src\main\resources\META-INF\accesstransformer.cfg
+ - --enable-parchment
+ - --parchment-mappings=C:\Users\xdra1\.gradle\caches\modules-2\files-2.1\org.parchmentmc.data\parchment-1.21.8\2025.09.14\8ef1066540374b84dd1b8ff28bef7798acfdd810\parchment-1.21.8-2025.09.14.zip
+ - --parchment-conflict-prefix=p_
+ - C:\Users\xdra1\.gradle\caches\neoformruntime\intermediate_results\patch_61713d04f3d66ec3914344c1dd98bf0100b1c0c9_output.zip
+ - ./output.zip
+--------------------------------------------------------------------------------
+
+Loading mapping file C:\Users\xdra1\.gradle\caches\modules-2\files-2.1\org.parchmentmc.data\parchment-1.21.8\2025.09.14\8ef1066540374b84dd1b8ff28bef7798acfdd810\parchment-1.21.8-2025.09.14.zip
+Access transformer targeting record class net.minecraft.world.level.biome.Biome$ClimateSettings attempts to widen its access without widening the constructor's access. You must AT the constructor too: "public net.minecraft.world.level.biome.Biome$ClimateSettings <init>(ZFLnet/minecraft/world/level/biome/Biome$TemperatureModifier;F)V" at PUBLIC LEAVE C:\Users\xdra1\IdeaProjects\ParticularReforgedMultiloader\common\src\main\resources\META-INF\accesstransformer.cfg:4

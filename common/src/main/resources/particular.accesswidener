@@ -1,0 +1,9 @@
+accessWidener v2 named
+
+accessible field net/minecraft/client/particle/ParticleEngine textureAtlas Lnet/minecraft/client/renderer/texture/TextureAtlas;
+accessible method net/minecraft/client/renderer/texture/TextureAtlas getWidth ()I
+accessible class net/minecraft/client/particle/DripParticle$FallAndLandParticle
+accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
+accessible field net/minecraft/client/renderer/texture/SpriteContents byMipLevel [Lcom/mojang/blaze3d/platform/NativeImage;
+accessible method net/minecraft/client/particle/BubbleColumnUpParticle <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDD)V
+
