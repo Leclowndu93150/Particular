@@ -18,6 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
@@ -40,8 +41,11 @@ public abstract class InjectEntity
 
 	@Shadow private Level level;
 	@Shadow private BlockPos blockPosition;
+	@Shadow public double fallDistance;
 	@Unique
 	public Queue<Double> velocities = new LinkedList<>();
+	@Unique
+	private double accumulatedFallDistance = 0.0;
 
 	@Inject(
 		method = "tick",
@@ -55,6 +59,12 @@ public abstract class InjectEntity
 		if (velocities.size() > 4)
 		{
 			velocities.poll();
+		}
+
+		if (deltaMovement.y() < 0.0) {
+			accumulatedFallDistance += Math.abs(deltaMovement.y());
+		} else if (deltaMovement.y() > 0.0) {
+			accumulatedFallDistance = 0.0;
 		}
 	}
 
@@ -89,9 +99,15 @@ public abstract class InjectEntity
 		if (!foundSurface) { return; }
 
 		double velocityValue = velocities.isEmpty() ? 0.0f : Collections.max(velocities);
-		
-		double fallDistance = velocityValue * 20.0;
-		if (fallDistance < ParticularConfig.COMMON.waterSplashMinFallDistance.get()) { return; }
+
+		double actualFallDistance = fallDistance > 0.0 ? fallDistance : accumulatedFallDistance;
+
+		if (actualFallDistance < ParticularConfig.COMMON.waterSplashMinFallDistance.get()) { 
+			accumulatedFallDistance = 0.0;
+			return; 
+		}
+
+		accumulatedFallDistance = 0.0;
 
 		level().addParticle(Particles.WATER_SPLASH_EMITTER(), getX(), baseY + prevState.getOwnHeight(), getZ(), dimensions.width(), velocityValue, 0.0);
 	}

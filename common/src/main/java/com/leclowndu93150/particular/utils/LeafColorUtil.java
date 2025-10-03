@@ -1,5 +1,6 @@
 package com.leclowndu93150.particular.utils;
 
+import com.leclowndu93150.particular.mixin.AccessorSpriteContents;
 import com.leclowndu93150.particular.mixin.NativeImageAccessor;
 import com.mojang.blaze3d.platform.NativeImage;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -106,7 +107,7 @@ public class LeafColorUtil {
 
         SpriteContents contents = sprite.contents();
         ResourceLocation spriteId = contents.name();
-        NativeImage texture = contents.byMipLevel[0];
+        NativeImage texture = ((AccessorSpriteContents) contents).getByMipLevel()[0];
         int blockColor = (shouldColor ? client.getBlockColors().getColor(state, world, pos, 0) : -1);
 
         return calculateLeafColor(spriteId, texture, blockColor);

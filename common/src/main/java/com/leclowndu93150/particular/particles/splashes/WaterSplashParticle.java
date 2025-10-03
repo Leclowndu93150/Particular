@@ -1,5 +1,7 @@
 package com.leclowndu93150.particular.particles.splashes;
 
+import com.leclowndu93150.particular.mixin.AccessorParticleEngine;
+import com.leclowndu93150.particular.mixin.AccessorTextureAtlas;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -34,7 +36,7 @@ public class WaterSplashParticle extends TextureSheetParticle
 		setSpriteFromAge(provider);
 
 		color = new Color(BiomeColors.getAverageWaterColor(clientWorld, BlockPos.containing(x, y, z)));
-		unit = 2f / Minecraft.getInstance().particleEngine.textureAtlas.getWidth();
+		unit = 2f / ((AccessorTextureAtlas) ((AccessorParticleEngine) Minecraft.getInstance().particleEngine).getTextureAtlas()).invokeGetWidth();
 	}
 
 	public ParticleRenderType getRenderType()
