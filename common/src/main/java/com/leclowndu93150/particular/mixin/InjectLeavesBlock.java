@@ -4,6 +4,7 @@ import com.leclowndu93150.particular.CommonClass;
 import com.leclowndu93150.particular.ParticularConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -45,7 +46,9 @@ public class InjectLeavesBlock
 				if (particle == null) { return; }
 				Color color = leafData.getColor(world, pos);
 
-				Particle leaf = Minecraft.getInstance().particleEngine.createParticle(particle, x, y, z, 0, 0, 0);
+
+                //FIXME Shitass casting
+				SingleQuadParticle leaf = (SingleQuadParticle) Minecraft.getInstance().particleEngine.createParticle(particle, x, y, z, 0, 0, 0);
 				if (leaf != null)
 				{
 					leaf.setColor(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f);

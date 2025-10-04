@@ -76,7 +76,7 @@ public abstract class InjectEntity
 		if (!ParticularConfig.waterSplash()) { return; }
 
 		//noinspection ConstantConditions
-		if ((Object) this instanceof Arrow || !level().isClientSide) { return; }
+		if ((Object) this instanceof Arrow || !level().isClientSide()) { return; }
 
 		// Find water height
 		float baseY = Mth.floor(getY());

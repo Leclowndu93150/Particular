@@ -2,20 +2,22 @@ package com.leclowndu93150.particular.particles.leaves;
 
 import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.state.QuadParticleRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-public class LeafParticle extends TextureSheetParticle
+public class LeafParticle extends SingleQuadParticle
 {
 	protected static final int fadeInDuration = 10;
 	protected static final int rampUpDuration = 20;
@@ -29,8 +31,7 @@ public class LeafParticle extends TextureSheetParticle
 
 	protected LeafParticle(ClientLevel world, double x, double y, double z, double r, double g, double b, SpriteSet provider)
 	{
-		super(world, x, y, z, r, g, b);
-		pickSprite(provider);
+		super(world, x, y, z, provider.get(0, 1));
 
 		hasPhysics = true;
 		gravity = 0;
@@ -122,88 +123,71 @@ public class LeafParticle extends TextureSheetParticle
 	}
 
 	@Override
-	public ParticleRenderType getRenderType()
+	protected SingleQuadParticle.Layer getLayer()
 	{
-		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+		return SingleQuadParticle.Layer.TRANSLUCENT;
 	}
 
 	@Override
-	public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta)
+	public void extract(QuadParticleRenderState renderState, Camera camera, float tickDelta)
 	{
+		float ageDelta = Mth.lerpInt(tickDelta, age, age + 1);
+		if (age <= fadeInDuration)
+		{
+			setAlpha(ageDelta / (float)fadeInDuration);
+		}
+		else if (age > lifetime - fadeOutDuration)
+		{
+			setAlpha(Math.max(0.0f, (lifetime - ageDelta) / (float)fadeOutDuration));
+		}
+		else
+		{
+			setAlpha(1);
+		}
+
 		Vec3 vec3d = camera.getPosition();
 		float f = (float)(Mth.lerp(tickDelta, xo, x) - vec3d.x());
 		float g = (float)(Mth.lerp(tickDelta, yo, y) - vec3d.y());
 		float h = (float)(Mth.lerp(tickDelta, zo, z) - vec3d.z());
 
-		Vector3f[] vector3fs;
-		float j = getQuadSize(tickDelta);
-
 		if (!expiring || !ParticularConfig.COMMON.fallingLeavesLayFlatOnGround.get())
 		{
-			vector3fs = new Vector3f[]{new Vector3f(1.0F, -1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(-1.0F, -1.0F, 0.0F)};
-
-			Quaternionf quaternionf;
-			if (roll == 0.0F)
+			Quaternionf quaternionf = new Quaternionf(camera.rotation());
+			if (roll != 0.0F)
 			{
-				quaternionf = camera.rotation();
-			}
-			else
-			{
-				quaternionf = new Quaternionf(camera.rotation());
 				quaternionf.rotateZ(Mth.lerp(tickDelta, oRoll, roll));
 			}
-
-			for (int k = 0; k < 4; ++k)
-			{
-				Vector3f vector3f = vector3fs[k];
-				vector3f.rotate(quaternionf);
-				vector3f.mul(j);
-				vector3f.add(f, g, h);
-			}
+			extractRotatedQuad(renderState, quaternionf, f, g, h, tickDelta);
 		}
 		else
 		{
-			vector3fs = new Vector3f[]{new Vector3f(-1.0F, 0.0F, -1.0f), new Vector3f(-1.0F, 0.0F, 1.0F), new Vector3f(1.0F, 0.0F, 1.0F), new Vector3f(1.0F, 0.0F, -1.0F)};
+			Quaternionf quaternionf = new Quaternionf();
+			quaternionf.rotateY(Mth.lerp(tickDelta, oRoll, roll));
+			extractRotatedQuad(renderState, quaternionf, f, g, h, tickDelta);
+		}
+	}
 
-			for (int k = 0; k < 4; ++k)
-			{
-				Vector3f vector3f = vector3fs[k];
-				vector3f.rotateAxis(roll, 0, 1, 0);
-				vector3f.mul(j);
-				vector3f.add(f, g, h);
-			}
-		}
-
-		float ageDelta = Mth.lerpInt(tickDelta, age, age + 1);
-		if (age <= fadeInDuration)
-		{
-			alpha = ageDelta / (float)fadeInDuration;
-		}
-		else if (age > lifetime - fadeOutDuration)
-		{
-			alpha = Math.max(0.0f, (lifetime - ageDelta) / (float)fadeOutDuration);
-		}
-		else
-		{
-			alpha = 1;
-		}
-
-		float l = getU0();
-		float m = getU1();
-		float n = getV0();
-		float o = getV1();
-		int p = getLightColor(tickDelta);
+	@Override
+	protected void extractRotatedQuad(QuadParticleRenderState renderState, Quaternionf rotation, float x, float y, float z, float partialTick)
+	{
+		float u0 = getU0();
+		float u1 = getU1();
 		if (flippedSprite)
 		{
-			float temp = l;
-			l = m;
-			m = temp;
+			float temp = u0;
+			u0 = u1;
+			u1 = temp;
 		}
-		
-		vertexConsumer.addVertex(vector3fs[0].x(), vector3fs[0].y(), vector3fs[0].z()).setUv(m, o).setColor(rCol, gCol, bCol, alpha).setLight(p);
-		vertexConsumer.addVertex(vector3fs[1].x(), vector3fs[1].y(), vector3fs[1].z()).setUv(m, n).setColor(rCol, gCol, bCol, alpha).setLight(p);
-		vertexConsumer.addVertex(vector3fs[2].x(), vector3fs[2].y(), vector3fs[2].z()).setUv(l, n).setColor(rCol, gCol, bCol, alpha).setLight(p);
-		vertexConsumer.addVertex(vector3fs[3].x(), vector3fs[3].y(), vector3fs[3].z()).setUv(l, o).setColor(rCol, gCol, bCol, alpha).setLight(p);
+
+		renderState.add(
+			getLayer(),
+			x, y, z,
+			rotation.x, rotation.y, rotation.z, rotation.w,
+			getQuadSize(partialTick),
+			u0, u1, getV0(), getV1(),
+			ARGB.colorFromFloat(alpha, rCol, gCol, bCol),
+			getLightColor(partialTick)
+		);
 	}
 
 	public static class Factory implements ParticleProvider<SimpleParticleType>
@@ -216,7 +200,7 @@ public class LeafParticle extends TextureSheetParticle
 		}
 
 		@Override
-		public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ)
+		public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ, RandomSource random)
 		{
 			return new LeafParticle(world, x, y, z, velX, velY, velZ, provider);
 		}

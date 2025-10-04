@@ -5,6 +5,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 
 public class SpinningLeafParticle extends LeafParticle
 {
@@ -36,7 +37,7 @@ public class SpinningLeafParticle extends LeafParticle
 		}
 
 		@Override
-		public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ)
+		public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ, RandomSource random)
 		{
 			return new SpinningLeafParticle(world, x, y, z, velX, velY, velZ, provider);
 		}

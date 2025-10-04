@@ -5,6 +5,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 
 public class BigLeafParticle extends LeafParticle
 {
@@ -26,7 +27,7 @@ public class BigLeafParticle extends LeafParticle
 		}
 
 		@Override
-		public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ)
+		public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ, RandomSource random)
 		{
 			return new BigLeafParticle(world, x, y, z, velX, velY, velZ, provider);
 		}

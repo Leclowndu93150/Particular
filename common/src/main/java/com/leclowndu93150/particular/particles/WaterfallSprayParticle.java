@@ -6,18 +6,20 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.WaterDropParticle;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.material.FluidState;
 
 import java.awt.*;
 
 public class WaterfallSprayParticle extends WaterDropParticle
 {
-	protected WaterfallSprayParticle(ClientLevel clientWorld, double d, double e, double f, double g, double h, double i)
+	protected WaterfallSprayParticle(ClientLevel clientWorld, double d, double e, double f, double g, double h, double i, TextureAtlasSprite textureAtlasSprite)
 	{
-		super(clientWorld, d, e, f);
+		super(clientWorld, d, e, f, textureAtlasSprite);
 
 		xd += g;
 		yd *= 0.75f;
@@ -84,10 +86,10 @@ public class WaterfallSprayParticle extends WaterDropParticle
 			this.spriteProvider = spriteProvider;
 		}
 
-		public Particle createParticle(SimpleParticleType SimpleParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i)
+		public Particle createParticle(SimpleParticleType SimpleParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i, RandomSource random)
 		{
-			WaterfallSprayParticle waterfallSprayParticle = new WaterfallSprayParticle(clientWorld, d, e, f, g, h, i);
-			waterfallSprayParticle.pickSprite(this.spriteProvider);
+			WaterfallSprayParticle waterfallSprayParticle = new WaterfallSprayParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider.get(random));
+			waterfallSprayParticle.setSpriteFromAge(this.spriteProvider);
 			return waterfallSprayParticle;
 		}
 	}

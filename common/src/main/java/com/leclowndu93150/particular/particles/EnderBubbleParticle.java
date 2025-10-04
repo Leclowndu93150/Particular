@@ -9,13 +9,15 @@ import net.minecraft.client.particle.BubbleColumnUpParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 
 public class EnderBubbleParticle extends BubbleColumnUpParticle
 {
 
-	public EnderBubbleParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-		super(level, x, y, z, xSpeed, ySpeed, zSpeed);
+	public EnderBubbleParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, TextureAtlasSprite textureAtlasSprite) {
+		super(level, x, y, z, xSpeed, ySpeed, zSpeed, textureAtlasSprite);
 	}
 
 	@Override
@@ -44,10 +46,9 @@ public class EnderBubbleParticle extends BubbleColumnUpParticle
 			this.spriteProvider = spriteProvider;
 		}
 
-		public Particle createParticle(SimpleParticleType SimpleParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i)
+		public Particle createParticle(SimpleParticleType SimpleParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i, RandomSource random)
 		{
-			EnderBubbleParticle enderBubbleParticle = new EnderBubbleParticle(clientWorld, d, e, f, g, h, i);
-			enderBubbleParticle.pickSprite(this.spriteProvider);
+			EnderBubbleParticle enderBubbleParticle = new EnderBubbleParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider.get(random));
 			return enderBubbleParticle;
 		}
 	}

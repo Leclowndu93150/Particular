@@ -4,15 +4,16 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 
-public class CascadeParticle extends TextureSheetParticle
+public class CascadeParticle extends SingleQuadParticle
 {
 	protected final SpriteSet provider;
 
 	protected CascadeParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider)
 	{
-		super(clientWorld, x, y, z);
+		super(clientWorld, x, y, z, provider.get(0, 9));
 		this.provider = provider;
 		lifetime = 9;
 		quadSize = 1f;
@@ -43,9 +44,9 @@ public class CascadeParticle extends TextureSheetParticle
 	}
 
 	@Override
-	public ParticleRenderType getRenderType()
+	protected SingleQuadParticle.Layer getLayer()
 	{
-		return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+		return SingleQuadParticle.Layer.OPAQUE;
 	}
 
 	public static class Factory implements ParticleProvider<SimpleParticleType>
@@ -58,7 +59,7 @@ public class CascadeParticle extends TextureSheetParticle
 		}
 
 		@Override
-		public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ)
+		public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ, RandomSource random)
 		{
 			return new CascadeParticle(world, x, y, z, provider);
 		}

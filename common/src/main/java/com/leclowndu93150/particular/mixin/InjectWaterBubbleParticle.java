@@ -6,7 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.BubbleParticle;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.ParticleTypes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,11 +15,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BubbleParticle.class)
-public abstract class InjectWaterBubbleParticle extends TextureSheetParticle
+public abstract class InjectWaterBubbleParticle extends SingleQuadParticle
 {
-	protected InjectWaterBubbleParticle(ClientLevel clientWorld, double d, double e, double f)
+	protected InjectWaterBubbleParticle(ClientLevel clientWorld, double d, double e, double f, TextureAtlasSprite sprite)
 	{
-		super(clientWorld, d, e, f);
+		super(clientWorld, d, e, f, sprite);
 	}
 
 	@Inject(

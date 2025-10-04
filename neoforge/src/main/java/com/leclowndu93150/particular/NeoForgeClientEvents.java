@@ -97,7 +97,7 @@ public class NeoForgeClientEvents {
 
         @SubscribeEvent
         public static void onRenderHUD(RenderGuiEvent.Post event) {
-            if (FMLLoader.isProduction()) return;
+            if (FMLLoader.getCurrent().isProduction()) return;
             Minecraft mc = Minecraft.getInstance();
             if (mc.player == null || mc.level == null) return;
 

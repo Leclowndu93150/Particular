@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
 
 public class WaterSplashEmitterParticle extends NoRenderParticle
 {
@@ -69,7 +70,7 @@ public class WaterSplashEmitterParticle extends NoRenderParticle
 	{
 		for (int i = 0; i < width * 20f; ++i)
 		{
-			Particle droplet = Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.FALLING_WATER,
+			SingleQuadParticle droplet = (SingleQuadParticle) Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.FALLING_WATER,
 				x, y + 1/16f, z, 0, 0, 0);
 			if (droplet != null)
 			{
@@ -89,7 +90,7 @@ public class WaterSplashEmitterParticle extends NoRenderParticle
 		public Factory(SpriteSet provider) { }
 
 		@Override
-		public Particle createParticle(SimpleParticleType SimpleParticleType, ClientLevel clientWorld, double x, double y, double z, double g, double h, double i)
+		public Particle createParticle(SimpleParticleType SimpleParticleType, ClientLevel clientWorld, double x, double y, double z, double g, double h, double i, RandomSource random)
 		{
 			return new WaterSplashEmitterParticle(clientWorld, x, y, z, (float) g, (float) h);
 		}

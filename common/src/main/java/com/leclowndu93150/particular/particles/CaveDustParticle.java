@@ -5,6 +5,7 @@ import com.leclowndu93150.particular.utils.Color;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 
 public class CaveDustParticle extends BaseAshSmokeParticle
 {
@@ -42,9 +43,10 @@ public class CaveDustParticle extends BaseAshSmokeParticle
 		}
 	}
 
-	public ParticleRenderType getRenderType()
+	@Override
+	public SingleQuadParticle.Layer getLayer()
 	{
-		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+		return SingleQuadParticle.Layer.TRANSLUCENT;
 	}
 
 	public static class Factory implements ParticleProvider<SimpleParticleType>
@@ -56,7 +58,7 @@ public class CaveDustParticle extends BaseAshSmokeParticle
 			this.provider = provider;
 		}
 
-		public Particle createParticle(SimpleParticleType SimpleParticleType, ClientLevel clientWorld, double x, double y, double z, double velX, double velY, double velZ)
+		public Particle createParticle(SimpleParticleType SimpleParticleType, ClientLevel clientWorld, double x, double y, double z, double velX, double velY, double velZ, RandomSource random)
 		{
 			return new CaveDustParticle(clientWorld, x, y, z, 0, 0, 0, 1.0F, provider);
 		}

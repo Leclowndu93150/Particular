@@ -10,7 +10,6 @@
     "AccessorBillboardParticle",
     "AccessorBlockLeakParticle",
     "AccessorParticle",
-    "AccessorParticleEngine",
     "AccessorSpriteContents",
     "AccessorTextureAtlas",
     "InjectBlockLeakParticle",

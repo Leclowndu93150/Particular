@@ -19,7 +19,7 @@ public class Main {
         
         CommonClass.init();
         
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
             modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
             eventBus.addListener(NeoForgeClientEvents::registerParticleFactories);
             eventBus.addListener(NeoForgeClientEvents::clientSetup);

@@ -4,7 +4,8 @@ import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.DripParticle;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -18,13 +19,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(DripParticle.FallAndLandParticle.class)
-public abstract class InjectContinuousFalling extends TextureSheetParticle
+public abstract class InjectContinuousFalling extends SingleQuadParticle
 {
 	@Shadow @Final protected ParticleOptions landParticle;
 
-	protected InjectContinuousFalling(ClientLevel clientWorld, double d, double e, double f)
+	protected InjectContinuousFalling(ClientLevel clientWorld, double d, double e, double f, TextureAtlasSprite sprite)
 	{
-		super(clientWorld, d, e, f);
+		super(clientWorld, d, e, f, sprite);
 	}
 
 	@Inject(

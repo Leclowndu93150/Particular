@@ -4,9 +4,10 @@ import com.leclowndu93150.particular.mixin.AccessorParticle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.synth.SimplexNoise;
 
-public class FireflyParticle extends TextureSheetParticle
+public class FireflyParticle extends SingleQuadParticle
 {
 	private static final int minOffTime = 20 * 2;
 	private static final int maxOffTime = 20 * 4;
@@ -20,8 +21,7 @@ public class FireflyParticle extends TextureSheetParticle
 
 	protected FireflyParticle(ClientLevel world, double x, double y, double z, SpriteSet provider)
 	{
-		super(world, x, y, z);
-		pickSprite(provider);
+		super(world, x, y, z, provider.get(0, 1));
 
 		gravity = 0;
 		xd = 0;
@@ -102,9 +102,9 @@ public class FireflyParticle extends TextureSheetParticle
 	}
 
 	@Override
-	public ParticleRenderType getRenderType()
+	protected SingleQuadParticle.Layer getLayer()
 	{
-		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+		return SingleQuadParticle.Layer.TRANSLUCENT;
 	}
 
 	public static class Factory implements ParticleProvider<SimpleParticleType>
@@ -117,7 +117,7 @@ public class FireflyParticle extends TextureSheetParticle
 		}
 
 		@Override
-		public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ)
+		public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ, RandomSource random)
 		{
 			return new FireflyParticle(world, x, y, z, provider);
 		}
