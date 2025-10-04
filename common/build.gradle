@@ -24,6 +24,8 @@ dependencies {
 
     implementation "fuzs.forgeconfigapiport:forgeconfigapiport-common-neoforgeapi:${config_api_port_version}"
 
+
+    // 1.21.8 ver cuz 1.21.9+ not on curseforge yet
     compileOnly "curse.maven:irisshaders-455508:7049145"
 }
 

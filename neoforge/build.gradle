@@ -38,6 +38,7 @@ neoForge {
 }
 
 dependencies {
+    // 1.21.8 ver cuz 1.21.9+ not on curseforge yet
     compileOnly "curse.maven:irisshaders-455508:7049145"
     compileOnly "curse.maven:sodium-394468:7050137"
 }

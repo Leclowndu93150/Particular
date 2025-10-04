@@ -30,9 +30,9 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-    modImplementation "curse.maven:forge-config-api-port-fabric-547434:6941149"
-    modCompileOnly "curse.maven:irisshaders-455508:7049144"
-    modCompileOnly "curse.maven:sodium-394468:7048943"
+    modImplementation "curse.maven:forge-config-api-port-fabric-547434:7065985"
+    modCompileOnly "curse.maven:irisshaders-455508:7050301"
+    modCompileOnly "curse.maven:sodium-394468:7048978"
     modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
 }
 
