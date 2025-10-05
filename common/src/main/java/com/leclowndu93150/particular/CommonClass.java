@@ -1,10 +1,12 @@
 package com.leclowndu93150.particular;
 
 import com.leclowndu93150.particular.mixin.AccessorBiome;
+import com.leclowndu93150.particular.particles.splashes.WaterSplashParticle;
 import com.leclowndu93150.particular.platform.Services;
 import com.leclowndu93150.particular.utils.CascadeData;
 import com.leclowndu93150.particular.utils.LeafColorUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -37,6 +39,8 @@ public class CommonClass {
 
     public static void init() {
         Constants.LOG.info("I am quite particular about the effects I choose to add :3");
+
+        ParticleEngine.RENDER_ORDER.add(WaterSplashParticle.WATER_SPLASH_TYPE);
     }
 
     public static void clientSetup() {
