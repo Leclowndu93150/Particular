@@ -39,8 +39,6 @@ public class CommonClass {
 
     public static void init() {
         Constants.LOG.info("I am quite particular about the effects I choose to add :3");
-
-        ParticleEngine.RENDER_ORDER.add(WaterSplashParticle.WATER_SPLASH_TYPE);
     }
 
     public static void clientSetup() {

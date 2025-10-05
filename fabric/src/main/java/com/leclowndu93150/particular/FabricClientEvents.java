@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.BubblePopParticle;
+import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 
@@ -69,6 +70,8 @@ public class FabricClientEvents {
     }
 
     public static void init() {
+        ParticleEngine.RENDER_ORDER.add(WaterSplashParticle.WATER_SPLASH_TYPE);
+
         CommonClass.clientSetup();
 
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
