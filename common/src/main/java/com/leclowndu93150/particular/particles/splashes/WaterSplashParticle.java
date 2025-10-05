@@ -11,6 +11,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import java.awt.Color;
@@ -53,7 +54,6 @@ public class WaterSplashParticle extends SingleQuadParticle {
 
     @Override
     public void extract(QuadParticleRenderState renderState, Camera camera, float partialTick) {
-        // Apply biome color if enabled
         if (colored) {
             this.rCol = color.getRed() / 255f;
             this.gCol = color.getGreen() / 255f;
@@ -64,20 +64,15 @@ public class WaterSplashParticle extends SingleQuadParticle {
             this.bCol = 1f;
         }
 
-        // Get camera-relative position (SAME AS ORIGINAL)
-        net.minecraft.world.phys.Vec3 vec3 = camera.getPosition();
+        Vec3 vec3 = camera.getPosition();
         float f = (float)(Mth.lerp(partialTick, this.xo, this.x) - vec3.x());
         float g = (float)(Mth.lerp(partialTick, this.yo, this.y) - vec3.y());
         float h = (float)(Mth.lerp(partialTick, this.zo, this.z) - vec3.z());
 
-        // Calculate scale (SAME AS ORIGINAL)
         float ageDelta = Mth.lerp(partialTick, age - 1, (float)age);
         float progress = ageDelta / (float)lifetime;
         float scale = width * (0.8f + 0.2f * progress);
 
-        System.out.println("Age: " + age + ", Progress: " + progress + ", Scale: " + scale + ", Height: " + height);
-
-        // Create corner positions (SAME AS ORIGINAL)
         Vector3f[] corners = new Vector3f[]{
                 new Vector3f(-1.0F, 0.0F, -1.0f),
                 new Vector3f(-1.0F, 0.0F, 1.0F),
@@ -85,14 +80,12 @@ public class WaterSplashParticle extends SingleQuadParticle {
                 new Vector3f(1.0F, 0.0F, -1.0F)
         };
 
-        // Scale and offset corners (SAME AS ORIGINAL)
         for (int i = 0; i < 4; ++i) {
             Vector3f corner = corners[i];
             corner.mul(scale);
             corner.add(f, g, h);
         }
 
-        // Calculate UV with border inset (SAME AS ORIGINAL)
         TextureAtlasSprite sprite = this.sprite;
         float uvWidth = sprite.getU1() - sprite.getU0();
         float unit = uvWidth / (sprite.contents().width() / 2f);
@@ -105,8 +98,6 @@ public class WaterSplashParticle extends SingleQuadParticle {
         int light = this.getLightColor(partialTick);
         int argb = net.minecraft.util.ARGB.colorFromFloat(1.0f, this.rCol, this.gCol, this.bCol);
 
-        // Render 4 sides between corners
-        // Each side is a vertical quad between two adjacent corners
         submitSide(renderState, corners, 0, 1, u0, u1, v0, v1, argb, light);
         submitSide(renderState, corners, 1, 2, u0, u1, v0, v1, argb, light);
         submitSide(renderState, corners, 2, 3, u0, u1, v0, v1, argb, light);
