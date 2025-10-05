@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.state.ParticleGroupRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -189,15 +190,17 @@ public class WaterSplashParticle extends Particle {
                 normalZ /= length;
             }
 
-            consumer.addVertex(bottomAX, baseY, bottomAZ).setUv(u0, v1).setColor(color).setOverlay(0).setLight(light).setNormal(normalX, normalY, normalZ);
-            consumer.addVertex(bottomBX, baseY, bottomBZ).setUv(u1, v1).setColor(color).setOverlay(0).setLight(light).setNormal(normalX, normalY, normalZ);
-            consumer.addVertex(topBX, baseY + height, topBZ).setUv(u1, v0).setColor(color).setOverlay(0).setLight(light).setNormal(normalX, normalY, normalZ);
-            consumer.addVertex(topAX, baseY + height, topAZ).setUv(u0, v0).setColor(color).setOverlay(0).setLight(light).setNormal(normalX, normalY, normalZ);
+            int noOverlay = OverlayTexture.NO_OVERLAY;
 
-            consumer.addVertex(bottomBX, baseY, bottomBZ).setUv(u0, v1).setColor(color).setOverlay(0).setLight(light).setNormal(-normalX, normalY, -normalZ);
-            consumer.addVertex(bottomAX, baseY, bottomAZ).setUv(u1, v1).setColor(color).setOverlay(0).setLight(light).setNormal(-normalX, normalY, -normalZ);
-            consumer.addVertex(topAX, baseY + height, topAZ).setUv(u1, v0).setColor(color).setOverlay(0).setLight(light).setNormal(-normalX, normalY, -normalZ);
-            consumer.addVertex(topBX, baseY + height, topBZ).setUv(u0, v0).setColor(color).setOverlay(0).setLight(light).setNormal(-normalX, normalY, -normalZ);
+            consumer.addVertex(bottomAX, baseY, bottomAZ).setUv(u0, v1).setColor(color).setOverlay(noOverlay).setLight(light).setNormal(normalX, normalY, normalZ);
+            consumer.addVertex(bottomBX, baseY, bottomBZ).setUv(u1, v1).setColor(color).setOverlay(noOverlay).setLight(light).setNormal(normalX, normalY, normalZ);
+            consumer.addVertex(topBX, baseY + height, topBZ).setUv(u1, v0).setColor(color).setOverlay(noOverlay).setLight(light).setNormal(normalX, normalY, normalZ);
+            consumer.addVertex(topAX, baseY + height, topAZ).setUv(u0, v0).setColor(color).setOverlay(noOverlay).setLight(light).setNormal(normalX, normalY, normalZ);
+
+            consumer.addVertex(bottomBX, baseY, bottomBZ).setUv(u0, v1).setColor(color).setOverlay(noOverlay).setLight(light).setNormal(-normalX, normalY, -normalZ);
+            consumer.addVertex(bottomAX, baseY, bottomAZ).setUv(u1, v1).setColor(color).setOverlay(noOverlay).setLight(light).setNormal(-normalX, normalY, -normalZ);
+            consumer.addVertex(topAX, baseY + height, topAZ).setUv(u1, v0).setColor(color).setOverlay(noOverlay).setLight(light).setNormal(-normalX, normalY, -normalZ);
+            consumer.addVertex(topBX, baseY + height, topBZ).setUv(u0, v0).setColor(color).setOverlay(noOverlay).setLight(light).setNormal(-normalX, normalY, -normalZ);
         }
     }
 }

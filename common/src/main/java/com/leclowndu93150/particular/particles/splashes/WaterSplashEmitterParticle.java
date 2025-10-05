@@ -57,7 +57,7 @@ public class WaterSplashEmitterParticle extends NoRenderParticle {
 
     private void splash(float width, float speed, float spread) {
         for (int i = 0; i < width * 20f; ++i) {
-            Particle droplet = Minecraft.getInstance().particleEngine.createParticle(
+            SingleQuadParticle droplet = (SingleQuadParticle) Minecraft.getInstance().particleEngine.createParticle(
                     ParticleTypes.FALLING_WATER,
                     x, y + 1/16f, z,
                     0, 0, 0
@@ -68,6 +68,7 @@ public class WaterSplashEmitterParticle extends NoRenderParticle {
                 double zVel = random.triangle(0.0, spread);
                 droplet.setPos(x + xVel / spread * width, y + 1/16f, z + zVel / spread * width);
                 droplet.setParticleSpeed(xVel, yVel, zVel);
+                droplet.setColor(1,1,1);
                 ((AccessorBillboardParticle) droplet).setQuadSize(1/8f);
             }
         }
