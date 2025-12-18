@@ -42,7 +42,7 @@ public class WaterRippleParticle extends SingleQuadParticle {
 
     @Override
     public void extract(QuadParticleRenderState renderState, Camera camera, float partialTick) {
-        Vec3 vec3 = camera.getPosition();
+        Vec3 vec3 = camera.position();
         float x = (float)(Mth.lerp(partialTick, this.xo, this.x) - vec3.x());
         float y = (float)(Mth.lerp(partialTick, this.yo, this.y) - vec3.y());
         float z = (float)(Mth.lerp(partialTick, this.zo, this.z) - vec3.z());

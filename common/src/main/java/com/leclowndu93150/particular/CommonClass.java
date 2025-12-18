@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.Level;
@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
 public class CommonClass {
-    public static ResourceLocation currentDimension;
+    public static Identifier currentDimension;
     public static ConcurrentHashMap<BlockPos, CascadeData> cascades = new ConcurrentHashMap<>();
     private static float fireflyFrequency = 1f;
     private static Map<Block, LeafData> leavesData = new HashMap<>();
@@ -54,7 +54,7 @@ public class CommonClass {
 //        leavesData.put(Blocks.CHERRY_LEAVES, new LeafData(null));
 
         for (Block block : BuiltInRegistries.BLOCK) {
-            ResourceLocation id = BuiltInRegistries.BLOCK.getKey(block);
+            Identifier id = BuiltInRegistries.BLOCK.getKey(block);
 
             if (leavesData.containsKey(block)) {
                 continue;
@@ -106,7 +106,7 @@ public class CommonClass {
         leavesData.put(block, leafData);
     }
 
-    public static void registerLeafData(ResourceLocation id, LeafData leafData) {
+    public static void registerLeafData(Identifier id, LeafData leafData) {
         BuiltInRegistries.BLOCK.getOptional(id).ifPresent(block -> leavesData.put(block, leafData));
     }
 
@@ -383,7 +383,7 @@ public class CommonClass {
     public static void onChunkLoad(Level world) {
         if (!ParticularConfig.cascades() || !world.isClientSide()) return;
 
-        ResourceLocation newDimension = world.dimensionType().effectsLocation();
+        Identifier newDimension = world.dimension().identifier();
         if (currentDimension != null && !newDimension.equals(currentDimension)) {
             Constants.LOG.debug("Dimension changed from {} to {}, clearing cascades", currentDimension, newDimension);
             cascades.clear();

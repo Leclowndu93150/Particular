@@ -6,9 +6,10 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.state.ParticleGroupRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -93,7 +94,7 @@ public class WaterSplashParticle extends Particle {
                 float gCol = particle.colored ? particle.color.getGreen() / 255f : 1f;
                 float bCol = particle.colored ? particle.color.getBlue() / 255f : 1f;
 
-                Vec3 vec3 = camera.getPosition();
+                Vec3 vec3 = camera.position();
                 float camX = (float)(Mth.lerp(partialTick, particle.xo, particle.x) - vec3.x());
                 float camY = (float)(Mth.lerp(partialTick, particle.yo, particle.y) - vec3.y());
                 float camZ = (float)(Mth.lerp(partialTick, particle.zo, particle.z) - vec3.z());
@@ -150,7 +151,7 @@ public class WaterSplashParticle extends Particle {
 
             collector.submitCustomGeometry(
                     poseStack,
-                    RenderType.entityTranslucent(TextureAtlas.LOCATION_PARTICLES),
+                    RenderTypes.entityTranslucent(TextureAtlas.LOCATION_PARTICLES),
                     (pose, consumer) -> {
                         for (WaterSplashRenderData data : renderDataList) {
                             renderSide(consumer, data.corners, 0, 1, data.baseY, data.height, data.u0, data.u1, data.v0, data.v1, data.color, data.light);

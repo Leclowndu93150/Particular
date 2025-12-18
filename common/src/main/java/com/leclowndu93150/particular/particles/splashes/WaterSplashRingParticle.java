@@ -10,6 +10,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 
 public class WaterSplashRingParticle extends SingleQuadParticle {
@@ -41,7 +42,7 @@ public class WaterSplashRingParticle extends SingleQuadParticle {
 
     @Override
     public void extract(QuadParticleRenderState renderState, Camera camera, float partialTick) {
-        net.minecraft.world.phys.Vec3 vec3 = camera.getPosition();
+        Vec3 vec3 = camera.position();
         float x = (float)(Mth.lerp(partialTick, this.xo, this.x) - vec3.x());
         float y = (float)(Mth.lerp(partialTick, this.yo, this.y) - vec3.y()) + 0.01f;
         float z = (float)(Mth.lerp(partialTick, this.zo, this.z) - vec3.z());

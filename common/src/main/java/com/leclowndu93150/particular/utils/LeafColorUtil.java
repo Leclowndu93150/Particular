@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -106,7 +106,7 @@ public class LeafColorUtil {
         }
 
         SpriteContents contents = sprite.contents();
-        ResourceLocation spriteId = contents.name();
+        Identifier spriteId = contents.name();
         NativeImage texture = ((AccessorSpriteContents) contents).getByMipLevel()[0];
         int blockColor = (shouldColor ? client.getBlockColors().getColor(state, world, pos, 0) : -1);
 
@@ -116,7 +116,7 @@ public class LeafColorUtil {
     /**
      * Combines texture and biome colors
      */
-    private static double[] calculateLeafColor(ResourceLocation spriteId, NativeImage texture, int blockColor) {
+    private static double[] calculateLeafColor(Identifier spriteId, NativeImage texture, int blockColor) {
         // Use texture cache for performance
         double[] textureColor = TextureCache.INST.computeIfAbsent(spriteId, (loc) -> {
             double[] doubles = averageColor(texture);

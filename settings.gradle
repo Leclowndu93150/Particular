@@ -40,4 +40,3 @@ rootProject.name = 'ParticularReforgedMultiloader'
 include('common')
 include('fabric')
 include('neoforge')
-include('forge')

@@ -27,7 +27,7 @@ public class InjectBlock
 	private static boolean isValidBiome(Holder<Biome> biome)
 	{
 		var key = biome.unwrapKey();
-		return key.map(biomeRegistryKey -> !ParticularConfig.COMMON.caveDustExcludeBiomes.get().contains(biomeRegistryKey.location())).orElse(true);
+		return key.map(biomeRegistryKey -> !ParticularConfig.COMMON.caveDustExcludeBiomes.get().contains(biomeRegistryKey.identifier())).orElse(true);
 	}
 
 	@Inject(at = @At("TAIL"), method = "animateTick")

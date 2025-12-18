@@ -1,7 +1,7 @@
 package com.leclowndu93150.particular;
 
 import com.leclowndu93150.particular.utils.IrisCompat;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -184,9 +184,9 @@ public class ParticularConfig {
     }
 
     // Helper methods to convert biome string list to ResourceLocation list
-    public static List<ResourceLocation> getCaveDustExcludeBiomes() {
+    public static List<Identifier> getCaveDustExcludeBiomes() {
         return COMMON.caveDustExcludeBiomes.get().stream()
-                .map(ResourceLocation::parse)
+                .map(Identifier::parse)
                 .toList();
     }
 }

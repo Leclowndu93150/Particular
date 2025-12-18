@@ -1,6 +1,6 @@
 package com.leclowndu93150.particular.utils;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ public class TextureCache {
         }
     }
 
-    public static final Map<ResourceLocation, Data> INST = new HashMap<>();
+    public static final Map<Identifier, Data> INST = new HashMap<>();
 
     public static void clear() {
         INST.clear();
