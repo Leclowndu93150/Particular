@@ -34,7 +34,8 @@
     "InjectWeatherRendering",
     "InvokerLivingEntity",
     "InvokerViewerCountManager",
-    "NativeImageAccessor"
+    "NativeImageAccessor",
+    "ParticleEngineMixin"
   ],
   "server": [],
   "injectors": {
