@@ -308,6 +308,7 @@ public class CommonClass {
         if (!ParticularConfig.cascades()) return;
 
         Minecraft mc = Minecraft.getInstance();
+        if (Minecraft.getInstance().player == null) return;
         int renderDistance = mc.options.renderDistance().get();
         BlockPos playerPos = mc.player.blockPosition();
         long currentTime = world.getGameTime();
