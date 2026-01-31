@@ -35,13 +35,11 @@ public abstract class InjectEntity
 	@Shadow public abstract double getZ();
 
 	@Shadow public abstract Level level();
-	@Shadow public abstract Vec3 position();
 	@Shadow public abstract BlockPos blockPosition();
 
-	@Shadow private Level level;
-	@Shadow private BlockPos blockPosition;
-	@Unique
-	public Queue<Double> velocities = new LinkedList<>();
+	@Unique private final int particular$velArraySize = 4;
+	@Unique private final double[] particular$vel = new double[particular$velArraySize];
+	@Unique private int particular$velIdx = 0;
 
 	@Inject(
 		method = "tick",
@@ -51,11 +49,8 @@ public abstract class InjectEntity
 	{
 		if (!ParticularConfig.waterSplash()) { return; }
 
-		velocities.offer(Math.abs(deltaMovement.y()));
-		if (velocities.size() > 4)
-		{
-			velocities.poll();
-		}
+		particular$vel[particular$velIdx % particular$velArraySize] = Math.abs(deltaMovement.y());
+		particular$velIdx = (particular$velIdx + 1) % particular$velArraySize;
 	}
 
 	@Inject(
@@ -88,7 +83,7 @@ public abstract class InjectEntity
 
 		if (!foundSurface) { return; }
 
-		double velocityValue = velocities.isEmpty() ? 0.0f : Collections.max(velocities);
+		double velocityValue = Math.max(Math.max(particular$vel[0], particular$vel[1]), Math.max(particular$vel[2], particular$vel[3]));
 
 		// 3D splash
 		level().addParticle(Particles.WATER_SPLASH_EMITTER.get(), getX(), baseY + prevState.getOwnHeight(), getZ(), dimensions.width(), velocityValue, 0.0);
