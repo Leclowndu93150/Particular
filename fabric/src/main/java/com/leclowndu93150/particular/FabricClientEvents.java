@@ -1,7 +1,6 @@
 package com.leclowndu93150.particular;
 
 import com.leclowndu93150.particular.particles.*;
-import com.leclowndu93150.particular.particles.leaves.BigLeafParticle;
 import com.leclowndu93150.particular.particles.leaves.ConiferLeafParticle;
 import com.leclowndu93150.particular.particles.leaves.LeafParticle;
 import com.leclowndu93150.particular.particles.leaves.SpinningLeafParticle;
@@ -11,8 +10,7 @@ import com.leclowndu93150.particular.particles.splashes.WaterSplashParticle;
 import com.leclowndu93150.particular.particles.splashes.WaterSplashRingParticle;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.minecraft.client.Minecraft;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.minecraft.client.particle.BubblePopParticle;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.world.level.Level;
@@ -22,7 +20,7 @@ public class FabricClientEvents {
     private static int cascadeCleanupTicks = 0;
 
     public static void registerParticleFactories() {
-        ParticleFactoryRegistry registry = ParticleFactoryRegistry.getInstance();
+        ParticleProviderRegistry registry = ParticleProviderRegistry.getInstance();
 
         registry.register(Particles.OAK_LEAF(), LeafParticle.Factory::new);
         registry.register(Particles.BIRCH_LEAF(), SpinningLeafParticle.Factory::new);
