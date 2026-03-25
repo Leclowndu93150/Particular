@@ -12,6 +12,10 @@ repositories {
         name = "Terraformers"
         url = "https://maven.terraformersmc.com/"
     }
+    maven {
+        name = "Nucleoid"
+        url = "https://maven.nucleoid.xyz/"
+    }
 }
 
 dependencies {
@@ -22,13 +26,13 @@ dependencies {
     implementation "com.electronwill.night-config:yaml:3.8.3"
 
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-    modImplementation "curse.maven:forge-config-api-port-547434:7807872"
-    modCompileOnly "curse.maven:irisshaders-455508:7805235"
-    modCompileOnly "curse.maven:sodium-394468:7805119"
-    modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
+    implementation "curse.maven:forge-config-api-port-547434:7807872"
+    compileOnly "curse.maven:irisshaders-455508:7805235"
+    compileOnly "curse.maven:sodium-394468:7805119"
+    implementation("com.terraformersmc:modmenu:${modmenu_version}")
 }
 
 loom {

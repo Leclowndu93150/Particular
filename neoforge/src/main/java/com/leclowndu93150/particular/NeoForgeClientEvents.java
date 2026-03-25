@@ -11,7 +11,7 @@ import com.leclowndu93150.particular.particles.splashes.WaterSplashParticle;
 import com.leclowndu93150.particular.particles.splashes.WaterSplashRingParticle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.particle.BubblePopParticle;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
@@ -101,7 +101,7 @@ public class NeoForgeClientEvents {
             Minecraft mc = Minecraft.getInstance();
             if (mc.player == null || mc.level == null) return;
 
-            GuiGraphics guiGraphics = event.getGuiGraphics();
+            GuiGraphicsExtractor guiGraphics = event.getGuiGraphics();
             Font font = mc.font;
 
             String cascadeText = "Cascades: " + CommonClass.cascades.size();
@@ -110,7 +110,7 @@ public class NeoForgeClientEvents {
             int y = 10;
 
             guiGraphics.fill(x - 2, y - 2, x + textWidth + 2, y + font.lineHeight + 2, 0x80000000);
-            guiGraphics.drawString(font, cascadeText, x, y, 0xFFFFFF);
+            guiGraphics.text(font, cascadeText, x, y, 0xFFFFFF);
         }
 
         @SubscribeEvent

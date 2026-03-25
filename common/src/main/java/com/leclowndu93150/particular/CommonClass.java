@@ -1,23 +1,19 @@
 package com.leclowndu93150.particular;
 
 import com.leclowndu93150.particular.mixin.AccessorBiome;
-import com.leclowndu93150.particular.particles.splashes.WaterSplashParticle;
-import com.leclowndu93150.particular.platform.Services;
 import com.leclowndu93150.particular.utils.CascadeData;
 import com.leclowndu93150.particular.utils.LeafColorUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -98,7 +94,7 @@ public class CommonClass {
             return LeafColorUtil.getColorFromValues(colorValues);
         } catch (Exception e) {
             Constants.LOG.error("Failed to extract leaf color", e);
-            return new Color(BiomeColors.getAverageFoliageColor(world, pos));
+            return new Color(BiomeColors.getAverageFoliageColor((BlockAndTintGetter) world, pos));
         }
     }
 
@@ -174,9 +170,9 @@ public class CommonClass {
     }
 
     public static void spawnBubble(ParticleOptions particle, Level world, BlockPos pos) {
-        double x = pos.getX() + 0.25d + world.random.nextDouble() * 0.5d;
-        double y = pos.getY() + 0.25d + world.random.nextDouble() * 0.5d;
-        double z = pos.getZ() + 0.25d + world.random.nextDouble() * 0.5d;
+        double x = pos.getX() + 0.25d + world.getRandom().nextDouble() * 0.5d;
+        double y = pos.getY() + 0.25d + world.getRandom().nextDouble() * 0.5d;
+        double z = pos.getZ() + 0.25d + world.getRandom().nextDouble() * 0.5d;
 
         world.addParticle(particle, x, y, z, 0, 0, 0);
     }
@@ -190,7 +186,7 @@ public class CommonClass {
         float downfall = ((AccessorBiome)(Object) biome).getWeather().downfall();
         if ((!world.isRaining() || ParticularConfig.COMMON.fireflyCanSpawnInRain.get()) &&
                 random.nextInt(30 - (int)(10 * downfall)) == 0) {
-            long timeOfDay = world.getDayTime() % 24000;
+            long timeOfDay = world.getOverworldClockTime() % 24000;
             float temp = biome.getBaseTemperature();
             if (timeOfDay >= ParticularConfig.COMMON.fireflyStartTime.get() &&
                     timeOfDay <= ParticularConfig.COMMON.fireflyEndTime.get() &&
@@ -237,9 +233,9 @@ public class CommonClass {
         }
 
         for (int i = 0; i < 2; ++i) {
-            double x = pos.getX() + 0.25d + world.random.nextDouble() * (0.5d + xLen) + xOffset;
-            double y = pos.getY() + 0.25d + world.random.nextDouble() * 0.5d;
-            double z = pos.getZ() + 0.25d + world.random.nextDouble() * (0.5d + zLen) + zOffset;
+            double x = pos.getX() + 0.25d + world.getRandom().nextDouble() * (0.5d + xLen) + xOffset;
+            double y = pos.getY() + 0.25d + world.getRandom().nextDouble() * 0.5d;
+            double z = pos.getZ() + 0.25d + world.getRandom().nextDouble() * (0.5d + zLen) + zOffset;
 
             world.addParticle(particle, x, y, z, 0, 0, 0);
         }
@@ -287,9 +283,9 @@ public class CommonClass {
         }
 
         for (int i = 0; i < 20; ++i) {
-            double x = pos.getX() + 0.25d + world.random.nextDouble() * (0.5d + xLen) + xOffset;
-            double y = pos.getY() + 0.25d + world.random.nextDouble() * 0.5d;
-            double z = pos.getZ() + 0.25d + world.random.nextDouble() * (0.5d + zLen) + zOffset;
+            double x = pos.getX() + 0.25d + world.getRandom().nextDouble() * (0.5d + xLen) + xOffset;
+            double y = pos.getY() + 0.25d + world.getRandom().nextDouble() * 0.5d;
+            double z = pos.getZ() + 0.25d + world.getRandom().nextDouble() * (0.5d + zLen) + zOffset;
 
             world.addParticle(particle, x, y, z, 0, 0, 0);
         }
@@ -298,9 +294,9 @@ public class CommonClass {
     public static void onClientTick(Level world) {
         if (world == null) return;
 
-        RandomSource random = world.random;
+        RandomSource random = world.getRandom();
 
-        if (world.getDayTime() % 24000 == ParticularConfig.COMMON.fireflyStartTime.get()) {
+        if (world.getOverworldClockTime() % 24000 == ParticularConfig.COMMON.fireflyStartTime.get()) {
             var dailyRandomList = ParticularConfig.COMMON.fireflyDailyRandom.get();
             fireflyFrequency = dailyRandomList.get(random.nextInt(dailyRandomList.size())).floatValue();
         }

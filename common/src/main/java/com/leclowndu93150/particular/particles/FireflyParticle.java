@@ -96,7 +96,7 @@ public class FireflyParticle extends SingleQuadParticle
 	}
 
 	@Override
-	protected int getLightColor(float tint)
+	protected int getLightCoords(float tint)
 	{
 		return 15728880;
 	}

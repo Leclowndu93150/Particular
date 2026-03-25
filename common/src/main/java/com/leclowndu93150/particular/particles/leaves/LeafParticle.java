@@ -5,7 +5,7 @@ import com.leclowndu93150.particular.ParticularConfig;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.state.QuadParticleRenderState;
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
@@ -152,8 +152,8 @@ public class LeafParticle extends SingleQuadParticle {
                     this.getQuadSize(partialTick),
                     u0, u1,
                     this.getV0(), this.getV1(),
-                    net.minecraft.util.ARGB.colorFromFloat(this.alpha, this.rCol, this.gCol, this.bCol),
-                    this.getLightColor(partialTick)
+                    ARGB.colorFromFloat(this.alpha, this.rCol, this.gCol, this.bCol),
+                    this.getLightCoords(partialTick)
             );
 
             // Submit bottom-facing quad
@@ -165,7 +165,7 @@ public class LeafParticle extends SingleQuadParticle {
                     u0, u1,
                     this.getV0(), this.getV1(),
                     net.minecraft.util.ARGB.colorFromFloat(this.alpha, this.rCol, this.gCol, this.bCol),
-                    this.getLightColor(partialTick)
+                    this.getLightCoords(partialTick)
             );
         } else {
             // Normal falling - face camera with Z-axis roll
@@ -182,7 +182,7 @@ public class LeafParticle extends SingleQuadParticle {
                     u0, u1,
                     this.getV0(), this.getV1(),
                     ARGB.colorFromFloat(this.alpha, this.rCol, this.gCol, this.bCol),
-                    this.getLightColor(partialTick)
+                    this.getLightCoords(partialTick)
             );
         }
     }

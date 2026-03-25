@@ -65,14 +65,14 @@ public abstract class InjectEnderChestBlockEntity extends BlockEntity implements
 			if (injected.isOpen)
 			{
 				injected.isOpen = false;
-				injected.ticksUntilNextSwitch = world.random.nextIntBetweenInclusive(minClosedTime, maxClosedTime);
+				injected.ticksUntilNextSwitch = world.getRandom().nextIntBetweenInclusive(minClosedTime, maxClosedTime);
 				((AccessorEnderChestBlockEntity) blockEntity).getLidAnimator().shouldBeOpen(false);
 				((InvokerViewerCountManager)manager).invokeOnContainerClose(world, pos, blockEntity.getBlockState());
 			}
 			else
 			{
 				injected.isOpen = true;
-				injected.ticksUntilNextSwitch = world.random.nextIntBetweenInclusive(minOpenTime, maxOpenTime);
+				injected.ticksUntilNextSwitch = world.getRandom().nextIntBetweenInclusive(minOpenTime, maxOpenTime);
 				((AccessorEnderChestBlockEntity) blockEntity).getLidAnimator().shouldBeOpen(true);
 				((InvokerViewerCountManager)manager).invokeOnContainerOpen(world, pos, blockEntity.getBlockState());
 				world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.AMBIENT, 1f, 1f, true);

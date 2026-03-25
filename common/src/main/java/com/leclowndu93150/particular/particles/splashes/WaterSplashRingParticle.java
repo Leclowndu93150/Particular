@@ -3,7 +3,7 @@ package com.leclowndu93150.particular.particles.splashes;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.state.QuadParticleRenderState;
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
@@ -61,7 +61,7 @@ public class WaterSplashRingParticle extends SingleQuadParticle {
                 scale,
                 this.getU0(), this.getU1(), this.getV0(), this.getV1(),
                 ARGB.colorFromFloat(this.alpha, this.rCol, this.gCol, this.bCol),
-                this.getLightColor(partialTick)
+                this.getLightCoords(partialTick)
         );
 
         // Submit bottom-facing quad
@@ -71,7 +71,7 @@ public class WaterSplashRingParticle extends SingleQuadParticle {
                 scale,
                 this.getU0(), this.getU1(), this.getV0(), this.getV1(),
                 ARGB.colorFromFloat(this.alpha, this.rCol, this.gCol, this.bCol),
-                this.getLightColor(partialTick)
+                this.getLightCoords(partialTick)
         );
     }
 

@@ -5,11 +5,12 @@ import com.leclowndu93150.particular.mixin.NativeImageAccessor;
 import com.mojang.blaze3d.platform.NativeImage;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -21,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LeafColorUtil {
@@ -84,12 +86,13 @@ public class LeafColorUtil {
      */
     public static double[] getBlockTextureColor(BlockState state, Level world, BlockPos pos) {
         Minecraft client = Minecraft.getInstance();
-        BlockStateModel model = client.getBlockRenderer().getBlockModel(state);
+        BlockStateModel model = client.getModelManager().getBlockStateModelSet().get(state);
 
         renderRandom.setSeed(state.getSeed(pos));
-        List<BlockModelPart> parts = model.collectParts(renderRandom);
+        List<BlockStateModelPart> parts = new ArrayList<>();
+        model.collectParts(renderRandom, parts);
         List<BakedQuad> quads = new ObjectArrayList<>();
-        for (BlockModelPart part : parts) {
+        for (BlockStateModelPart part : parts) {
             quads.addAll(part.getQuads(Direction.DOWN));
         }
 
@@ -98,17 +101,23 @@ public class LeafColorUtil {
 
         if (!quads.isEmpty()) {
             BakedQuad quad = quads.get(0);
-            sprite = quad.sprite();
-            shouldColor = quad.isTinted();
+            sprite = quad.materialInfo().sprite();
+            shouldColor = quad.materialInfo().isTinted();
         } else {
-            sprite = model.particleIcon();
+            sprite = model.particleMaterial().sprite();
             shouldColor = true;
         }
 
         SpriteContents contents = sprite.contents();
         Identifier spriteId = contents.name();
         NativeImage texture = ((AccessorSpriteContents) contents).getByMipLevel()[0];
-        int blockColor = (shouldColor ? client.getBlockColors().getColor(state, world, pos, 0) : -1);
+        int blockColor = -1;
+        if (shouldColor) {
+            var tintSource = client.getBlockColors().getTintSource(state, 0);
+            if (tintSource != null) {
+                blockColor = tintSource.colorInWorld(state, (BlockAndTintGetter) world, pos);
+            }
+        }
 
         return calculateLeafColor(spriteId, texture, blockColor);
     }

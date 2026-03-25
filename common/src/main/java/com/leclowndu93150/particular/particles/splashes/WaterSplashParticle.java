@@ -8,15 +8,15 @@ import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.client.renderer.state.ParticleGroupRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.state.level.ParticleGroupRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
@@ -115,8 +115,8 @@ public class WaterSplashParticle extends Particle {
                     corners[i].add(camX, camY, camZ);
                 }
 
-                int light = particle.getLightColor(partialTick);
-                int argb = net.minecraft.util.ARGB.colorFromFloat(1.0f, rCol, gCol, bCol);
+                int light = particle.getLightCoords(partialTick);
+                int argb = ARGB.colorFromFloat(1.0f, rCol, gCol, bCol);
 
                 renderDataList.add(new WaterSplashRenderData(
                         corners, camY, particle.height, u0, u1, v0, v1, argb, light
