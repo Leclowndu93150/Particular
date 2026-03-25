@@ -2,7 +2,7 @@ package com.leclowndu93150.particular.platform;
 
 import com.leclowndu93150.particular.Constants;
 import com.leclowndu93150.particular.platform.services.IPlatformHelper;
-import com.leclowndu93150.particular.platform.services.IParticleRegistry;
+import com.leclowndu93150.baguettelib.platform.services.IParticleRegistry;
 
 import java.util.ServiceLoader;
 

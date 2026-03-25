@@ -2,7 +2,7 @@ package com.leclowndu93150.particular;
 
 import com.leclowndu93150.particular.mixin.AccessorBiome;
 import com.leclowndu93150.particular.utils.CascadeData;
-import com.leclowndu93150.particular.utils.LeafColorUtil;
+import com.leclowndu93150.baguettelib.util.BlockColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
@@ -90,8 +90,8 @@ public class CommonClass {
             if (world.getBlockState(pos).getBlock() == block) {
                 state = world.getBlockState(pos);
             }
-            double[] colorValues = LeafColorUtil.getBlockTextureColor(state, world, pos);
-            return LeafColorUtil.getColorFromValues(colorValues);
+            double[] colorValues = BlockColorUtil.getBlockTextureColor(state, world, pos);
+            return BlockColorUtil.getColorFromValues(colorValues);
         } catch (Exception e) {
             Constants.LOG.error("Failed to extract leaf color", e);
             return new Color(BiomeColors.getAverageFoliageColor((BlockAndTintGetter) world, pos));

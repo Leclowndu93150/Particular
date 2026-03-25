@@ -1,13 +1,8 @@
 package com.leclowndu93150.particular.platform;
 
-import com.leclowndu93150.particular.Constants;
 import com.leclowndu93150.particular.NeoForgeParticles;
-import com.leclowndu93150.particular.platform.services.IParticleRegistry;
-import net.minecraft.core.particles.ParticleType;
+import com.leclowndu93150.baguettelib.platform.services.IParticleRegistry;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.HashMap;
 import java.util.Map;

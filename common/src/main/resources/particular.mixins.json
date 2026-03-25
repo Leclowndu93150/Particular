@@ -13,7 +13,6 @@
     "AccessorChestBlockEntity",
     "AccessorEnderChestBlockEntity",
     "AccessorParticle",
-    "AccessorSpriteContents",
     "AccessorTextureAtlas",
     "InjectBarrelBlock",
     "InjectBlock",
@@ -34,7 +33,6 @@
     "InjectWeatherRendering",
     "InvokerLivingEntity",
     "InvokerViewerCountManager",
-    "NativeImageAccessor",
     "ParticleEngineMixin"
   ],
   "server": [],

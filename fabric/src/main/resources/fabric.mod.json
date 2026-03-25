@@ -36,9 +36,7 @@
     "minecraft": "~${minecraft_version}",
     "forgeconfigapiport": "*",
     "modmenu": "*",
+    "baguettelib": ">=2.0.1",
     "java": ">=${java_version}"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }

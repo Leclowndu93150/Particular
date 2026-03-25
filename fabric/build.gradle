@@ -29,6 +29,7 @@ dependencies {
     implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
+    implementation "com.leclowndu93150.baguettelib:baguettelib-fabric:${baguettelib_version}"
     implementation "curse.maven:forge-config-api-port-547434:7807872"
     compileOnly "curse.maven:irisshaders-455508:7805235"
     compileOnly "curse.maven:sodium-394468:7805119"

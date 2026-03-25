@@ -41,6 +41,7 @@ neoForge {
 }
 
 dependencies {
+    implementation "com.leclowndu93150.baguettelib:baguettelib-neoforge:${baguettelib_version}"
     compileOnly "curse.maven:irisshaders-455508:7805235"
     compileOnly "curse.maven:sodium-394468:7805119"
 }

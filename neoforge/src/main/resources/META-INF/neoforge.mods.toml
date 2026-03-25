@@ -25,8 +25,14 @@ ordering = "NONE" # The order that this dependency should load in relation to yo
 side = "BOTH" # Side this dependency is applied on - 'BOTH', 'CLIENT' or 'SERVER'
 [[dependencies."${mod_id}"]]
 modId = "minecraft"
-type = "required" #mandatory Can be one of "required", "optional", "incompatible" or "discouraged"
+type = "required"
 versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies."${mod_id}"]]
+modId = "baguettelib"
+type = "required"
+versionRange = "[2.0.1,)"
 ordering = "NONE"
 side = "BOTH"
 

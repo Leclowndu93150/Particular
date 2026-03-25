@@ -18,6 +18,8 @@ dependencies {
 
     implementation "fuzs.forgeconfigapiport:forgeconfigapiport-common-neoforgeapi:${config_api_port_version}"
 
+    implementation "com.leclowndu93150.baguettelib:baguettelib-common:${baguettelib_version}"
+
     compileOnly "curse.maven:irisshaders-455508:7805235"
 }
 

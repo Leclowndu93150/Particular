@@ -1,7 +1,7 @@
 package com.leclowndu93150.particular.platform;
 
 import com.leclowndu93150.particular.Constants;
-import com.leclowndu93150.particular.platform.services.IParticleRegistry;
+import com.leclowndu93150.baguettelib.platform.services.IParticleRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
