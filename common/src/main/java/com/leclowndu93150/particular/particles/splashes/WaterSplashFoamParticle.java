@@ -8,9 +8,16 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.RandomSource;
 
 public class WaterSplashFoamParticle extends WaterSplashParticle {
-    WaterSplashFoamParticle(ClientLevel clientWorld, double x, double y, double z, float width, float height, SpriteSet provider) {
-        super(clientWorld, x, y, z, width, height, provider);
-        colored = false;
+    private static final java.awt.Color LAVA_FOAM_COLOR = new java.awt.Color(231, 174, 87);
+
+    WaterSplashFoamParticle(ClientLevel clientWorld, double x, double y, double z, float width, float height, SpriteSet provider, boolean lava) {
+        super(clientWorld, x, y, z, width, height, provider, lava);
+        if (lava) {
+            colored = true;
+            color = LAVA_FOAM_COLOR;
+        } else {
+            colored = false;
+        }
     }
 
     public static class Factory implements ParticleProvider<SimpleParticleType> {
@@ -22,7 +29,7 @@ public class WaterSplashFoamParticle extends WaterSplashParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType type, ClientLevel world, double x, double y, double z, double g, double h, double i, RandomSource random) {
-            return new WaterSplashFoamParticle(world, x, y, z, (float) g, (float) h, provider);
+            return new WaterSplashFoamParticle(world, x, y, z, (float) g, (float) h, provider, i > 0);
         }
     }
 }

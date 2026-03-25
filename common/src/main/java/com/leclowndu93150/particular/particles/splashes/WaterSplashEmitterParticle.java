@@ -16,8 +16,9 @@ public class WaterSplashEmitterParticle extends NoRenderParticle {
     private final float speed;
     private final float width;
     private final float height;
+    private final boolean isLava;
 
-    WaterSplashEmitterParticle(ClientLevel clientWorld, double x, double y, double z, float width, float speed) {
+    WaterSplashEmitterParticle(ClientLevel clientWorld, double x, double y, double z, float width, float speed, boolean lava) {
         super(clientWorld, x, y, z);
         speed = Math.min(2, speed);
         gravity = 0;
@@ -25,10 +26,12 @@ public class WaterSplashEmitterParticle extends NoRenderParticle {
         this.speed = speed;
         this.width = width;
         this.height = (speed / 2f + width / 3f);
+        this.isLava = lava;
+        double flag = lava ? 1 : 0;
 
-        clientWorld.addParticle(Particles.WATER_SPLASH(), x, y, z, width, this.height, 0);
-        clientWorld.addParticle(Particles.WATER_SPLASH_FOAM(), x, y, z, width, this.height, 0);
-        clientWorld.addParticle(Particles.WATER_SPLASH_RING(), x, y, z, width, 0, 0);
+        clientWorld.addParticle(Particles.WATER_SPLASH(), x, y, z, width, this.height, flag);
+        clientWorld.addParticle(Particles.WATER_SPLASH_FOAM(), x, y, z, width, this.height, flag);
+        clientWorld.addParticle(Particles.WATER_SPLASH_RING(), x, y, z, width, 0, flag);
 
         if (speed > 0.5) {
             splash(width, (1.5f/8f + speed * 1/8f) + (width / 6f), 0.15f);
@@ -44,21 +47,24 @@ public class WaterSplashEmitterParticle extends NoRenderParticle {
     public void tick() {
         super.tick();
         if (age == 8) {
-            level.addParticle(Particles.WATER_SPLASH(), x, y, z, width * 0.66f, height * 2f, 0);
-            level.addParticle(Particles.WATER_SPLASH_FOAM(), x, y, z, width * 0.66f, height * 2f, 0);
-            level.addParticle(Particles.WATER_SPLASH_RING(), x, y, z, width * 0.66f, 0, 0);
+            double flag = isLava ? 1 : 0;
+            level.addParticle(Particles.WATER_SPLASH(), x, y, z, width * 0.66f, height * 2f, flag);
+            level.addParticle(Particles.WATER_SPLASH_FOAM(), x, y, z, width * 0.66f, height * 2f, flag);
+            level.addParticle(Particles.WATER_SPLASH_RING(), x, y, z, width * 0.66f, 0, flag);
             splash(width * 0.66f, (3f/8f + speed * 1/8f) + (width / 6f), 0.05f);
         }
 
-        if (!level.getFluidState(BlockPos.containing(x, y, z)).is(FluidTags.WATER)) {
+        var fluid = level.getFluidState(BlockPos.containing(x, y, z));
+        if (isLava ? !fluid.is(FluidTags.LAVA) : !fluid.is(FluidTags.WATER)) {
             this.remove();
         }
     }
 
     private void splash(float width, float speed, float spread) {
+        var dropletType = isLava ? ParticleTypes.LANDING_LAVA : ParticleTypes.FALLING_WATER;
         for (int i = 0; i < width * 20f; ++i) {
             SingleQuadParticle droplet = (SingleQuadParticle) Minecraft.getInstance().particleEngine.createParticle(
-                    ParticleTypes.FALLING_WATER,
+                    dropletType,
                     x, y + 1/16f, z,
                     0, 0, 0
             );
@@ -68,7 +74,7 @@ public class WaterSplashEmitterParticle extends NoRenderParticle {
                 double zVel = random.triangle(0.0, spread);
                 droplet.setPos(x + xVel / spread * width, y + 1/16f, z + zVel / spread * width);
                 droplet.setParticleSpeed(xVel, yVel, zVel);
-                droplet.setColor(1,1,1);
+                if (!isLava) droplet.setColor(1, 1, 1);
                 ((AccessorBillboardParticle) droplet).setQuadSize(1/8f);
             }
         }
@@ -79,7 +85,7 @@ public class WaterSplashEmitterParticle extends NoRenderParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType type, ClientLevel world, double x, double y, double z, double g, double h, double i, RandomSource random) {
-            return new WaterSplashEmitterParticle(world, x, y, z, (float) g, (float) h);
+            return new WaterSplashEmitterParticle(world, x, y, z, (float) g, (float) h, i > 0);
         }
     }
 }

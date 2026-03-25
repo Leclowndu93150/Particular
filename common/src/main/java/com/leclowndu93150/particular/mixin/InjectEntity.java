@@ -37,6 +37,7 @@ public abstract class InjectEntity
 	@Shadow public abstract Level level();
 	@Shadow public abstract Vec3 position();
 	@Shadow public abstract BlockPos blockPosition();
+	@Shadow public abstract boolean isInLava();
 
 	@Shadow private Level level;
 	@Shadow private BlockPos blockPosition;
@@ -45,6 +46,8 @@ public abstract class InjectEntity
 	public Queue<Double> velocities = new LinkedList<>();
 	@Unique
 	private double accumulatedFallDistance = 0.0;
+	@Unique
+	private boolean wasInLava = false;
 
 	@Inject(
 		method = "tick",
@@ -52,7 +55,7 @@ public abstract class InjectEntity
 	)
 	private void onSetVelocity(CallbackInfo ci)
 	{
-		if (!ParticularConfig.waterSplash()) { return; }
+		if (!ParticularConfig.waterSplash() && !ParticularConfig.lavaSplash()) { return; }
 
 		velocities.offer(Math.abs(deltaMovement.y()));
 		if (velocities.size() > 4)
@@ -64,6 +67,14 @@ public abstract class InjectEntity
 			accumulatedFallDistance += Math.abs(deltaMovement.y());
 		} else if (deltaMovement.y() > 0.0) {
 			accumulatedFallDistance = 0.0;
+		}
+
+		if (ParticularConfig.lavaSplash() && level().isClientSide()) {
+			boolean inLava = isInLava();
+			if (inLava && !wasInLava) {
+				lavaParticles();
+			}
+			wasInLava = inLava;
 		}
 	}
 
@@ -109,5 +120,44 @@ public abstract class InjectEntity
 		accumulatedFallDistance = 0.0;
 
 		level().addParticle(Particles.WATER_SPLASH_EMITTER(), getX(), baseY + prevState.getOwnHeight(), getZ(), dimensions.width(), velocityValue, 0.0);
+	}
+
+	@Unique
+	private void lavaParticles()
+	{
+		//noinspection ConstantConditions
+		if ((Object) this instanceof Arrow) { return; }
+
+		float baseY = Mth.floor(getY());
+
+		boolean foundSurface = false;
+		FluidState prevState = Fluids.EMPTY.defaultFluidState();
+		for (int i = 0; i < 5; ++i)
+		{
+			FluidState nextState = level().getFluidState(blockPosition().offset(0, i, 0));
+			if (prevState.is(Fluids.LAVA) && nextState.is(Fluids.EMPTY))
+			{
+				baseY += i - 1;
+				foundSurface = true;
+				break;
+			}
+
+			prevState = nextState;
+		}
+
+		if (!foundSurface) { return; }
+
+		double velocityValue = velocities.isEmpty() ? 0.0f : Collections.max(velocities);
+
+		double actualFallDistance = fallDistance > 0.0 ? fallDistance : accumulatedFallDistance;
+
+		if (actualFallDistance < ParticularConfig.COMMON.waterSplashMinFallDistance.get()) {
+			accumulatedFallDistance = 0.0;
+			return;
+		}
+
+		accumulatedFallDistance = 0.0;
+
+		level().addParticle(Particles.WATER_SPLASH_EMITTER(), getX(), baseY + prevState.getOwnHeight(), getZ(), dimensions.width(), velocityValue, 1.0);
 	}
 }

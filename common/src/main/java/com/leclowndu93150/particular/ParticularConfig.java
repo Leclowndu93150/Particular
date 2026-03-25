@@ -21,6 +21,7 @@ public class ParticularConfig {
     public static class CommonConfig {
         // Enabled Effects
         public final ModConfigSpec.BooleanValue waterSplash;
+        public final ModConfigSpec.BooleanValue lavaSplash;
         public final ModConfigSpec.BooleanValue cascades;
         public final ModConfigSpec.BooleanValue waterfallSpray;
         public final ModConfigSpec.BooleanValue fireflies;
@@ -72,6 +73,7 @@ public class ParticularConfig {
             // Enabled Effects Section
             builder.comment("Enable/Disable Effects").push("enabledEffects");
             waterSplash = builder.comment("Enable water splash particles").define("waterSplash", true);
+            lavaSplash = builder.comment("Enable lava splash particles").define("lavaSplash", true);
             cascades = builder.comment("Enable cascade particles").define("cascades", true);
             waterfallSpray = builder.comment("Enable waterfall spray particles").define("waterfallSpray", true);
             fireflies = builder.comment("Enable firefly particles").define("fireflies", true);
@@ -157,6 +159,7 @@ public class ParticularConfig {
 
     // Helper methods to access config values
     public static boolean waterSplash() { return COMMON.waterSplash.get(); }
+    public static boolean lavaSplash() { return COMMON.lavaSplash.get(); }
     public static boolean cascades() { return COMMON.cascades.get(); }
     public static boolean waterfallSpray() { return COMMON.waterfallSpray.get(); }
     public static boolean fireflies() { return COMMON.fireflies.get(); }

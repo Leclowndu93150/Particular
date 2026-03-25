@@ -31,8 +31,10 @@ public class WaterSplashParticle extends Particle {
     protected final SpriteSet provider;
     private final float width;
     private final float height;
-    private final Color color;
+    protected static final Color LAVA_COLOR = new Color(207, 92, 15);
+    protected Color color;
     protected boolean colored = true;
+    protected boolean isLava = false;
 
     WaterSplashParticle(ClientLevel clientWorld, double x, double y, double z, float width, float height, SpriteSet provider) {
         super(clientWorld, x, y, z);
@@ -44,6 +46,17 @@ public class WaterSplashParticle extends Particle {
         color = new Color(BiomeColors.getAverageWaterColor(clientWorld, BlockPos.containing(x, y, z)));
     }
 
+    WaterSplashParticle(ClientLevel clientWorld, double x, double y, double z, float width, float height, SpriteSet provider, boolean lava) {
+        super(clientWorld, x, y, z);
+        gravity = 0;
+        lifetime = 18;
+        this.width = width;
+        this.height = height;
+        this.provider = provider;
+        this.isLava = lava;
+        color = lava ? LAVA_COLOR : new Color(BiomeColors.getAverageWaterColor(clientWorld, BlockPos.containing(x, y, z)));
+    }
+
     @Override
     public ParticleRenderType getGroup() {
         return WATER_SPLASH_TYPE;
@@ -52,7 +65,8 @@ public class WaterSplashParticle extends Particle {
     @Override
     public void tick() {
         super.tick();
-        if (!level.getFluidState(BlockPos.containing(x, y, z)).is(FluidTags.WATER)) {
+        var fluid = level.getFluidState(BlockPos.containing(x, y, z));
+        if (isLava ? !fluid.is(FluidTags.LAVA) : !fluid.is(FluidTags.WATER)) {
             this.remove();
         }
     }
@@ -66,7 +80,7 @@ public class WaterSplashParticle extends Particle {
 
         @Override
         public Particle createParticle(SimpleParticleType type, ClientLevel world, double x, double y, double z, double g, double h, double i, RandomSource random) {
-            return new WaterSplashParticle(world, x, y, z, (float) g, (float) h, provider);
+            return new WaterSplashParticle(world, x, y, z, (float) g, (float) h, provider, i > 0);
         }
     }
 

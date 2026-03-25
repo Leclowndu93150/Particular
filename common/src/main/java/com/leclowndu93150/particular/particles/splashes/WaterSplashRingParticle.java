@@ -16,13 +16,20 @@ import org.joml.Quaternionf;
 public class WaterSplashRingParticle extends SingleQuadParticle {
     protected final SpriteSet provider;
     private final float width;
+    private final boolean isLava;
 
-    WaterSplashRingParticle(ClientLevel clientWorld, double x, double y, double z, float width, SpriteSet provider) {
+    WaterSplashRingParticle(ClientLevel clientWorld, double x, double y, double z, float width, SpriteSet provider, boolean lava) {
         super(clientWorld, x, y, z, provider.first());
         gravity = 0;
         lifetime = 18;
         this.width = width;
         this.provider = provider;
+        this.isLava = lava;
+        if (lava) {
+            rCol = 207f / 255f;
+            gCol = 92f / 255f;
+            bCol = 15f / 255f;
+        }
         setSpriteFromAge(provider);
     }
 
@@ -35,7 +42,8 @@ public class WaterSplashRingParticle extends SingleQuadParticle {
     public void tick() {
         super.tick();
         setSpriteFromAge(provider);
-        if (!level.getFluidState(BlockPos.containing(x, y, z)).is(FluidTags.WATER)) {
+        var fluid = level.getFluidState(BlockPos.containing(x, y, z));
+        if (isLava ? !fluid.is(FluidTags.LAVA) : !fluid.is(FluidTags.WATER)) {
             this.remove();
         }
     }
@@ -84,7 +92,7 @@ public class WaterSplashRingParticle extends SingleQuadParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType type, ClientLevel world, double x, double y, double z, double g, double h, double i, RandomSource random) {
-            return new WaterSplashRingParticle(world, x, y, z, (float) g, provider);
+            return new WaterSplashRingParticle(world, x, y, z, (float) g, provider, i > 0);
         }
     }
 }
