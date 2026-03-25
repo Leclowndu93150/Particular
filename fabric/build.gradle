@@ -1,6 +1,6 @@
 plugins {
     id 'multiloader-loader'
-    id 'fabric-loom'
+    id 'net.fabricmc.fabric-loom'
 }
 
 base {
@@ -15,7 +15,6 @@ repositories {
 }
 
 dependencies {
-
     implementation "com.electronwill.night-config:core:3.8.3"
     implementation "com.electronwill.night-config:toml:3.8.3"
     implementation "com.electronwill.night-config:json:3.8.3"
@@ -23,16 +22,12 @@ dependencies {
     implementation "com.electronwill.night-config:yaml:3.8.3"
 
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
-    }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-    modImplementation "curse.maven:forge-config-api-port-547434:7337130"
-    modCompileOnly "curse.maven:irisshaders-455508:7050301"
-    modCompileOnly "curse.maven:sodium-394468:7048978"
+    modImplementation "curse.maven:forge-config-api-port-547434:7807872"
+    modCompileOnly "curse.maven:irisshaders-455508:7805235"
+    modCompileOnly "curse.maven:sodium-394468:7805119"
     modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
 }
 
@@ -56,6 +51,24 @@ loom {
             setConfigName('Fabric Server')
             ideConfigGenerated(true)
             runDir('runs/server')
+        }
+    }
+}
+
+def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements', 'includeInternal', 'modCompileClasspath'].each { variant ->
+    configurations.named("$variant") {
+        attributes {
+            attribute(loaderAttribute, 'fabric')
+        }
+    }
+}
+sourceSets.configureEach {
+    [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName].each { variant->
+        configurations.named("$variant") {
+            attributes {
+                attribute(loaderAttribute, 'fabric')
+            }
         }
     }
 }
