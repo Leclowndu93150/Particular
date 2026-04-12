@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "com.leclowndu93150.particular.mixin",
   "refmap": "${mod_id}.refmap.json",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [],
   "client": [
   ],
