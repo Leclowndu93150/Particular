@@ -25,6 +25,7 @@ public class WaterSplashRingParticle extends SingleQuadParticle {
         this.width = width;
         this.provider = provider;
         this.isLava = lava;
+        this.alpha = WaterSplashParticle.splashAlpha();
         if (lava) {
             rCol = 207f / 255f;
             gCol = 92f / 255f;

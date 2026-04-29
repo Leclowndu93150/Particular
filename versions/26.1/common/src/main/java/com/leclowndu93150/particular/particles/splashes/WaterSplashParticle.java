@@ -1,5 +1,6 @@
 package com.leclowndu93150.particular.particles.splashes;
 
+import com.leclowndu93150.particular.ParticularConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
@@ -130,7 +131,7 @@ public class WaterSplashParticle extends Particle {
                 }
 
                 int light = particle.getLightCoords(partialTick);
-                int argb = ARGB.colorFromFloat(1.0f, rCol, gCol, bCol);
+                int argb = ARGB.colorFromFloat(splashAlpha(), rCol, gCol, bCol);
 
                 renderDataList.add(new WaterSplashRenderData(
                         corners, camY, particle.height, u0, u1, v0, v1, argb, light
@@ -139,6 +140,10 @@ public class WaterSplashParticle extends Particle {
 
             return new WaterSplashGroupRenderState(renderDataList);
         }
+    }
+
+    protected static float splashAlpha() {
+        return ParticularConfig.COMMON.waterSplashOpacity.get().floatValue();
     }
 
     private record WaterSplashRenderData(
