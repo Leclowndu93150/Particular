@@ -15,10 +15,11 @@ public class CascadeParticle extends SingleQuadParticle
 	{
 		super(clientWorld, x, y, z, provider.get(0, 9));
 		this.provider = provider;
-		lifetime = 9;
-		quadSize = 1f;
-		gravity = 0.4f;
-		setParticleSpeed(random.nextDouble() * 0.25f - 0.125f, 0, random.nextDouble() * 0.25f - 0.125f);
+		lifetime = 18;
+		quadSize = 0.7f;
+		gravity = 0.12f;
+		friction = 0.92f;
+		setParticleSpeed(random.nextDouble() * 0.1f - 0.05f, 0, random.nextDouble() * 0.1f - 0.05f);
 		setSpriteFromAge(provider);
 		removeIfInsideSolidBlock();
 	}

@@ -355,22 +355,38 @@ public class CommonClass {
             }
 
             float height = world.getFluidState(pos.above()).getOwnHeight();
-            double x = pos.getX();
-            double y = (double) pos.getY() + random.nextDouble() * height + 1;
-            double z = pos.getZ();
+            int particles = 2 + cascadeData.strength;
+            for (int i = 0; i < particles; i++) {
+                double x = pos.getX();
+                double y = (double) pos.getY() + random.nextDouble() * height + 1;
+                double z = pos.getZ();
+                int side = random.nextInt(4);
 
-            if (random.nextBoolean()) {
-                x += random.nextDouble();
-                z += random.nextIntBetweenInclusive(0, 1);
-            } else {
-                x += random.nextIntBetweenInclusive(0, 1);
-                z += random.nextDouble();
-            }
+                if (side == 0 && world.getFluidState(pos.north()).is(Fluids.WATER)) {
+                    x += random.nextDouble();
+                    z += 0.5 + (random.nextDouble() * 0.25 - 0.5) * 1.2;
+                } else if (side == 1 && world.getFluidState(pos.east()).is(Fluids.WATER)) {
+                    x += 0.5 + (0.25 + random.nextDouble() * 0.25) * 1.2;
+                    z += random.nextDouble();
+                } else if (side == 2 && world.getFluidState(pos.south()).is(Fluids.WATER)) {
+                    x += random.nextDouble();
+                    z += 0.5 + (0.25 + random.nextDouble() * 0.25) * 1.2;
+                } else if (world.getFluidState(pos.west()).is(Fluids.WATER)) {
+                    x += 0.5 + (random.nextDouble() * 0.25 - 0.5) * 1.2;
+                    z += random.nextDouble();
+                } else if (random.nextBoolean()) {
+                    x += random.nextDouble();
+                    z += random.nextIntBetweenInclusive(0, 1);
+                } else {
+                    x += random.nextIntBetweenInclusive(0, 1);
+                    z += random.nextDouble();
+                }
 
-            var cascade = mc.particleEngine.createParticle(Particles.CASCADE(), x, y, z, 0, 0, 0);
-            if (cascade != null) {
-                float size = cascadeData.strength / 4f * height;
-                cascade.scale(1f - (1f - size) / 2f);
+                var cascade = mc.particleEngine.createParticle(Particles.CASCADE(), x, y, z, 0, 0, 0);
+                if (cascade != null) {
+                    float size = Math.max(0.75f, cascadeData.strength / 4f * height);
+                    cascade.scale(1f - (1f - size) / 2f);
+                }
             }
 
             return false;
