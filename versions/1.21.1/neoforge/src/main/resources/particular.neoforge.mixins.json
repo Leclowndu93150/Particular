@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.leclowndu93150.particular.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "client": [
+    "ParticleEngineMixinNeo"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

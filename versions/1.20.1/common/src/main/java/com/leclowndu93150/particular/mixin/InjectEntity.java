@@ -1,0 +1,149 @@
+package com.leclowndu93150.particular.mixin;
+
+import com.leclowndu93150.particular.Particles;
+import com.leclowndu93150.particular.ParticularConfig;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(Entity.class)
+public abstract class InjectEntity
+{
+	@Shadow private Vec3 deltaMovement;
+	@Shadow private EntityDimensions dimensions;
+	@Shadow @Final protected RandomSource random;
+	@Shadow public abstract double getX();
+	@Shadow public abstract double getY();
+	@Shadow public abstract double getZ();
+
+	@Shadow public abstract Level level();
+	@Shadow public abstract BlockPos blockPosition();
+	@Shadow public abstract boolean isInLava();
+	@Shadow public float fallDistance;
+
+	@Unique private final int particular$velArraySize = 4;
+	@Unique private final double[] particular$vel = new double[particular$velArraySize];
+	@Unique private int particular$velIdx = 0;
+	@Unique private double particular$accumulatedFallDistance = 0.0;
+	@Unique private boolean particular$wasInLava = false;
+
+	@Inject(
+		method = "tick",
+		at = @At("TAIL")
+	)
+	private void onSetVelocity(CallbackInfo ci)
+	{
+		if (!ParticularConfig.waterSplash() && !ParticularConfig.lavaSplash()) { return; }
+
+		particular$vel[particular$velIdx % particular$velArraySize] = Math.abs(deltaMovement.y());
+		particular$velIdx = (particular$velIdx + 1) % particular$velArraySize;
+
+		if (deltaMovement.y() < 0.0) {
+			particular$accumulatedFallDistance += Math.abs(deltaMovement.y());
+		} else if (deltaMovement.y() > 0.0) {
+			particular$accumulatedFallDistance = 0.0;
+		}
+
+		if (ParticularConfig.lavaSplash() && level().isClientSide) {
+			boolean inLava = isInLava();
+			if (inLava && !particular$wasInLava) {
+				particular$lavaParticles();
+			}
+			particular$wasInLava = inLava;
+		}
+	}
+
+	@Inject(
+		method = "doWaterSplashEffect",
+		at = @At("TAIL"))
+	private void waterParticles(CallbackInfo ci)
+	{
+		if (!ParticularConfig.waterSplash()) { return; }
+
+		if ((Object) this instanceof Arrow || !level().isClientSide) { return; }
+
+		float baseY = Mth.floor(getY());
+
+		boolean foundSurface = false;
+		FluidState prevState = Fluids.EMPTY.defaultFluidState();
+		for (int i = 0; i < 5; ++i)
+		{
+			FluidState nextState = level().getFluidState(blockPosition().offset(0, i, 0));
+			if (prevState.is(Fluids.WATER) && nextState.is(Fluids.EMPTY))
+			{
+				baseY += i - 1;
+				foundSurface = true;
+				break;
+			}
+
+			prevState = nextState;
+		}
+
+		if (!foundSurface) { return; }
+
+		double velocityValue = Math.max(Math.max(particular$vel[0], particular$vel[1]), Math.max(particular$vel[2], particular$vel[3]));
+
+		double actualFallDistance = fallDistance > 0.0 ? fallDistance : particular$accumulatedFallDistance;
+
+		if (actualFallDistance < ParticularConfig.COMMON.waterSplashMinFallDistance.get()) {
+			particular$accumulatedFallDistance = 0.0;
+			return;
+		}
+
+		particular$accumulatedFallDistance = 0.0;
+
+		level().addParticle(Particles.WATER_SPLASH_EMITTER(), getX(), baseY + prevState.getOwnHeight(), getZ(), dimensions.width, velocityValue, 0.0);
+	}
+
+	@Unique
+	private void particular$lavaParticles()
+	{
+		if ((Object) this instanceof Arrow) { return; }
+
+		float baseY = Mth.floor(getY());
+
+		boolean foundSurface = false;
+		FluidState prevState = Fluids.EMPTY.defaultFluidState();
+		for (int i = 0; i < 5; ++i)
+		{
+			FluidState nextState = level().getFluidState(blockPosition().offset(0, i, 0));
+			if (prevState.is(Fluids.LAVA) && nextState.is(Fluids.EMPTY))
+			{
+				baseY += i - 1;
+				foundSurface = true;
+				break;
+			}
+
+			prevState = nextState;
+		}
+
+		if (!foundSurface) { return; }
+
+		double velocityValue = Math.max(Math.max(particular$vel[0], particular$vel[1]), Math.max(particular$vel[2], particular$vel[3]));
+
+		double actualFallDistance = fallDistance > 0.0 ? fallDistance : particular$accumulatedFallDistance;
+
+		if (actualFallDistance < ParticularConfig.COMMON.waterSplashMinFallDistance.get()) {
+			particular$accumulatedFallDistance = 0.0;
+			return;
+		}
+
+		particular$accumulatedFallDistance = 0.0;
+
+		level().addParticle(Particles.WATER_SPLASH_EMITTER(), getX(), baseY + prevState.getOwnHeight(), getZ(), dimensions.width, velocityValue, 1.0);
+	}
+}

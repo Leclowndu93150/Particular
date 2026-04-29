@@ -1,0 +1,40 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.leclowndu93150.particular.mixin",
+  "refmap": "${mod_id}.refmap.json",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [],
+  "client": [
+    "AccessorBillboardParticle",
+    "AccessorBiome",
+    "AccessorBlockLeakParticle",
+    "AccessorChestBlockEntity",
+    "AccessorEnderChestBlockEntity",
+    "AccessorParticle",
+    "InjectBarrelBlock",
+    "InjectBlock",
+    "InjectBlockLeakParticle",
+    "InjectBubbleColumnUpParticle",
+    "InjectCakeBlock",
+    "InjectChestBlock",
+    "InjectChestBlockEntity",
+    "InjectContinuousFalling",
+    "InjectEnderChestBlock",
+    "InjectEnderChestBlockEntity",
+    "InjectEntity",
+    "InjectFlowableFluid",
+    "InjectLeavesBlock",
+    "InjectLevelRenderer",
+    "InjectSpongeBlock",
+    "InjectWaterBubbleParticle",
+    "InjectWaterFluid",
+    "InvokerLivingEntity",
+    "InvokerViewerCountManager",
+    "NativeImageAccessor"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

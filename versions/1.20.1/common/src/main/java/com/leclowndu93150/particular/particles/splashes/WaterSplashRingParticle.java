@@ -1,0 +1,105 @@
+package com.leclowndu93150.particular.particles.splashes;
+
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
+
+import javax.annotation.Nullable;
+
+public class WaterSplashRingParticle extends TextureSheetParticle
+{
+	protected final SpriteSet provider;
+	private final float width;
+	private final boolean isLava;
+
+	WaterSplashRingParticle(ClientLevel clientWorld, double x, double y, double z, float width, SpriteSet provider, boolean lava)
+	{
+		super(clientWorld, x, y, z);
+		gravity = 0;
+		lifetime = 18;
+		this.width = width;
+		this.provider = provider;
+		this.isLava = lava;
+		if (lava)
+		{
+			rCol = 207f / 255f;
+			gCol = 92f / 255f;
+			bCol = 15f / 255f;
+		}
+		setSpriteFromAge(provider);
+	}
+
+	public ParticleRenderType getRenderType()
+	{
+		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+	}
+
+	@Override
+	public void tick()
+	{
+		super.tick();
+
+		setSpriteFromAge(provider);
+
+		var fluid = level.getFluidState(BlockPos.containing(x, y, z));
+		if (isLava ? !fluid.is(FluidTags.LAVA) : !fluid.is(FluidTags.WATER))
+		{
+			this.remove();
+		}
+	}
+
+	@Override
+	public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta)
+	{
+		Vec3 vec3d = camera.getPosition();
+		float f = (float) (Mth.lerp(tickDelta, xo, x) - vec3d.x());
+		float g = (float) (Mth.lerp(tickDelta, yo, y) - vec3d.y());
+		float h = (float) (Mth.lerp(tickDelta, zo, z) - vec3d.z());
+
+		Vector3f[] vector3fs = new Vector3f[]{new Vector3f(-1.0F, 0.0F, -1.0f), new Vector3f(-1.0F, 0.0F, 1.0F), new Vector3f(1.0F, 0.0F, 1.0F), new Vector3f(1.0F, 0.0F, -1.0F)};
+		float ageDelta = Mth.lerp(tickDelta, age - 1, (float)age);
+		float progress = ageDelta / (float)lifetime;
+		float scale = width * (0.8f + 0.2f * progress);
+
+		for (int k = 0; k < 4; ++k)
+		{
+			Vector3f vector3f2 = vector3fs[k];
+			vector3f2.mul(scale);
+			vector3f2.add(f, g, h);
+		}
+
+		float l = getU0();
+		float m = getU1();
+		float n = getV0();
+		float o = getV1();
+		int p = getLightColor(tickDelta);
+		vertexConsumer.vertex(vector3fs[0].x(), vector3fs[0].y(), vector3fs[0].z()).uv(m, o).color(rCol, gCol, bCol, alpha).uv2(p).endVertex();
+		vertexConsumer.vertex(vector3fs[1].x(), vector3fs[1].y(), vector3fs[1].z()).uv(m, n).color(rCol, gCol, bCol, alpha).uv2(p).endVertex();
+		vertexConsumer.vertex(vector3fs[2].x(), vector3fs[2].y(), vector3fs[2].z()).uv(l, n).color(rCol, gCol, bCol, alpha).uv2(p).endVertex();
+		vertexConsumer.vertex(vector3fs[3].x(), vector3fs[3].y(), vector3fs[3].z()).uv(l, o).color(rCol, gCol, bCol, alpha).uv2(p).endVertex();
+	}
+
+	public static class Factory implements ParticleProvider<SimpleParticleType>
+	{
+		private final SpriteSet provider;
+
+		public Factory(SpriteSet provider)
+		{
+			this.provider = provider;
+		}
+
+		@Nullable
+		@Override
+		public Particle createParticle(SimpleParticleType SimpleParticleType, ClientLevel clientWorld, double x, double y, double z, double g, double h, double i)
+		{
+			return new WaterSplashRingParticle(clientWorld, x, y, z, (float) g, provider, i > 0);
+		}
+	}
+}

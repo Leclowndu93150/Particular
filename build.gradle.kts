@@ -22,12 +22,105 @@ prism {
         credit("Leclowndu93150, and Chai the goat for the original Particular mod")
     }
 
+    version("1.20.1") {
+        parchmentMinecraftVersion = "1.20.1"
+        parchmentMappingsVersion = "2023.09.03"
+
+        common {
+            compileOnly("curse.maven:terrafirmacraft-302973:7730077")
+        }
+
+        fabric {
+            loaderVersion = "0.16.9"
+            fabricApi("0.92.8+1.20.1")
+
+            dependencies {
+                modImplementation("curse.maven:forge-config-api-port-547434:7260491")
+                modCompileOnly("curse.maven:irisshaders-455508:6258195")
+                modCompileOnly("curse.maven:sodium-394468:6260639")
+                modCompileOnly("curse.maven:modmenu-308702:5162837")
+            }
+
+            publishingDependencies {
+                requires("fabric-api")
+                requires("forge-config-api-port")
+                optional("modmenu")
+                optional("iris")
+            }
+        }
+
+        forge {
+            loaderVersion = "47.4.18"
+            loaderVersionRange = "[47,)"
+
+            dependencies {
+                modCompileOnly("curse.maven:terrafirmacraft-302973:7730077")
+                annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+                compileOnly("io.github.llamalad7:mixinextras-common:0.4.1")
+                annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1")
+                jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")
+            }
+
+            publishingDependencies {
+                optional("terrafirmacraft")
+            }
+        }
+    }
+
+    version("1.21.1") {
+        parchmentMinecraftVersion = "1.21.1"
+        parchmentMappingsVersion = "2024.11.17"
+
+        common {
+            compileOnly("curse.maven:irisshaders-455508:6213635")
+            compileOnly("fuzs.forgeconfigapiport:forgeconfigapiport-common-neoforgeapi:21.1.6")
+        }
+
+        fabric {
+            loaderVersion = "0.16.9"
+            fabricApi("0.110.0+1.21.1")
+
+            dependencies {
+                implementation("com.electronwill.night-config:core:3.8.1")
+                implementation("com.electronwill.night-config:toml:3.8.1")
+                implementation("com.electronwill.night-config:json:3.8.1")
+                implementation("com.electronwill.night-config:hocon:3.8.1")
+                implementation("com.electronwill.night-config:yaml:3.8.1")
+                modImplementation("curse.maven:forge-config-api-port-547434:7213608")
+                modCompileOnly("curse.maven:irisshaders-455508:6213635")
+                modCompileOnly("curse.maven:sodium-394468:6382649")
+                modCompileOnly("curse.maven:modmenu-308702:7808443")
+            }
+
+            publishingDependencies {
+                requires("fabric-api")
+                requires("forge-config-api-port")
+                optional("modmenu")
+                optional("iris")
+            }
+        }
+
+        neoforge {
+            loaderVersion = "21.1.222"
+            loaderVersionRange = "[4,)"
+
+            dependencies {
+                compileOnly("curse.maven:irisshaders-455508:6661598")
+                compileOnly("curse.maven:sodium-394468:6382651")
+            }
+
+            publishingDependencies {
+                optional("iris")
+            }
+        }
+    }
+
     version("26.1") {
         minecraftVersions("26.1", "26.1.1", "26.1.2")
 
         common {
             compileOnly("curse.maven:irisshaders-455508:7867943")
-            compileOnly("fuzs.forgeconfigapiport:forgeconfigapiport-common-neoforgeapi:26.1.3")
+            compileOnly("fuzs.forgeconfigapiport:forgeconfigapiport-common-neoforgeapi:26.1.4")
             compileOnly("com.leclowndu93150.baguettelib:baguettelib-26.1-common:2.0.6")
         }
 
@@ -42,7 +135,7 @@ prism {
                 implementation("com.electronwill.night-config:hocon:3.8.3")
                 implementation("com.electronwill.night-config:yaml:3.8.3")
                 implementation("com.leclowndu93150.baguettelib:baguettelib-26.1-fabric:2.0.6")
-                implementation("curse.maven:forge-config-api-port-547434:7861252")
+                implementation("curse.maven:forge-config-api-port-547434:7986992")
                 compileOnly("curse.maven:irisshaders-455508:7867943")
                 compileOnly("curse.maven:sodium-394468:7867826")
                 implementation("com.terraformersmc:modmenu:18.0.0-alpha.8")
@@ -51,8 +144,8 @@ prism {
             publishingDependencies {
                 requires("fabric-api")
                 requires("forge-config-api-port")
-                requires("modmenu")
                 requires("baguettelib")
+                optional("modmenu")
                 optional("iris")
             }
         }

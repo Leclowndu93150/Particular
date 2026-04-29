@@ -17,6 +17,18 @@ plugins {
 rootProject.name = "ParticularReforgedMultiloader"
 
 prism {
+    version("1.20.1") {
+        common()
+        fabric()
+        forge()
+    }
+
+    version("1.21.1") {
+        common()
+        fabric()
+        neoforge()
+    }
+
     version("26.1") {
         common()
         fabric()

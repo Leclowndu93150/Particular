@@ -34,8 +34,10 @@
     "fabric-api": "*",
     "minecraft": "~26.1",
     "forgeconfigapiport": "*",
-    "modmenu": "*",
     "baguettelib": ">=2.0.1",
     "java": ">=${java_version}"
+  },
+  "recommends": {
+    "modmenu": "*"
   }
 }
