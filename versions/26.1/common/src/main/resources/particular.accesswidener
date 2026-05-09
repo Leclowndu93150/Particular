@@ -1,6 +1,0 @@
-accessWidener v2 official
-
-accessible class net/minecraft/client/particle/DripParticle$FallAndLandParticle
-accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
-accessible method net/minecraft/client/particle/BubbleColumnUpParticle <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V
-accessible field net/minecraft/client/particle/ParticleEngine RENDER_ORDER Ljava/util/List;
