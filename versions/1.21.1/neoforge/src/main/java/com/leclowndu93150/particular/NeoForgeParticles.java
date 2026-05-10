@@ -1,5 +1,6 @@
 package com.leclowndu93150.particular;
 
+import com.leclowndu93150.particular.particles.CuboidParticle;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -53,6 +54,8 @@ public class NeoForgeParticles {
     public static final Supplier<SimpleParticleType> WATER_SPLASH = PARTICLE_TYPES.register("water_splash", () -> new SimpleParticleType(true));
     public static final Supplier<SimpleParticleType> WATER_SPLASH_FOAM = PARTICLE_TYPES.register("water_splash_foam", () -> new SimpleParticleType(true));
     public static final Supplier<SimpleParticleType> WATER_SPLASH_RING = PARTICLE_TYPES.register("water_splash_ring", () -> new SimpleParticleType(true));
+
+    public static final Supplier<CuboidParticle.Type> CUBOID = PARTICLE_TYPES.register("cuboid", () -> new CuboidParticle.Type(true));
 
     public static DeferredRegister<ParticleType<?>> getRegistry() {
         return PARTICLE_TYPES;

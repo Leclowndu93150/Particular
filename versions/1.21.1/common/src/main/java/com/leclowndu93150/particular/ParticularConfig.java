@@ -53,6 +53,13 @@ public class ParticularConfig {
 
 		public final ModConfigSpec.DoubleValue waterSplashMinFallDistance;
 		public final ModConfigSpec.BooleanValue waterSplashSmallDroplets;
+		public final ModConfigSpec.DoubleValue waterSplashOpacity;
+		public final ModConfigSpec.BooleanValue waterSplashSoftEntryParticles;
+		public final ModConfigSpec.BooleanValue cuboidWaterfallSpray;
+		public final ModConfigSpec.BooleanValue cuboidSplashDroplets;
+		public final ModConfigSpec.BooleanValue waterCuboidBiomeTint;
+		public final ModConfigSpec.IntValue waterCuboidColor;
+		public final ModConfigSpec.IntValue lavaCuboidColor;
 
 		public final ModConfigSpec.IntValue caveDustSpawnChance;
 		public final ModConfigSpec.IntValue caveDustBaseMaxAge;
@@ -118,6 +125,20 @@ public class ParticularConfig {
 					.defineInRange("minFallDistance", 0.0, 0.0, 100.0);
 			waterSplashSmallDroplets = builder.comment("Whether small splashes should emit water droplet particles")
 					.define("smallDroplets", false);
+			waterSplashOpacity = builder.comment("Opacity of water and lava splash particles")
+					.defineInRange("splashOpacity", 0.7, 0.0, 1.0);
+			waterSplashSoftEntryParticles = builder.comment("Whether soft water entries should emit bubbles and tiny falling-water droplets instead of a full splash")
+					.define("softEntryParticles", true);
+			cuboidWaterfallSpray = builder.comment("Use 1-voxel cuboid particles for waterfall spray")
+					.define("cuboidWaterfallSpray", false);
+			cuboidSplashDroplets = builder.comment("Use 1-voxel cuboid particles for splash droplets")
+					.define("cuboidSplashDroplets", true);
+			waterCuboidBiomeTint = builder.comment("Tint cuboid waterfall spray using the local biome water color")
+					.define("waterCuboidBiomeTint", true);
+			waterCuboidColor = builder.comment("Fallback color of cuboid waterfall spray when biome tinting is disabled (RGB hex)")
+					.defineInRange("waterCuboidColor", 0xFFFFFF, 0, 0xFFFFFF);
+			lavaCuboidColor = builder.comment("Color of cuboid lava droplets (RGB hex)")
+					.defineInRange("lavaCuboidColor", 0xFF681F, 0, 0xFFFFFF);
 			builder.pop();
 
 			builder.push("caveDustSettings");

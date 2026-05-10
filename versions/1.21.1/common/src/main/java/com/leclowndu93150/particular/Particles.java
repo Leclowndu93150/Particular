@@ -1,6 +1,8 @@
 package com.leclowndu93150.particular;
 
+import com.leclowndu93150.particular.particles.CuboidParticle;
 import com.leclowndu93150.particular.platform.Services;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 
 public class Particles {
@@ -42,6 +44,7 @@ public class Particles {
     private static SimpleParticleType waterSplash;
     private static SimpleParticleType waterSplashFoam;
     private static SimpleParticleType waterSplashRing;
+    private static ParticleType<CuboidParticle.Options> cuboid;
 
     public static SimpleParticleType OAK_LEAF() { if (oakLeaf == null) oakLeaf = Services.PARTICLES.getParticle("oak_leaf"); return oakLeaf; }
     public static SimpleParticleType BIRCH_LEAF() { if (birchLeaf == null) birchLeaf = Services.PARTICLES.getParticle("birch_leaf"); return birchLeaf; }
@@ -81,6 +84,7 @@ public class Particles {
     public static SimpleParticleType WATER_SPLASH() { if (waterSplash == null) waterSplash = Services.PARTICLES.getParticle("water_splash"); return waterSplash; }
     public static SimpleParticleType WATER_SPLASH_FOAM() { if (waterSplashFoam == null) waterSplashFoam = Services.PARTICLES.getParticle("water_splash_foam"); return waterSplashFoam; }
     public static SimpleParticleType WATER_SPLASH_RING() { if (waterSplashRing == null) waterSplashRing = Services.PARTICLES.getParticle("water_splash_ring"); return waterSplashRing; }
+    public static ParticleType<CuboidParticle.Options> CUBOID() { if (cuboid == null) cuboid = Services.PARTICLES.get("cuboid"); return cuboid; }
 
     public static void init() {
         Services.PARTICLES.registerParticle("oak_leaf", false);
@@ -121,5 +125,6 @@ public class Particles {
         Services.PARTICLES.registerParticle("water_splash", true);
         Services.PARTICLES.registerParticle("water_splash_foam", true);
         Services.PARTICLES.registerParticle("water_splash_ring", true);
+        Services.PARTICLES.register("cuboid", () -> new CuboidParticle.Type(true));
     }
 }

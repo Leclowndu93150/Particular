@@ -28,6 +28,7 @@ prism {
 
         common {
             compileOnly("curse.maven:terrafirmacraft-302973:7730077")
+            modImplementation("curse.maven:forge-config-api-port-547434:7260491")
         }
 
         fabric {
@@ -115,17 +116,17 @@ prism {
         }
     }
 
-    version("26.1") {
+    version("26.1.2") {
         minecraftVersions("26.1", "26.1.1", "26.1.2")
 
         common {
             compileOnly("curse.maven:irisshaders-455508:7867943")
             compileOnly("fuzs.forgeconfigapiport:forgeconfigapiport-common-neoforgeapi:26.1.4")
-            compileOnly("com.leclowndu93150.baguettelib:baguettelib-26.1-common:2.0.6")
+            compileOnly("curse.maven:baguettelib-1264423:8010963")
         }
 
         fabric {
-            loaderVersion = "0.19.1"
+            loaderVersion = "0.19.2"
             fabricApi("0.145.4+26.1.2")
 
             dependencies {
@@ -134,7 +135,7 @@ prism {
                 implementation("com.electronwill.night-config:json:3.8.3")
                 implementation("com.electronwill.night-config:hocon:3.8.3")
                 implementation("com.electronwill.night-config:yaml:3.8.3")
-                implementation("com.leclowndu93150.baguettelib:baguettelib-26.1-fabric:2.0.6")
+                modImplementation("curse.maven:baguettelib-1264423:8010960")
                 implementation("curse.maven:forge-config-api-port-547434:7986992")
                 compileOnly("curse.maven:irisshaders-455508:7867943")
                 compileOnly("curse.maven:sodium-394468:7867826")
@@ -155,7 +156,7 @@ prism {
             loaderVersionRange = "[4,)"
 
             dependencies {
-                implementation("com.leclowndu93150.baguettelib:baguettelib-26.1-neoforge:2.0.6")
+                implementation("curse.maven:baguettelib-1264423:8010963")
                 compileOnly("curse.maven:irisshaders-455508:7867946")
                 compileOnly("curse.maven:sodium-394468:7867828")
             }

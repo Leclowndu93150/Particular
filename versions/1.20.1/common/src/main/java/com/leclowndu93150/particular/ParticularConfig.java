@@ -52,6 +52,8 @@ public class ParticularConfig {
 
 		public final ForgeConfigSpec.DoubleValue waterSplashMinFallDistance;
 		public final ForgeConfigSpec.BooleanValue waterSplashSmallDroplets;
+		public final ForgeConfigSpec.DoubleValue waterSplashOpacity;
+		public final ForgeConfigSpec.BooleanValue waterSplashSoftEntryParticles;
 
 		public final ForgeConfigSpec.IntValue caveDustSpawnChance;
 		public final ForgeConfigSpec.IntValue caveDustBaseMaxAge;
@@ -117,6 +119,10 @@ public class ParticularConfig {
 					.defineInRange("minFallDistance", 0.0, 0.0, 100.0);
 			waterSplashSmallDroplets = builder.comment("Whether small splashes should emit water droplet particles")
 					.define("smallDroplets", false);
+			waterSplashOpacity = builder.comment("Opacity of water and lava splash particles")
+					.defineInRange("splashOpacity", 0.7, 0.0, 1.0);
+			waterSplashSoftEntryParticles = builder.comment("Whether soft water entries should emit bubbles and tiny falling-water droplets instead of a full splash")
+					.define("softEntryParticles", true);
 			builder.pop();
 
 			builder.push("caveDustSettings");

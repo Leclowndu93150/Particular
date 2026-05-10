@@ -9,6 +9,17 @@ pluginManagement {
     }
 }
 
+buildscript {
+    configurations.classpath {
+        resolutionStrategy.eachDependency {
+            if (requested.group == "net.fabricmc" && requested.name == "fabric-loom") {
+                useVersion("1.16.1")
+                because("class-tweaker v2 support for Minecraft 26.1")
+            }
+        }
+    }
+}
+
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
     id("dev.prism.settings") version "+"
@@ -29,7 +40,7 @@ prism {
         neoforge()
     }
 
-    version("26.1") {
+    version("26.1.2") {
         common()
         fabric()
         neoforge()

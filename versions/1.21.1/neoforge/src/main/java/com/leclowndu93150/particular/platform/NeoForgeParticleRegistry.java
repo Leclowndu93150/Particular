@@ -2,6 +2,8 @@ package com.leclowndu93150.particular.platform;
 
 import com.leclowndu93150.particular.NeoForgeParticles;
 import com.leclowndu93150.particular.platform.services.IParticleRegistry;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 
 import java.util.HashMap;
@@ -9,7 +11,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class NeoForgeParticleRegistry implements IParticleRegistry {
-    private static final Map<String, Supplier<SimpleParticleType>> PARTICLES = new HashMap<>();
+    private static final Map<String, Supplier<? extends ParticleType<?>>> PARTICLES = new HashMap<>();
 
     static {
         PARTICLES.put("oak_leaf", NeoForgeParticles.OAK_LEAF);
@@ -50,16 +52,23 @@ public class NeoForgeParticleRegistry implements IParticleRegistry {
         PARTICLES.put("water_splash", NeoForgeParticles.WATER_SPLASH);
         PARTICLES.put("water_splash_foam", NeoForgeParticles.WATER_SPLASH_FOAM);
         PARTICLES.put("water_splash_ring", NeoForgeParticles.WATER_SPLASH_RING);
+        PARTICLES.put("cuboid", NeoForgeParticles.CUBOID);
+    }
+
+    @Override
+    public <T extends ParticleOptions> ParticleType<T> register(String name, Supplier<? extends ParticleType<T>> factory) {
+        return get(name);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends ParticleType<?>> T get(String name) {
+        Supplier<? extends ParticleType<?>> supplier = PARTICLES.get(name);
+        return supplier != null ? (T) supplier.get() : null;
     }
 
     @Override
     public SimpleParticleType registerParticle(String name, boolean alwaysShow) {
-        return null;
-    }
-
-    @Override
-    public SimpleParticleType getParticle(String name) {
-        Supplier<SimpleParticleType> supplier = PARTICLES.get(name);
-        return supplier != null ? supplier.get() : null;
+        return get(name);
     }
 }

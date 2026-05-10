@@ -3,6 +3,7 @@ package com.leclowndu93150.particular.particles.splashes;
 import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
 import com.leclowndu93150.particular.mixin.AccessorBillboardParticle;
+import com.leclowndu93150.particular.particles.CuboidParticle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -72,6 +73,18 @@ public class WaterSplashEmitterParticle extends NoRenderParticle
 
 	private void splash(float width, float speed, float spread)
 	{
+		boolean useCuboid = ParticularConfig.COMMON.cuboidSplashDroplets.get();
+		if (useCuboid) {
+			var cuboidType = isLava ? CuboidParticle.lava() : CuboidParticle.whiteSplash();
+			for (int i = 0; i < width * 20f; ++i) {
+				double xVel = random.triangle(0.0, spread);
+				double yVel = speed * random.triangle(1.0, 0.25);
+				double zVel = random.triangle(0.0, spread);
+				level.addParticle(cuboidType, x + xVel / spread * width, y + 1/16f, z + zVel / spread * width, xVel, yVel, zVel);
+			}
+			return;
+		}
+
 		var dropletType = isLava ? ParticleTypes.LANDING_LAVA : ParticleTypes.FALLING_WATER;
 		for (int i = 0; i < width * 20f; ++i)
 		{

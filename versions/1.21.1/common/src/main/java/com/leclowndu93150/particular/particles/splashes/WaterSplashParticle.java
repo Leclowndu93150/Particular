@@ -1,5 +1,6 @@
 package com.leclowndu93150.particular.particles.splashes;
 
+import com.leclowndu93150.particular.ParticularConfig;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -91,7 +92,9 @@ public class WaterSplashParticle extends TextureSheetParticle
 		float n = getV0();
 		float o = getV1();
 		int light = getLightColor(tickDelta);
-		int color = colored ? this.color.getRGB() : Color.white.getRGB();
+		int rgb = colored ? this.color.getRGB() : Color.white.getRGB();
+		int alpha = (int) (Math.max(0, Math.min(1, ParticularConfig.COMMON.waterSplashOpacity.get())) * 255) & 0xFF;
+		int color = (alpha << 24) | (rgb & 0x00FFFFFF);
 		renderSide(vertexConsumer, vector3fs, 0, 1, height, l, m, n, o, light, color);
 		renderSide(vertexConsumer, vector3fs, 1, 2, height, l, m, n, o, light, color);
 		renderSide(vertexConsumer, vector3fs, 2, 3, height, l, m, n, o, light, color);

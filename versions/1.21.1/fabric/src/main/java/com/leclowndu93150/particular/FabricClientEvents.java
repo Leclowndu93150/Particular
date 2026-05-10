@@ -66,6 +66,7 @@ public class FabricClientEvents {
         registry.register(Particles.WATER_SPLASH(), WaterSplashParticle.Factory::new);
         registry.register(Particles.WATER_SPLASH_FOAM(), WaterSplashFoamParticle.Factory::new);
         registry.register(Particles.WATER_SPLASH_RING(), WaterSplashRingParticle.Factory::new);
+        registry.register(Particles.CUBOID(), CuboidParticle.Factory::new);
     }
 
     public static void init() {

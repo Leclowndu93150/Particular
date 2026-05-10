@@ -2,6 +2,7 @@ package com.leclowndu93150.particular.mixin;
 
 import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -98,15 +99,49 @@ public abstract class InjectEntity
 		double velocityValue = Math.max(Math.max(particular$vel[0], particular$vel[1]), Math.max(particular$vel[2], particular$vel[3]));
 
 		double actualFallDistance = fallDistance > 0.0 ? fallDistance : particular$accumulatedFallDistance;
+		double surfaceY = baseY + prevState.getOwnHeight();
+		double downwardSpeed = -deltaMovement.y();
 
-		if (actualFallDistance < ParticularConfig.COMMON.waterSplashMinFallDistance.get()) {
+		double minFallDistance = Math.max(ParticularConfig.COMMON.waterSplashMinFallDistance.get(), LARGE_WATER_SPLASH_MIN_FALL_DISTANCE);
+		if (actualFallDistance < minFallDistance || downwardSpeed < LARGE_WATER_SPLASH_MIN_DOWNWARD_SPEED) {
+			if (ParticularConfig.COMMON.waterSplashSoftEntryParticles.get()) {
+				particular$softWaterEntryParticles(surfaceY, dimensions.width, velocityValue);
+			}
 			particular$accumulatedFallDistance = 0.0;
 			return;
 		}
 
 		particular$accumulatedFallDistance = 0.0;
 
-		level().addParticle(Particles.WATER_SPLASH_EMITTER(), getX(), baseY + prevState.getOwnHeight(), getZ(), dimensions.width, velocityValue, 0.0);
+		level().addParticle(Particles.WATER_SPLASH_EMITTER(), getX(), surfaceY, getZ(), dimensions.width, velocityValue, 0.0);
+	}
+
+	@Unique
+	private static final double LARGE_WATER_SPLASH_MIN_FALL_DISTANCE = 1.0;
+	@Unique
+	private static final double LARGE_WATER_SPLASH_MIN_DOWNWARD_SPEED = 0.35;
+	@Unique
+	private static final int SOFT_WATER_PARTICLE_COUNT = 12;
+
+	@Unique
+	private void particular$softWaterEntryParticles(double surfaceY, float width, double speed)
+	{
+		double radius = Math.max(0.25, width * 0.5);
+		int count = Math.max(4, (int)(SOFT_WATER_PARTICLE_COUNT * width));
+		for (int i = 0; i < count; i++) {
+			double xOffset = random.triangle(0.0, radius);
+			double zOffset = random.triangle(0.0, radius);
+			double x = getX() + xOffset;
+			double y = surfaceY + random.nextDouble() * 0.08;
+			double z = getZ() + zOffset;
+
+			if (random.nextBoolean()) {
+				level().addParticle(ParticleTypes.BUBBLE, x, y - 0.08, z, xOffset * 0.04, 0.02 + random.nextDouble() * 0.03, zOffset * 0.04);
+			} else {
+				double dropletSpeed = 0.02 + Math.min(speed, 0.25) * 0.08;
+				level().addParticle(ParticleTypes.FALLING_WATER, x, y + 0.02, z, xOffset * 0.02, dropletSpeed, zOffset * 0.02);
+			}
+		}
 	}
 
 	@Unique

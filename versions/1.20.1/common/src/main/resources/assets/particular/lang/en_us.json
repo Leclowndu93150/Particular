@@ -140,5 +140,11 @@
   "particular.configuration.minFallDistance.tooltip": "Minimum distance (in blocks) an entity must fall before creating water splash particles\n\n0.0 = always create splashes\nRange: 0.0 to 100.0",
 
   "particular.configuration.smallDroplets": "Small Splash Droplets",
-  "particular.configuration.smallDroplets.tooltip": "Enable water droplet particles for small splashes\n\nAdds visual detail to gentle water entries"
+  "particular.configuration.smallDroplets.tooltip": "Enable water droplet particles for small splashes\n\nAdds visual detail to gentle water entries",
+
+  "particular.configuration.splashOpacity": "Splash Opacity",
+  "particular.configuration.splashOpacity.tooltip": "Opacity of water and lava splash particles\n\n0.7 = 30% more transparent\nRange: 0.0 to 1.0",
+
+  "particular.configuration.softEntryParticles": "Soft Entry Particles",
+  "particular.configuration.softEntryParticles.tooltip": "Use bubbles and tiny falling-water droplets for gentle water entries instead of full splash particles"
 }
