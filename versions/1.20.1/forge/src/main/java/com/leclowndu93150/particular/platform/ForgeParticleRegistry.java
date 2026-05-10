@@ -2,14 +2,17 @@ package com.leclowndu93150.particular.platform;
 
 import com.leclowndu93150.particular.ForgeParticles;
 import com.leclowndu93150.particular.platform.services.IParticleRegistry;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class ForgeParticleRegistry implements IParticleRegistry {
-    private static final Map<String, RegistryObject<SimpleParticleType>> PARTICLES = new HashMap<>();
+    private static final Map<String, RegistryObject<? extends ParticleType<?>>> PARTICLES = new HashMap<>();
 
     static {
         PARTICLES.put("oak_leaf", ForgeParticles.OAK_LEAF);
@@ -50,16 +53,23 @@ public class ForgeParticleRegistry implements IParticleRegistry {
         PARTICLES.put("water_splash", ForgeParticles.WATER_SPLASH);
         PARTICLES.put("water_splash_foam", ForgeParticles.WATER_SPLASH_FOAM);
         PARTICLES.put("water_splash_ring", ForgeParticles.WATER_SPLASH_RING);
+        PARTICLES.put("cuboid", ForgeParticles.CUBOID);
+    }
+
+    @Override
+    public <T extends ParticleOptions> ParticleType<T> register(String name, Supplier<? extends ParticleType<T>> factory) {
+        return get(name);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends ParticleType<?>> T get(String name) {
+        RegistryObject<? extends ParticleType<?>> obj = PARTICLES.get(name);
+        return obj != null ? (T) obj.get() : null;
     }
 
     @Override
     public SimpleParticleType registerParticle(String name, boolean alwaysShow) {
-        return null;
-    }
-
-    @Override
-    public SimpleParticleType getParticle(String name) {
-        RegistryObject<SimpleParticleType> obj = PARTICLES.get(name);
-        return obj != null ? obj.get() : null;
+        return get(name);
     }
 }

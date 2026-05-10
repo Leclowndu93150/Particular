@@ -6,7 +6,6 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 
-import javax.annotation.Nullable;
 
 public class SpinningLeafParticle extends LeafParticle
 {
@@ -37,7 +36,6 @@ public class SpinningLeafParticle extends LeafParticle
 			this.provider = provider;
 		}
 
-		@Nullable
 		@Override
 		public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ)
 		{

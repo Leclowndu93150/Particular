@@ -3,6 +3,7 @@ package com.leclowndu93150.particular.mixin;
 import com.leclowndu93150.particular.CommonClass;
 import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
+import com.leclowndu93150.particular.particles.CuboidParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
@@ -49,7 +50,9 @@ public class InjectWaterFluid
 						z += random.nextDouble();
 					}
 
-					world.addParticle(Particles.WATERFALL_SPRAY(), x, y, z, 0.0, 0.0, 0.0);
+					world.addParticle(
+							ParticularConfig.COMMON.cuboidWaterfallSpray.get() ? CuboidParticle.waterfallSpray() : Particles.WATERFALL_SPRAY(),
+							x, y, z, 0.0, 0.0, 0.0);
 				}
 				else
 				{
@@ -57,7 +60,9 @@ public class InjectWaterFluid
 					double y = (double) pos.getY() + (random.nextDouble() * state.getOwnHeight());
 					double z = (double) pos.getZ() + random.nextDouble();
 					Vec3 vel = state.getFlow(world, pos).scale(0.075);
-					world.addParticle(Particles.WATERFALL_SPRAY(), x, y, z, vel.x, 0.0, vel.z);
+					world.addParticle(
+							ParticularConfig.COMMON.cuboidWaterfallSpray.get() ? CuboidParticle.waterfallSpray() : Particles.WATERFALL_SPRAY(),
+							x, y, z, vel.x, 0.0, vel.z);
 				}
 			}
 		}

@@ -19,9 +19,6 @@
     ],
     "client": [
       "com.leclowndu93150.particular.Main"
-    ],
-    "modmenu": [
-      "com.leclowndu93150.particular.config.ParticularModMenu"
     ]
   },
   "mixins": [
@@ -37,6 +34,7 @@
     "java": ">=${java_version}"
   },
   "recommends": {
-    "modmenu": "*"
+    "modmenu": "*",
+    "iris": "*"
   }
 }

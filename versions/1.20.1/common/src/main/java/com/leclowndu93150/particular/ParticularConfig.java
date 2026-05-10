@@ -54,6 +54,11 @@ public class ParticularConfig {
 		public final ForgeConfigSpec.BooleanValue waterSplashSmallDroplets;
 		public final ForgeConfigSpec.DoubleValue waterSplashOpacity;
 		public final ForgeConfigSpec.BooleanValue waterSplashSoftEntryParticles;
+		public final ForgeConfigSpec.BooleanValue cuboidWaterfallSpray;
+		public final ForgeConfigSpec.BooleanValue cuboidSplashDroplets;
+		public final ForgeConfigSpec.BooleanValue waterCuboidBiomeTint;
+		public final ForgeConfigSpec.IntValue waterCuboidColor;
+		public final ForgeConfigSpec.IntValue lavaCuboidColor;
 
 		public final ForgeConfigSpec.IntValue caveDustSpawnChance;
 		public final ForgeConfigSpec.IntValue caveDustBaseMaxAge;
@@ -120,9 +125,19 @@ public class ParticularConfig {
 			waterSplashSmallDroplets = builder.comment("Whether small splashes should emit water droplet particles")
 					.define("smallDroplets", false);
 			waterSplashOpacity = builder.comment("Opacity of water and lava splash particles")
-					.defineInRange("splashOpacity", 0.7, 0.0, 1.0);
+					.defineInRange("splashOpacity", 0.75, 0.0, 1.0);
 			waterSplashSoftEntryParticles = builder.comment("Whether soft water entries should emit bubbles and tiny falling-water droplets instead of a full splash")
 					.define("softEntryParticles", true);
+			cuboidWaterfallSpray = builder.comment("Use 1-voxel cuboid particles for waterfall spray")
+					.define("cuboidWaterfallSpray", false);
+			cuboidSplashDroplets = builder.comment("Use 1-voxel cuboid particles for splash droplets")
+					.define("cuboidSplashDroplets", true);
+			waterCuboidBiomeTint = builder.comment("Tint cuboid waterfall spray using the local biome water color")
+					.define("waterCuboidBiomeTint", true);
+			waterCuboidColor = builder.comment("Fallback color of cuboid waterfall spray when biome tinting is disabled (RGB hex)")
+					.defineInRange("waterCuboidColor", 0xFFFFFF, 0, 0xFFFFFF);
+			lavaCuboidColor = builder.comment("Color of cuboid lava droplets (RGB hex)")
+					.defineInRange("lavaCuboidColor", 0xFF681F, 0, 0xFFFFFF);
 			builder.pop();
 
 			builder.push("caveDustSettings");

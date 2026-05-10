@@ -37,6 +37,7 @@
     "java": ">=${java_version}"
   },
   "recommends": {
-    "modmenu": "*"
+    "modmenu": "*",
+    "iris": "*"
   }
 }

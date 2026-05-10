@@ -143,8 +143,23 @@
   "particular.configuration.smallDroplets.tooltip": "Enable water droplet particles for small splashes\n\nAdds visual detail to gentle water entries",
 
   "particular.configuration.splashOpacity": "Splash Opacity",
-  "particular.configuration.splashOpacity.tooltip": "Opacity of water and lava splash particles\n\n0.7 = 30% more transparent\nRange: 0.0 to 1.0",
+  "particular.configuration.splashOpacity.tooltip": "Opacity of water and lava splash particles\n\n0.75 = 25% more transparent\nRange: 0.0 to 1.0",
 
   "particular.configuration.softEntryParticles": "Soft Entry Particles",
-  "particular.configuration.softEntryParticles.tooltip": "Use bubbles and tiny falling-water droplets for gentle water entries instead of full splash particles"
+  "particular.configuration.softEntryParticles.tooltip": "Use bubbles and tiny falling-water droplets for gentle water entries instead of full splash particles",
+
+  "particular.configuration.cuboidWaterfallSpray": "Cuboid Waterfall Spray",
+  "particular.configuration.cuboidWaterfallSpray.tooltip": "Use 1-voxel cuboid particles for waterfall spray",
+
+  "particular.configuration.cuboidSplashDroplets": "Cuboid Splash Droplets",
+  "particular.configuration.cuboidSplashDroplets.tooltip": "Use 1-voxel cuboid particles for splash droplets",
+
+  "particular.configuration.waterCuboidBiomeTint": "Water Cuboid Biome Tint",
+  "particular.configuration.waterCuboidBiomeTint.tooltip": "Tint cuboid waterfall spray using the local biome water color",
+
+  "particular.configuration.waterCuboidColor": "Water Cuboid Color",
+  "particular.configuration.waterCuboidColor.tooltip": "Fallback RGB color for cuboid waterfall spray when biome tinting is disabled\n\n0xFFFFFF = white\nRange: 0x000000 to 0xFFFFFF",
+
+  "particular.configuration.lavaCuboidColor": "Lava Cuboid Color",
+  "particular.configuration.lavaCuboidColor.tooltip": "RGB color for cuboid lava droplets\n\n0xFF681F = orange lava\nRange: 0x000000 to 0xFFFFFF"
 }

@@ -7,7 +7,6 @@ import java.util.stream.Stream;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.util.Mth;
-import org.antlr.v4.runtime.misc.NotNull;
 
 public record OwOColor(float red, float green, float blue, float alpha) {
     public static final OwOColor BLACK = ofRgb(0);
@@ -52,7 +51,7 @@ public record OwOColor(float red, float green, float blue, float alpha) {
         return ofArgb((int)(alpha * 255.0F) << 24 | Mth.hsvToRgb(hue - 5.0E-8F, saturation, value));
     }
 
-    public static OwOColor ofFormatting(@NotNull ChatFormatting formatting) {
+    public static OwOColor ofFormatting(ChatFormatting formatting) {
         Integer colorValue = formatting.getColor();
         return ofRgb(colorValue == null ? 0 : colorValue);
     }

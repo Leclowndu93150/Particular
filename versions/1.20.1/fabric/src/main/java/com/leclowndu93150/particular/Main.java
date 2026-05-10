@@ -1,6 +1,6 @@
 package com.leclowndu93150.particular;
 
-import fuzs.forgeconfigapiport.api.config.v3.ForgeConfigRegistry;
+import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.minecraftforge.fml.config.ModConfig;

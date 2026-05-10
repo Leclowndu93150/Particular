@@ -11,8 +11,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
-import javax.annotation.Nullable;
-
 public class WaterSplashRingParticle extends TextureSheetParticle
 {
 	protected final SpriteSet provider;
@@ -95,7 +93,6 @@ public class WaterSplashRingParticle extends TextureSheetParticle
 			this.provider = provider;
 		}
 
-		@Nullable
 		@Override
 		public Particle createParticle(SimpleParticleType SimpleParticleType, ClientLevel clientWorld, double x, double y, double z, double g, double h, double i)
 		{

@@ -1,6 +1,5 @@
 package com.leclowndu93150.particular.mixin;
 
-import com.leclowndu93150.particular.ClientStuff;
 import com.leclowndu93150.particular.CommonClass;
 import com.leclowndu93150.particular.ParticularConfig;
 import net.minecraft.client.Minecraft;
@@ -40,7 +39,7 @@ public class InjectLeavesBlock
 				double y = pos.getY() - 0.05d;
 				double z = pos.getZ() + 0.02d + random.nextDouble() * 0.96d;
 
-				ClientStuff.LeafData leafData = ClientStuff.getLeafData(state.getBlock());
+				CommonClass.LeafData leafData = CommonClass.getLeafData(state.getBlock());
 
 				ParticleOptions particle = leafData.getParticle();
 				if (particle == null) { return; }

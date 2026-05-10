@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "com.leclowndu93150"
-version = "1.4.1"
+version = "1.5.0"
 
 prism {
     curseMaven()
@@ -29,24 +29,30 @@ prism {
         common {
             compileOnly("curse.maven:terrafirmacraft-302973:7730077")
             modImplementation("curse.maven:forge-config-api-port-547434:7260491")
+            compileOnly("io.github.llamalad7:mixinextras-common:0.4.1")
+            annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1")
+            compileOnly("org.ow2.asm:asm:9.6")
         }
 
         fabric {
-            loaderVersion = "0.16.9"
+            loaderVersion = "0.16.10"
             fabricApi("0.92.8+1.20.1")
 
             dependencies {
                 modImplementation("curse.maven:forge-config-api-port-547434:7260491")
                 modCompileOnly("curse.maven:irisshaders-455508:6258195")
                 modCompileOnly("curse.maven:sodium-394468:6260639")
-                modCompileOnly("curse.maven:modmenu-308702:5162837")
+                modImplementation("curse.maven:modmenu-308702:5162837")
+                compileOnly("io.github.llamalad7:mixinextras-common:0.4.1")
+                annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1")
             }
 
             publishingDependencies {
                 requires("fabric-api")
                 requires("forge-config-api-port")
                 optional("modmenu")
-                optional("iris")
+                curseforge { optional("irisshaders") }
+                modrinth { optional("iris") }
             }
         }
 
@@ -78,7 +84,7 @@ prism {
         }
 
         fabric {
-            loaderVersion = "0.16.9"
+            loaderVersion = "0.16.10"
             fabricApi("0.110.0+1.21.1")
 
             dependencies {
@@ -90,14 +96,15 @@ prism {
                 modImplementation("curse.maven:forge-config-api-port-547434:7213608")
                 modCompileOnly("curse.maven:irisshaders-455508:6213635")
                 modCompileOnly("curse.maven:sodium-394468:6382649")
-                modCompileOnly("curse.maven:modmenu-308702:7808443")
+                modImplementation("curse.maven:modmenu-308702:7808443")
             }
 
             publishingDependencies {
                 requires("fabric-api")
                 requires("forge-config-api-port")
                 optional("modmenu")
-                optional("iris")
+                curseforge { optional("irisshaders") }
+                modrinth { optional("iris") }
             }
         }
 
@@ -111,7 +118,8 @@ prism {
             }
 
             publishingDependencies {
-                optional("iris")
+                curseforge { optional("irisshaders") }
+                modrinth { optional("iris") }
             }
         }
     }
@@ -147,7 +155,8 @@ prism {
                 requires("forge-config-api-port")
                 requires("baguettelib")
                 optional("modmenu")
-                optional("iris")
+                curseforge { optional("irisshaders") }
+                modrinth { optional("iris") }
             }
         }
 
@@ -163,13 +172,14 @@ prism {
 
             publishingDependencies {
                 requires("baguettelib")
-                optional("iris")
+                curseforge { optional("irisshaders") }
+                modrinth { optional("iris") }
             }
         }
     }
 
     publishing {
-        type = BETA
+        type = STABLE
         curseforge {
             accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
             projectId = "1219053"

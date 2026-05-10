@@ -16,8 +16,6 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import javax.annotation.Nullable;
-
 public class LeafParticle extends TextureSheetParticle
 {
 	protected static final int fadeInDuration = 10;
@@ -223,7 +221,6 @@ public class LeafParticle extends TextureSheetParticle
 			this.provider = provider;
 		}
 
-		@Nullable
 		@Override
 		public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ)
 		{

@@ -14,7 +14,6 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import javax.annotation.Nullable;
 import java.awt.*;
 
 public class WaterSplashParticle extends TextureSheetParticle
@@ -123,7 +122,6 @@ public class WaterSplashParticle extends TextureSheetParticle
 			this.provider = provider;
 		}
 
-		@Nullable
 		@Override
 		public Particle createParticle(SimpleParticleType SimpleParticleType, ClientLevel clientWorld, double x, double y, double z, double g, double h, double i)
 		{

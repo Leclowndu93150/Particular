@@ -74,6 +74,7 @@ public class ForgeClientEvents {
         event.registerSpriteSet(ForgeParticles.WATER_SPLASH.get(), WaterSplashParticle.Factory::new);
         event.registerSpriteSet(ForgeParticles.WATER_SPLASH_FOAM.get(), WaterSplashFoamParticle.Factory::new);
         event.registerSpriteSet(ForgeParticles.WATER_SPLASH_RING.get(), WaterSplashRingParticle.Factory::new);
+        event.registerSpriteSet(ForgeParticles.CUBOID.get(), CuboidParticle.Factory::new);
     }
 
     @SubscribeEvent

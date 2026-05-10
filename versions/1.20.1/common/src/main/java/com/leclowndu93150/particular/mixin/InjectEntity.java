@@ -2,6 +2,7 @@ package com.leclowndu93150.particular.mixin;
 
 import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
+import com.leclowndu93150.particular.particles.CuboidParticle;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -139,7 +140,9 @@ public abstract class InjectEntity
 				level().addParticle(ParticleTypes.BUBBLE, x, y - 0.08, z, xOffset * 0.04, 0.02 + random.nextDouble() * 0.03, zOffset * 0.04);
 			} else {
 				double dropletSpeed = 0.02 + Math.min(speed, 0.25) * 0.08;
-				level().addParticle(ParticleTypes.FALLING_WATER, x, y + 0.02, z, xOffset * 0.02, dropletSpeed, zOffset * 0.02);
+				level().addParticle(
+						ParticularConfig.COMMON.cuboidSplashDroplets.get() ? CuboidParticle.whiteSplash() : ParticleTypes.FALLING_WATER,
+						x, y + 0.02, z, xOffset * 0.02, dropletSpeed, zOffset * 0.02);
 			}
 		}
 	}

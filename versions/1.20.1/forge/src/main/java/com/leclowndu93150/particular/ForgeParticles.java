@@ -4,6 +4,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraftforge.registries.DeferredRegister;
+import com.leclowndu93150.particular.particles.CuboidParticleType;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ForgeParticles {
@@ -52,6 +53,8 @@ public class ForgeParticles {
     public static final RegistryObject<SimpleParticleType> WATER_SPLASH = PARTICLE_TYPES.register("water_splash", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> WATER_SPLASH_FOAM = PARTICLE_TYPES.register("water_splash_foam", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> WATER_SPLASH_RING = PARTICLE_TYPES.register("water_splash_ring", () -> new SimpleParticleType(true));
+
+    public static final RegistryObject<CuboidParticleType> CUBOID = PARTICLE_TYPES.register("cuboid", () -> new CuboidParticleType(true));
 
     public static DeferredRegister<ParticleType<?>> getRegistry() {
         return PARTICLE_TYPES;

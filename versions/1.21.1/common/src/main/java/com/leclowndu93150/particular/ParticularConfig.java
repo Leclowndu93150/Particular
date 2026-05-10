@@ -126,7 +126,7 @@ public class ParticularConfig {
 			waterSplashSmallDroplets = builder.comment("Whether small splashes should emit water droplet particles")
 					.define("smallDroplets", false);
 			waterSplashOpacity = builder.comment("Opacity of water and lava splash particles")
-					.defineInRange("splashOpacity", 0.7, 0.0, 1.0);
+					.defineInRange("splashOpacity", 0.75, 0.0, 1.0);
 			waterSplashSoftEntryParticles = builder.comment("Whether soft water entries should emit bubbles and tiny falling-water droplets instead of a full splash")
 					.define("softEntryParticles", true);
 			cuboidWaterfallSpray = builder.comment("Use 1-voxel cuboid particles for waterfall spray")

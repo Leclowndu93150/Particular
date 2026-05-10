@@ -206,10 +206,10 @@ public class CuboidParticle extends TextureSheetParticle {
     }
 
     private void emitQuad(VertexConsumer vc, Vector3f a, Vector3f b, Vector3f c, Vector3f d, float u0, float u1, float v0, float v1, int light) {
-        vc.addVertex(a.x, a.y, a.z).setUv(u0, v1).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(light);
-        vc.addVertex(b.x, b.y, b.z).setUv(u0, v0).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(light);
-        vc.addVertex(c.x, c.y, c.z).setUv(u1, v0).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(light);
-        vc.addVertex(d.x, d.y, d.z).setUv(u1, v1).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setLight(light);
+        vc.vertex(a.x, a.y, a.z).uv(u0, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        vc.vertex(b.x, b.y, b.z).uv(u0, v0).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        vc.vertex(c.x, c.y, c.z).uv(u1, v0).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        vc.vertex(d.x, d.y, d.z).uv(u1, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
     }
 
     public static class Factory implements ParticleProvider<CuboidParticleType.Options> {
