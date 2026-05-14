@@ -25,6 +25,7 @@ prism {
     version("1.20.1") {
         parchmentMinecraftVersion = "1.20.1"
         parchmentMappingsVersion = "2023.09.03"
+        changelogFile = "versions/1.20.1/CHANGELOG.md"
 
         common {
             compileOnly("curse.maven:terrafirmacraft-302973:7730077")
@@ -58,7 +59,6 @@ prism {
 
         forge {
             loaderVersion = "47.4.18"
-            loaderVersionRange = "[47,)"
 
             dependencies {
                 modCompileOnly("curse.maven:terrafirmacraft-302973:7730077")
@@ -77,6 +77,7 @@ prism {
     version("1.21.1") {
         parchmentMinecraftVersion = "1.21.1"
         parchmentMappingsVersion = "2024.11.17"
+        changelogFile = "versions/1.21.1/CHANGELOG.md"
 
         common {
             compileOnly("curse.maven:irisshaders-455508:6213635")
@@ -126,6 +127,7 @@ prism {
 
     version("26.1.2") {
         minecraftVersions("26.1", "26.1.1", "26.1.2")
+        changelogFile = "versions/26.1.2/CHANGELOG.md"
 
         common {
             compileOnly("curse.maven:irisshaders-455508:7867943")
@@ -179,7 +181,7 @@ prism {
     }
 
     publishing {
-        type = STABLE
+        type = BETA
         curseforge {
             accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
             projectId = "1219053"
