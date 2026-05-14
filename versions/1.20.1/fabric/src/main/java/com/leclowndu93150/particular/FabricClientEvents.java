@@ -82,7 +82,7 @@ public class FabricClientEvents {
         });
 
         ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
-            CommonClass.onChunkLoad(world);
+            CommonClass.onChunkLoad(world, chunk.getPos());
         });
 
         ClientChunkEvents.CHUNK_UNLOAD.register((world, chunk) -> {

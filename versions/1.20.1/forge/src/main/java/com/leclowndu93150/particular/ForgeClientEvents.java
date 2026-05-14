@@ -124,7 +124,7 @@ public class ForgeClientEvents {
         @SubscribeEvent
         public static void onChunkLoad(ChunkEvent.Load event) {
             Level world = (Level) event.getLevel();
-            CommonClass.onChunkLoad(world);
+            CommonClass.onChunkLoad(world, event.getChunk().getPos());
         }
 
         @SubscribeEvent

@@ -2,6 +2,7 @@ package com.leclowndu93150.particular;
 
 import com.leclowndu93150.particular.mixin.AccessorBiome;
 import com.leclowndu93150.particular.platform.Services;
+import com.leclowndu93150.particular.utils.CascadeCache;
 import com.leclowndu93150.particular.utils.CascadeData;
 import com.leclowndu93150.particular.utils.LeafColorUtil;
 import com.leclowndu93150.particular.utils.TextureCache;
@@ -13,6 +14,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.FoliageColor;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -171,6 +173,7 @@ public class CommonClass {
 
 				if (!isEncased) {
 					cascades.put(immutablePos, new CascadeData(strength, world.getGameTime() - 101));
+					CascadeCache.add(world, immutablePos, strength);
 				}
 			}
 		}
@@ -353,12 +356,14 @@ public class CommonClass {
 						}
 					}
 				}
+				CascadeCache.remove(world, pos);
 				return true;
 			}
 
 			if (!world.getFluidState(pos).is(Fluids.WATER) ||
 					!world.getFluidState(pos.above()).is(Fluids.FLOWING_WATER) ||
 					!world.getFluidState(pos.below()).is(Fluids.WATER)) {
+				CascadeCache.remove(world, pos);
 				return true;
 			}
 
@@ -372,15 +377,15 @@ public class CommonClass {
 
 				if (side == 0 && world.getFluidState(pos.north()).is(Fluids.WATER)) {
 					x += random.nextDouble();
-					z += 0.5 + (random.nextDouble() * 0.25 - 0.5) * 1.2;
+					z += 0.5 + (random.nextDouble() * 0.25 - 0.5) * 1.5;
 				} else if (side == 1 && world.getFluidState(pos.east()).is(Fluids.WATER)) {
-					x += 0.5 + (0.25 + random.nextDouble() * 0.25) * 1.2;
+					x += 0.5 + (0.25 + random.nextDouble() * 0.25) * 1.5;
 					z += random.nextDouble();
 				} else if (side == 2 && world.getFluidState(pos.south()).is(Fluids.WATER)) {
 					x += random.nextDouble();
-					z += 0.5 + (0.25 + random.nextDouble() * 0.25) * 1.2;
+					z += 0.5 + (0.25 + random.nextDouble() * 0.25) * 1.5;
 				} else if (world.getFluidState(pos.west()).is(Fluids.WATER)) {
-					x += 0.5 + (random.nextDouble() * 0.25 - 0.5) * 1.2;
+					x += 0.5 + (random.nextDouble() * 0.25 - 0.5) * 1.5;
 					z += random.nextDouble();
 				} else if (random.nextBoolean()) {
 					x += random.nextDouble();
@@ -401,15 +406,29 @@ public class CommonClass {
 		});
 	}
 
-	public static void onChunkLoad(Level world) {
+	public static void onChunkLoad(Level world, ChunkPos chunk) {
 		if (!ParticularConfig.cascades() || !world.isClientSide()) return;
 
-		ResourceLocation newDimension = world.dimensionType().effectsLocation();
+		ResourceLocation newDimension = world.dimension().location();
 		if (currentDimension != null && !newDimension.equals(currentDimension)) {
 			Constants.LOG.debug("Dimension changed from {} to {}, clearing cascades", currentDimension, newDimension);
 			cascades.clear();
+			CascadeCache.onDimensionChange(world);
+		} else {
+			CascadeCache.init(world);
 		}
 		currentDimension = newDimension;
+
+		CascadeCache.getChunk(world, chunk).forEach((pos, strength) -> {
+			if (cascades.containsKey(pos)) return;
+			if (world.getFluidState(pos).is(Fluids.WATER) &&
+					world.getFluidState(pos.above()).is(Fluids.FLOWING_WATER) &&
+					world.getFluidState(pos.below()).is(Fluids.WATER)) {
+				cascades.put(pos, new CascadeData(strength, world.getGameTime() - 101));
+			} else {
+				CascadeCache.remove(world, pos);
+			}
+		});
 	}
 
 	public static void onChunkUnload(Level world, int minX, int maxX, int minZ, int maxZ) {
@@ -425,6 +444,7 @@ public class CommonClass {
 	public static void onLevelUnload(Level world) {
 		if (world.isClientSide()) {
 			cascades.clear();
+			CascadeCache.onLevelUnload();
 		}
 	}
 
@@ -456,6 +476,9 @@ public class CommonClass {
 					aboveState.is(Fluids.FLOWING_WATER) &&
 					belowState.is(Fluids.WATER);
 
+			if (!isValid) {
+				CascadeCache.remove(world, pos);
+			}
 			return !isValid;
 		});
 	}

@@ -369,15 +369,15 @@ public class CommonClass {
 
                 if (side == 0 && world.getFluidState(pos.north()).is(Fluids.WATER)) {
                     x += random.nextDouble();
-                    z += 0.5 + (random.nextDouble() * 0.25 - 0.5) * 1.2;
+                    z += 0.5 + (random.nextDouble() * 0.25 - 0.5) * 1.5;
                 } else if (side == 1 && world.getFluidState(pos.east()).is(Fluids.WATER)) {
-                    x += 0.5 + (0.25 + random.nextDouble() * 0.25) * 1.2;
+                    x += 0.5 + (0.25 + random.nextDouble() * 0.25) * 1.5;
                     z += random.nextDouble();
                 } else if (side == 2 && world.getFluidState(pos.south()).is(Fluids.WATER)) {
                     x += random.nextDouble();
-                    z += 0.5 + (0.25 + random.nextDouble() * 0.25) * 1.2;
+                    z += 0.5 + (0.25 + random.nextDouble() * 0.25) * 1.5;
                 } else if (world.getFluidState(pos.west()).is(Fluids.WATER)) {
-                    x += 0.5 + (random.nextDouble() * 0.25 - 0.5) * 1.2;
+                    x += 0.5 + (random.nextDouble() * 0.25 - 0.5) * 1.5;
                     z += random.nextDouble();
                 } else if (random.nextBoolean()) {
                     x += random.nextDouble();
