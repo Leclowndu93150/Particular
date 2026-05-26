@@ -12,6 +12,7 @@ prism {
     maven("Nucleoid", "https://maven.nucleoid.xyz/")
     maven("Fuzs Mod Resources", "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/")
     maven("BaguetteLib", "https://maven.leclowndu93150.dev/releases")
+    maven("Sable Companion", "https://maven.ryanhcode.dev/releases")
 
     metadata {
         modId = "particular"
@@ -79,6 +80,8 @@ prism {
         parchmentMappingsVersion = "2024.11.17"
         changelogFile = "versions/1.21.1/CHANGELOG.md"
 
+        version = "1.5.1"
+
         common {
             compileOnly("curse.maven:irisshaders-455508:6213635")
             compileOnly("fuzs.forgeconfigapiport:forgeconfigapiport-common-neoforgeapi:21.1.6")
@@ -106,6 +109,7 @@ prism {
                 optional("modmenu")
                 curseforge { optional("irisshaders") }
                 modrinth { optional("iris") }
+                optional("sable")
             }
         }
 
@@ -116,11 +120,22 @@ prism {
             dependencies {
                 compileOnly("curse.maven:irisshaders-455508:6661598")
                 compileOnly("curse.maven:sodium-394468:6382651")
+                compileOnly("curse.maven:sable-1312371:8007005")
+                runtimeOnly("curse.maven:sable-1312371:8007005")
+                compileOnly("dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:1.6.0")
+                compileOnly("maven.modrinth:create-aeronautics:1.2.1+mc1.21.1")
+                runtimeOnly("maven.modrinth:create-aeronautics:1.2.1+mc1.21.1")
+                compileOnly("curse.maven:create-328085:7963363")
+                runtimeOnly("curse.maven:create-328085:7963363")
+                runtimeOnly("curse.maven:wakes-reforged-1223529:8144268")
             }
 
             publishingDependencies {
                 curseforge { optional("irisshaders") }
                 modrinth { optional("iris") }
+                optional("sable")
+                optional("create-aeronautics")
+                optional("create")
             }
         }
     }

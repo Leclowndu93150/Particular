@@ -1,5 +1,7 @@
 # Particular Reforged 1.21.1
 
+## 1.5.1 - Create: Aeronautics compatibility for splashes
+
 Fabric now has feature parity with NeoForge — everything the loader version did, the Fabric version now does too.
 
 ## What's new

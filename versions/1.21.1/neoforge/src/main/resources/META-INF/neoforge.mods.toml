@@ -16,6 +16,8 @@ description = '''${description}'''
 config = "${mod_id}.mixins.json"
 [[mixins]]
 config = "${mod_id}.neoforge.mixins.json"
+[[mixins]]
+config = "${mod_id}.sable.mixins.json"
 
 [[dependencies."${mod_id}"]]
 modId = "neoforge"
@@ -36,4 +38,11 @@ modId = "iris"
 type = "optional"
 versionRange = "[0,)"
 ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies."${mod_id}"]]
+modId = "sable"
+type = "optional"
+versionRange = "[0,)"
+ordering = "BEFORE"
 side = "CLIENT"
