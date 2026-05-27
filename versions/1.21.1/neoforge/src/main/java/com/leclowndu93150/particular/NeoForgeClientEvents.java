@@ -18,6 +18,7 @@ import net.minecraft.client.particle.BubblePopParticle;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.loading.FMLLoader;
@@ -94,9 +95,11 @@ public class NeoForgeClientEvents {
     public static class ForgeEvents {
         private static int cascadeCleanupTicks = 0;
 
+        private static final boolean SABLE_LOADED = ModList.get().isLoaded("sable");
+
         @SubscribeEvent
         public static void onLevelTick(LevelTickEvent.Post event) {
-            if (event.getLevel() instanceof ClientLevel clientLevel && SableCompat.isLoaded()) {
+            if (SABLE_LOADED && event.getLevel() instanceof ClientLevel clientLevel) {
                 SableCompat.tick(clientLevel);
             }
         }
