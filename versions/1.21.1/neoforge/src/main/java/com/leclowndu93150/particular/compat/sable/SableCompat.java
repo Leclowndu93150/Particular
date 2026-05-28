@@ -4,7 +4,6 @@ import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
 import com.leclowndu93150.particular.particles.CuboidParticle;
 import dev.ryanhcode.sable.Sable;
-import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
 import dev.ryanhcode.sable.companion.ClientSubLevelAccess;
 import dev.ryanhcode.sable.companion.math.BoundingBox3dc;
 import dev.ryanhcode.sable.companion.math.BoundingBox3i;
@@ -26,10 +25,8 @@ import net.neoforged.fml.ModList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 public class SableCompat {
@@ -53,47 +50,60 @@ public class SableCompat {
     private static final int ENTRY_SPLASH_COOLDOWN = 15;
     private static final int TRAIL_SPLASH_COOLDOWN = 20;
 
+    private static final int NO_FLUID_RESCAN_INTERVAL = 10;
+    private static final double NO_FLUID_RESCAN_MOVE_SQ = 1.0;
+    private static final int STATE_PRUNE_AGE = 200;
+
     private static final Map<UUID, SubLevelSplashState> STATES = new HashMap<>();
 
     public static boolean isLoaded() {
         return LOADED;
     }
 
-    public static void tick(Level level) {
-        if (!LOADED || !ParticularConfig.waterSplash()) return;
+    public static void tickSubLevelWake(SubLevel subLevel) {
+        if (!LOADED || !ParticularConfig.waterSplash() || subLevel.isRemoved()) return;
 
-        SubLevelContainer container = SubLevelContainer.getContainer(level);
-        if (container == null) return;
+        Level level = subLevel.getLevel();
+        if (!level.isClientSide) return;
 
-        Set<UUID> seen = new HashSet<>();
+        UUID id = subLevel.getUniqueId();
+        if (id == null) return;
+
         long gameTime = level.getGameTime();
+        pruneStaleStates(gameTime);
 
-        for (SubLevel subLevel : container.getAllSubLevels()) {
-            if (subLevel.isRemoved()) continue;
-
-            UUID id = subLevel.getUniqueId();
-            if (id == null) continue;
-            seen.add(id);
-
+        {
             BoundingBox3dc bounds = subLevel.boundingBox();
             SubLevelSplashState state = STATES.computeIfAbsent(id, k -> new SubLevelSplashState());
+            state.lastSeenTime = gameTime;
             double centerY = centerY(bounds);
+            double centerX = (bounds.minX() + bounds.maxX()) * 0.5;
+            double centerZ = (bounds.minZ() + bounds.maxZ()) * 0.5;
+            if (!state.touchingWater && gameTime < state.noFluidRescanTime
+                    && sqDist(centerX, centerZ, state.noFluidCenterX, state.noFluidCenterZ) < NO_FLUID_RESCAN_MOVE_SQ) {
+                rememberBounds(state, bounds, centerY);
+                return;
+            }
+
             double centerYDelta = Double.isNaN(state.lastCenterY) ? 0.0 : Math.abs(centerY - state.lastCenterY);
             boolean shapeChanged = checkShapeChanged(subLevel, state, gameTime);
             Motion centerMotion = sampleCenterMotion(level, subLevel).withVerticalAtLeast(centerYDelta);
 
             FluidSurface surface = findFluidSurfaceNearBounds(level, bounds, state);
             if (surface == null) {
+                state.noFluidRescanTime = gameTime + NO_FLUID_RESCAN_INTERVAL;
+                state.noFluidCenterX = centerX;
+                state.noFluidCenterZ = centerZ;
                 handleNoWaterContact(level, subLevel, bounds, state, gameTime, Double.NaN);
                 rememberBounds(state, bounds, centerY);
-                continue;
+                return;
             }
 
             double footprintTolerance = footprintTolerance(centerMotion.verticalSpeed);
             if (!sweptBoundsTouchesSurface(bounds, state, surface.height, footprintTolerance)) {
                 handleNoWaterContact(level, subLevel, bounds, state, gameTime, surface.height);
                 rememberBounds(state, bounds, centerY);
-                continue;
+                return;
             }
 
             boolean waterLevelChanged = Double.isNaN(state.lastWaterY) || Math.abs(state.lastWaterY - surface.height) > 0.25;
@@ -128,7 +138,7 @@ public class SableCompat {
             if (positions.isEmpty()) {
                 handleNoWaterContact(level, subLevel, bounds, state, gameTime, surface.height);
                 rememberBounds(state, bounds, centerY);
-                continue;
+                return;
             }
 
             Motion motion = sampleMotion(level, subLevel, sampleBlocks(state), centerMotion);
@@ -154,8 +164,17 @@ public class SableCompat {
             state.footprintSize = footprintSize;
             rememberBounds(state, bounds, centerY);
         }
+    }
 
-        STATES.keySet().removeIf(id -> !seen.contains(id));
+    private static void pruneStaleStates(long gameTime) {
+        STATES.values().removeIf(state -> gameTime - state.lastSeenTime > STATE_PRUNE_AGE);
+    }
+
+    private static double sqDist(double x1, double z1, double x2, double z2) {
+        if (Double.isNaN(x2) || Double.isNaN(z2)) return Double.POSITIVE_INFINITY;
+        double dx = x1 - x2;
+        double dz = z1 - z2;
+        return dx * dx + dz * dz;
     }
 
     private static void handleNoWaterContact(Level level, SubLevel subLevel, BoundingBox3dc bounds, SubLevelSplashState state, long gameTime, double fallbackWaterY) {
@@ -685,6 +704,10 @@ public class SableCompat {
         double lastMaxY = Double.NaN;
         boolean touchingWater = false;
         int footprintSize = 0;
+        long noFluidRescanTime = Long.MIN_VALUE;
+        double noFluidCenterX = Double.NaN;
+        double noFluidCenterZ = Double.NaN;
+        long lastSeenTime = Long.MIN_VALUE;
     }
 
     private static class Motion {

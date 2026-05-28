@@ -80,7 +80,7 @@ prism {
         parchmentMappingsVersion = "2024.11.17"
         changelogFile = "versions/1.21.1/CHANGELOG.md"
 
-        version = "1.5.2"
+        version = "1.5.3"
 
         common {
             compileOnly("curse.maven:irisshaders-455508:6213635")

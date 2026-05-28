@@ -1,6 +1,5 @@
 package com.leclowndu93150.particular;
 
-import com.leclowndu93150.particular.compat.sable.SableCompat;
 import com.leclowndu93150.particular.particles.*;
 import com.leclowndu93150.particular.particles.leaves.BigLeafParticle;
 import com.leclowndu93150.particular.particles.leaves.ConiferLeafParticle;
@@ -13,12 +12,10 @@ import com.leclowndu93150.particular.particles.splashes.WaterSplashRingParticle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.BubblePopParticle;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.loading.FMLLoader;
@@ -28,7 +25,6 @@ import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
-import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 @EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
 public class NeoForgeClientEvents {
@@ -94,15 +90,6 @@ public class NeoForgeClientEvents {
     @EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
     public static class ForgeEvents {
         private static int cascadeCleanupTicks = 0;
-
-        private static final boolean SABLE_LOADED = ModList.get().isLoaded("sable");
-
-        @SubscribeEvent
-        public static void onLevelTick(LevelTickEvent.Post event) {
-            if (SABLE_LOADED && event.getLevel() instanceof ClientLevel clientLevel) {
-                SableCompat.tick(clientLevel);
-            }
-        }
 
         @SubscribeEvent
         public static void onClientTick(ClientTickEvent.Pre event) {
