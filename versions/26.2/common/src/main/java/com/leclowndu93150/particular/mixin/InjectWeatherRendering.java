@@ -1,0 +1,32 @@
+package com.leclowndu93150.particular.mixin;
+
+import com.leclowndu93150.particular.Particles;
+import com.leclowndu93150.particular.ParticularConfig;
+import com.leclowndu93150.particular.utils.CustomFluidSupport;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.level.material.FluidState;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+
+@Mixin(ClientLevel.class)
+public class InjectWeatherRendering
+{
+	@ModifyExpressionValue(
+			method = "tickWeatherEffects",
+			at = @At(
+					value = "FIELD",
+					target = "Lnet/minecraft/core/particles/ParticleTypes;RAIN:Lnet/minecraft/core/particles/SimpleParticleType;"
+			)
+	)
+	private SimpleParticleType modifyParticleEffect(SimpleParticleType original, @Local FluidState fluid) {
+		if ((fluid.is(FluidTags.WATER) || CustomFluidSupport.isWaterLike(fluid)) && ParticularConfig.rainRipples())
+		{
+			return Particles.WATER_RIPPLE();
+		}
+		return original;
+	}
+}

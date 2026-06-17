@@ -18,6 +18,8 @@ config = "${mod_id}.mixins.json"
 config = "${mod_id}.neoforge.mixins.json"
 [[mixins]]
 config = "${mod_id}.sable.mixins.json"
+[[mixins]]
+config = "${mod_id}.tfc.mixins.json"
 
 [[dependencies."${mod_id}"]]
 modId = "neoforge"
@@ -46,3 +48,10 @@ type = "optional"
 versionRange = "[0,)"
 ordering = "BEFORE"
 side = "CLIENT"
+
+[[dependencies."${mod_id}"]]
+modId = "tfc"
+type = "optional"
+versionRange = "[0,)"
+ordering = "BEFORE"
+side = "BOTH"

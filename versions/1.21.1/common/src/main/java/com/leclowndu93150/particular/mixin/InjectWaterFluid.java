@@ -4,6 +4,7 @@ import com.leclowndu93150.particular.CommonClass;
 import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
 import com.leclowndu93150.particular.particles.CuboidParticle;
+import com.leclowndu93150.particular.utils.CustomFluidSupport;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
@@ -27,8 +28,9 @@ public class InjectWaterFluid
 	{
 		if (!ParticularConfig.waterfallSpray()) { return; }
 
+		FluidState below = world.getFluidState(pos.below());
 		if (!state.isSource() &&
-			world.getFluidState(pos.below()).is(FluidTags.WATER))
+			(below.is(FluidTags.WATER) || CustomFluidSupport.isWaterLike(below)))
 		{
 			// Splishy splashy
 			for (int i = 0; i < 2; ++i)

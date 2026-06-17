@@ -19,7 +19,7 @@ public class FireflyParticle extends SingleQuadParticle
 	private int ticksUntilNextSwitch = 40;
 	private boolean isOn = false;
 
-	protected FireflyParticle(ClientLevel world, double x, double y, double z, SpriteSet provider)
+	protected FireflyParticle(ClientLevel world, double x, double y, double z, double velX, double velY, double velZ, SpriteSet provider)
 	{
 		super(world, x, y, z, provider.get(0, 1));
 
@@ -29,21 +29,31 @@ public class FireflyParticle extends SingleQuadParticle
 		zd = 0;
 
 		alpha = 0;
-		rCol = 187f/255f;
-		gCol = 1f;
-		bCol = 107f/255f;
 
-		if (world.getRandom().nextInt(10) == 1)
+		if (velX <= 1.0 && velY <= 1.0 && velZ <= 1.0)
 		{
-			rCol = 107f/255f;
-			gCol = 250/255f;
-			bCol = 1f;
+			rCol = (float) velX;
+			gCol = (float) velY;
+			bCol = (float) velZ;
+		}
+		else
+		{
+			rCol = 187f/255f;
+			gCol = 1f;
+			bCol = 107f/255f;
 
 			if (world.getRandom().nextInt(10) == 1)
 			{
-				rCol = 1f;
-				gCol = 124/255f;
-				bCol = 107/255f;
+				rCol = 107f/255f;
+				gCol = 250/255f;
+				bCol = 1f;
+
+				if (world.getRandom().nextInt(10) == 1)
+				{
+					rCol = 1f;
+					gCol = 124/255f;
+					bCol = 107/255f;
+				}
 			}
 		}
 
@@ -119,7 +129,7 @@ public class FireflyParticle extends SingleQuadParticle
 		@Override
 		public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velX, double velY, double velZ, RandomSource random)
 		{
-			return new FireflyParticle(world, x, y, z, provider);
+			return new FireflyParticle(world, x, y, z, velX, velY, velZ, provider);
 		}
 	}
 }

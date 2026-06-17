@@ -44,6 +44,7 @@ public class ParticularConfig {
 		public final ForgeConfigSpec.DoubleValue fireflyTallGrassFrequency;
 		public final ForgeConfigSpec.DoubleValue fireflyFlowersFrequency;
 		public final ForgeConfigSpec.DoubleValue fireflyTallFlowersFrequency;
+		public final ForgeConfigSpec.DoubleValue fireflyCustomBlockFrequency;
 
 		public final ForgeConfigSpec.IntValue fallingLeavesSpawnChance;
 		public final ForgeConfigSpec.BooleanValue fallingLeavesSpawnRipples;
@@ -59,6 +60,13 @@ public class ParticularConfig {
 		public final ForgeConfigSpec.BooleanValue waterCuboidBiomeTint;
 		public final ForgeConfigSpec.IntValue waterCuboidColor;
 		public final ForgeConfigSpec.IntValue lavaCuboidColor;
+
+		public final ForgeConfigSpec.ConfigValue<List<? extends String>> customWaterFluids;
+		public final ForgeConfigSpec.ConfigValue<List<? extends String>> cascadeFluidPairs;
+		public final ForgeConfigSpec.ConfigValue<List<? extends String>> fireflyBiomes;
+		public final ForgeConfigSpec.ConfigValue<List<? extends String>> fireflySpawnBlocks;
+		public final ForgeConfigSpec.ConfigValue<List<? extends String>> fireflyBiomeColors;
+		public final ForgeConfigSpec.ConfigValue<List<? extends String>> fireflyColorPool;
 
 		public final ForgeConfigSpec.IntValue caveDustSpawnChance;
 		public final ForgeConfigSpec.IntValue caveDustBaseMaxAge;
@@ -105,7 +113,30 @@ public class ParticularConfig {
 			fireflyTallGrassFrequency = builder.comment("Frequency modifier for tall grass").defineInRange("tallGrass", 1.0/12.0, 0.0, 1.0);
 			fireflyFlowersFrequency = builder.comment("Frequency modifier for flowers").defineInRange("flowers", 1.0, 0.0, 1.0);
 			fireflyTallFlowersFrequency = builder.comment("Frequency modifier for tall flowers").defineInRange("tallFlowers", 0.5, 0.0, 1.0);
+			fireflyCustomBlockFrequency = builder.comment("Frequency modifier for blocks listed in fireflySpawnBlocks").defineInRange("customBlocks", 1.0/6.0, 0.0, 1.0);
 			builder.pop();
+
+			fireflyBiomes = builder.comment("Biomes where fireflies always spawn (bypasses temperature check). Example: \"minecraft:swamp\"")
+					.defineList("biomes", List.<String>of(), entry -> entry instanceof String);
+			fireflySpawnBlocks = builder.comment("Extra blocks that spawn fireflies. Example: \"tfc:plant/cattail\"")
+					.defineList("spawnBlocks", List.<String>of(), entry -> entry instanceof String);
+			fireflyBiomeColors = builder.comment("Per-biome firefly RGB hex tints. Format: \"biomeId|RRGGBB\". Example: \"minecraft:swamp|FFD27F\". Takes priority over fireflyColorPool.")
+					.defineList("biomeColors", List.<String>of(), entry -> entry instanceof String);
+			fireflyColorPool = builder.comment("Random RGB hex colors picked per firefly when no biomeColors entry matches. Empty = use built-in yellow/blue/red mix. Format: \"RRGGBB\".")
+					.defineList("colorPool", List.<String>of(), entry -> entry instanceof String);
+			builder.pop();
+
+			builder.push("customFluidsSettings");
+			customWaterFluids = builder.comment("Fluid IDs treated like vanilla water for splash, rain ripples, and waterfall spray. Example: \"tfc:river_water\"")
+					.defineList("waterLikeFluids", Arrays.asList(
+									"tfc:river_water",
+									"tfc:flowing_salt_water",
+									"tfc:salt_water",
+									"tfc:flowing_spring_water",
+									"tfc:spring_water"),
+							entry -> entry instanceof String);
+			cascadeFluidPairs = builder.comment("Flowing,source fluid pairs that produce cascade waterfalls. Example: \"mymod:flowing_water,mymod:water\". TFC fluids do not produce cascades because they have no flowing variant.")
+					.defineList("cascadeFluidPairs", List.<String>of(), entry -> entry instanceof String);
 			builder.pop();
 
 			builder.push("fallingLeavesSettings");

@@ -1,0 +1,83 @@
+package com.leclowndu93150.particular.particles.splashes;
+
+import com.leclowndu93150.particular.Particles;
+import com.leclowndu93150.particular.ParticularConfig;
+import com.leclowndu93150.particular.particles.CuboidParticle;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
+
+public class WaterSplashEmitterParticle extends NoRenderParticle {
+    private final float speed;
+    private final float width;
+    private final float height;
+    private final boolean isLava;
+
+    WaterSplashEmitterParticle(ClientLevel clientWorld, double x, double y, double z, float width, float speed, boolean lava) {
+        super(clientWorld, x, y, z);
+        speed = Math.min(2, speed);
+        gravity = 0;
+        lifetime = 24;
+        this.speed = speed;
+        this.width = width;
+        this.height = (speed / 2f + width / 3f);
+        this.isLava = lava;
+        double flag = lava ? 1 : 0;
+
+        clientWorld.addParticle(Particles.WATER_SPLASH(), x, y, z, width, this.height, flag);
+        clientWorld.addParticle(Particles.WATER_SPLASH_FOAM(), x, y, z, width, this.height, flag);
+        clientWorld.addParticle(Particles.WATER_SPLASH_RING(), x, y, z, width, 0, flag);
+
+        if (speed > 0.5) {
+            splash(width, (1.5f/8f + speed * 1/8f) + (width / 6f), 0.15f);
+        } else if (ParticularConfig.COMMON.waterSplashSmallDroplets.get()) {
+            splash(width * 0.5f, (0.5f/8f + speed * 1/8f) + (width / 8f), 0.08f);
+            remove();
+        } else {
+            remove();
+        }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (age == 8) {
+            double flag = isLava ? 1 : 0;
+            level.addParticle(Particles.WATER_SPLASH(), x, y, z, width * 0.66f, height * 2f, flag);
+            level.addParticle(Particles.WATER_SPLASH_FOAM(), x, y, z, width * 0.66f, height * 2f, flag);
+            level.addParticle(Particles.WATER_SPLASH_RING(), x, y, z, width * 0.66f, 0, flag);
+            splash(width * 0.66f, (3f/8f + speed * 1/8f) + (width / 6f), 0.05f);
+        }
+
+        var fluid = level.getFluidState(BlockPos.containing(x, y, z));
+        if (isLava ? !fluid.is(FluidTags.LAVA) : !fluid.is(FluidTags.WATER)) {
+            this.remove();
+        }
+    }
+
+    private void splash(float width, float speed, float spread) {
+        ParticleOptions dropletType = ParticularConfig.COMMON.cuboidSplashDroplets.get()
+                ? (isLava ? CuboidParticle.lava() : CuboidParticle.whiteSplash())
+                : (isLava ? ParticleTypes.LANDING_LAVA : ParticleTypes.FALLING_WATER);
+        for (int i = 0; i < width * 20f; ++i) {
+            double xVel = random.triangle(0.0, spread);
+            double yVel = speed * random.triangle(1.0, 0.25);
+            double zVel = random.triangle(0.0, spread);
+            level.addParticle(dropletType, x + xVel / spread * width, y + 1/16f, z + zVel / spread * width, xVel, yVel, zVel);
+        }
+    }
+
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        public Factory(SpriteSet provider) { }
+
+        @Override
+        public Particle createParticle(SimpleParticleType type, ClientLevel world, double x, double y, double z, double g, double h, double i, RandomSource random) {
+            return new WaterSplashEmitterParticle(world, x, y, z, (float) g, (float) h, i > 0);
+        }
+    }
+}

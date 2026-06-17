@@ -1,6 +1,12 @@
-## What's new
+# Particular Reforged 26.1
 
-- **Reworked cascade waterfalls.** New textures, gentler motion, and bigger waterfalls now spawn proportionally more spray. Looks more natural and less chaotic.
-- **Cuboid fluid particles.** Tiny 1-voxel cube particles for splash droplets and (optionally) waterfall spray. On by default for splashes — turn on `cuboidWaterfallSpray` in the config to extend it to waterfalls. Lava splashes get cuboid droplets too.
-- **Soft water entries.** Stepping into water no longer triggers a full splash. Gentle entries now create a small ring of bubbles and droplets instead, while real falls still produce the big splash you're used to.
-- **Splash transparency.** Splash particles are now translucent (75% opacity by default), adjustable in the config. Waterfalls and lava splashes feel less opaque and blend in better.
+## 1.5.4
+
+- **Fix.** Cascade particles no longer accumulate while the game is paused (closes #43).
+
+
+- **Custom water-like fluids (config).** New `customFluidsSettings.waterLikeFluids` list — fluid IDs treated like vanilla water for splash, rain ripples, and waterfall spray.
+- **Custom cascades (config).** New `customFluidsSettings.cascadeFluidPairs` list — `"flowing,source"` pairs that produce cascade waterfalls for any mod fluid that has both variants.
+- **Firefly biomes (config).** New `fireflySettings.biomes` list — biome IDs where fireflies always spawn (bypasses temperature check).
+- **Firefly spawn blocks (config).** New `fireflySettings.spawnBlocks` list — extra blocks that spawn fireflies, plus a `customBlocks` frequency modifier.
+- **Firefly colors (config).** New `fireflySettings.biomeColors` (per-biome RGB tint: `"biomeId|RRGGBB"`) and `fireflySettings.colorPool` (random RGB pool, format `"RRGGBB"`).

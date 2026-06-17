@@ -6,8 +6,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
   "client": [
-    "compat.TFCMixingFluidMixin",
-    "compat.TFCWaterMixin"
+    "compat.TFCMixingFluidMixin"
   ],
   "server": [],
   "injectors": {

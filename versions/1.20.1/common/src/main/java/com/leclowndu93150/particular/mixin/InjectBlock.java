@@ -3,6 +3,7 @@ package com.leclowndu93150.particular.mixin;
 import com.leclowndu93150.particular.CommonClass;
 import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
+import com.leclowndu93150.particular.utils.CustomFireflySupport;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
@@ -37,12 +38,12 @@ public class InjectBlock
 
 		if (ParticularConfig.fireflies())
 		{
-			// Fireflies
 			double val = random.nextDouble();
 			if ((block == Blocks.GRASS_BLOCK && val < ParticularConfig.COMMON.fireflyGrassFrequency.get()) ||
 				(block == Blocks.TALL_GRASS && val < ParticularConfig.COMMON.fireflyTallGrassFrequency.get()) ||
 				(block instanceof FlowerBlock && val < ParticularConfig.COMMON.fireflyFlowersFrequency.get()) ||
-				(block instanceof TallFlowerBlock && val < ParticularConfig.COMMON.fireflyTallFlowersFrequency.get()))
+				(block instanceof TallFlowerBlock && val < ParticularConfig.COMMON.fireflyTallFlowersFrequency.get()) ||
+				(val < ParticularConfig.COMMON.fireflyCustomBlockFrequency.get() && CustomFireflySupport.isFireflySpawnBlock(state)))
 			{
 				CommonClass.spawnFirefly(world, pos, random);
 				return;

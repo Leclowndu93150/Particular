@@ -2,6 +2,7 @@ package com.leclowndu93150.particular.mixin;
 
 import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
+import com.leclowndu93150.particular.utils.CustomFluidSupport;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -29,7 +30,7 @@ public class InjectLevelRenderer
 					opcode = Opcodes.GETFIELD))
 	private void modifyParticleEffect(Camera camera, CallbackInfo ci, @Local FluidState fluidState, @Local LocalRef<ParticleOptions> particleEffect)
 	{
-		if (fluidState.is(FluidTags.WATER) && ParticularConfig.rainRipples())
+		if ((fluidState.is(FluidTags.WATER) || CustomFluidSupport.isWaterLike(fluidState)) && ParticularConfig.rainRipples())
 		{
 			particleEffect.set(Particles.WATER_RIPPLE());
 		}

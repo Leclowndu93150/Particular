@@ -1,0 +1,12 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.leclowndu93150.particular.mixin.compat",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "TFCMixingFluidMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

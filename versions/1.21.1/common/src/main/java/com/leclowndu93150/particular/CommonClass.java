@@ -4,6 +4,8 @@ import com.leclowndu93150.particular.mixin.AccessorBiome;
 import com.leclowndu93150.particular.platform.Services;
 import com.leclowndu93150.particular.utils.CascadeCache;
 import com.leclowndu93150.particular.utils.CascadeData;
+import com.leclowndu93150.particular.utils.CustomFireflySupport;
+import com.leclowndu93150.particular.utils.CustomFluidSupport;
 import com.leclowndu93150.particular.utils.LeafColorUtil;
 import com.leclowndu93150.particular.utils.TextureCache;
 import net.minecraft.client.Minecraft;
@@ -23,6 +25,7 @@ import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
@@ -148,34 +151,51 @@ public class CommonClass {
 		}
 	}
 
+	public static boolean isCascadeLocation(Level world, BlockPos pos) {
+		FluidState state = world.getFluidState(pos);
+		FluidState above = world.getFluidState(pos.above());
+		FluidState below = world.getFluidState(pos.below());
+
+		if (state.is(Fluids.WATER) && above.is(Fluids.FLOWING_WATER) && below.is(Fluids.WATER)) {
+			return true;
+		}
+		Fluid sourceForAbove = CustomFluidSupport.sourceFor(above);
+		return sourceForAbove != null && state.is(sourceForAbove) && below.is(sourceForAbove);
+	}
+
+	public static int cascadeStrength(Level world, BlockPos pos) {
+		FluidState state = world.getFluidState(pos);
+		int strength = 0;
+		if (world.getFluidState(pos.north()).is(state.getType())) { ++strength; }
+		if (world.getFluidState(pos.east()).is(state.getType())) { ++strength; }
+		if (world.getFluidState(pos.south()).is(state.getType())) { ++strength; }
+		if (world.getFluidState(pos.west()).is(state.getType())) { ++strength; }
+		return strength;
+	}
+
 	public static void updateCascade(Level world, BlockPos pos, FluidState state) {
 		BlockPos immutablePos = pos.immutable();
 		if (cascades.containsKey(immutablePos)) {
 			return;
 		}
 
-		boolean shouldHaveCascade = state.is(Fluids.WATER) &&
-				world.getFluidState(pos.above()).is(Fluids.FLOWING_WATER) &&
-				world.getFluidState(pos.below()).is(Fluids.WATER);
+		if (!isCascadeLocation(world, immutablePos)) {
+			return;
+		}
 
-		if (shouldHaveCascade) {
-			int strength = 0;
-			if (world.getFluidState(pos.north()).is(Fluids.WATER)) { ++strength; }
-			if (world.getFluidState(pos.east()).is(Fluids.WATER)) { ++strength; }
-			if (world.getFluidState(pos.south()).is(Fluids.WATER)) { ++strength; }
-			if (world.getFluidState(pos.west()).is(Fluids.WATER)) { ++strength; }
+		int strength = cascadeStrength(world, immutablePos);
+		if (strength == 0) {
+			return;
+		}
 
-			if (strength > 0) {
-				boolean isEncased = !world.getBlockState(pos.above().north()).isAir() &&
-						!world.getBlockState(pos.above().east()).isAir() &&
-						!world.getBlockState(pos.above().south()).isAir() &&
-						!world.getBlockState(pos.above().west()).isAir();
+		boolean isEncased = !world.getBlockState(pos.above().north()).isAir() &&
+				!world.getBlockState(pos.above().east()).isAir() &&
+				!world.getBlockState(pos.above().south()).isAir() &&
+				!world.getBlockState(pos.above().west()).isAir();
 
-				if (!isEncased) {
-					cascades.put(immutablePos, new CascadeData(strength, world.getGameTime() - 101));
-					CascadeCache.add(world, immutablePos, strength);
-				}
-			}
+		if (!isEncased) {
+			cascades.put(immutablePos, new CascadeData(strength, world.getGameTime() - 101));
+			CascadeCache.add(world, immutablePos, strength);
 		}
 	}
 
@@ -187,22 +207,41 @@ public class CommonClass {
 		world.addParticle(particle, x, y, z, 0, 0, 0);
 	}
 
+	private static void spawnFireflyParticle(Level world, BlockPos pos, net.minecraft.core.Holder<Biome> biomeHolder, RandomSource random) {
+		int rgb = CustomFireflySupport.resolveColor(biomeHolder, random, -1);
+		double r, g, b;
+		if (rgb < 0) {
+			r = 2.0; g = 2.0; b = 2.0;
+		} else {
+			r = ((rgb >> 16) & 0xFF) / 255.0;
+			g = ((rgb >> 8) & 0xFF) / 255.0;
+			b = (rgb & 0xFF) / 255.0;
+		}
+		world.addParticle(Particles.FIREFLY(), pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, r, g, b);
+	}
+
 	public static void spawnFirefly(Level world, BlockPos pos, RandomSource random) {
 		if (random.nextDouble() > fireflyFrequency) {
 			return;
 		}
 
-		Biome biome = world.getBiome(pos).value();
+		var biomeHolder = world.getBiome(pos);
+		Biome biome = biomeHolder.value();
 		float downfall = ((AccessorBiome)(Object) biome).getWeather().downfall();
 		if ((!world.isRaining() || ParticularConfig.COMMON.fireflyCanSpawnInRain.get()) &&
 				random.nextInt(30 - (int)(10 * downfall)) == 0) {
 			long time = world.getDayTime() % 24000;
+			if (time < ParticularConfig.COMMON.fireflyStartTime.get() || time > ParticularConfig.COMMON.fireflyEndTime.get()) {
+				return;
+			}
+			if (CustomFireflySupport.isFireflyBiome(biomeHolder)) {
+				spawnFireflyParticle(world, pos, biomeHolder, random);
+				return;
+			}
 			float temp = biome.getBaseTemperature();
-			if (time >= ParticularConfig.COMMON.fireflyStartTime.get() &&
-					time <= ParticularConfig.COMMON.fireflyEndTime.get() &&
-					temp >= ParticularConfig.COMMON.fireflyMinTemp.get() &&
+			if (temp >= ParticularConfig.COMMON.fireflyMinTemp.get() &&
 					temp <= ParticularConfig.COMMON.fireflyMaxTemp.get()) {
-				world.addParticle(Particles.FIREFLY(), pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, 0, 0, 0);
+				spawnFireflyParticle(world, pos, biomeHolder, random);
 			}
 		}
 	}
@@ -315,7 +354,7 @@ public class CommonClass {
 		if (!ParticularConfig.cascades()) return;
 
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.player == null) return;
+		if (mc.player == null || mc.isPaused()) return;
 		int renderDistance = mc.options.renderDistance().get();
 		BlockPos playerPos = mc.player.blockPosition();
 		long currentTime = world.getGameTime();
@@ -334,16 +373,8 @@ public class CommonClass {
 			}
 
 			if (currentTime - cascadeData.createdTime > 100) {
-				if (world.getFluidState(pos).is(Fluids.WATER) &&
-						world.getFluidState(pos.above()).is(Fluids.FLOWING_WATER) &&
-						world.getFluidState(pos.below()).is(Fluids.WATER)) {
-
-					int strength = 0;
-					if (world.getFluidState(pos.north()).is(Fluids.WATER)) { ++strength; }
-					if (world.getFluidState(pos.east()).is(Fluids.WATER)) { ++strength; }
-					if (world.getFluidState(pos.south()).is(Fluids.WATER)) { ++strength; }
-					if (world.getFluidState(pos.west()).is(Fluids.WATER)) { ++strength; }
-
+				if (isCascadeLocation(world, pos)) {
+					int strength = cascadeStrength(world, pos);
 					if (strength > 0) {
 						boolean isEncased = !world.getBlockState(pos.above().north()).isAir() &&
 								!world.getBlockState(pos.above().east()).isAir() &&
@@ -360,13 +391,12 @@ public class CommonClass {
 				return true;
 			}
 
-			if (!world.getFluidState(pos).is(Fluids.WATER) ||
-					!world.getFluidState(pos.above()).is(Fluids.FLOWING_WATER) ||
-					!world.getFluidState(pos.below()).is(Fluids.WATER)) {
+			if (!isCascadeLocation(world, pos)) {
 				CascadeCache.remove(world, pos);
 				return true;
 			}
 
+			Fluid hereType = world.getFluidState(pos).getType();
 			float height = world.getFluidState(pos.above()).getOwnHeight();
 			int particles = 2 + cascadeData.strength;
 			for (int i = 0; i < particles; i++) {
@@ -375,16 +405,16 @@ public class CommonClass {
 				double z = pos.getZ();
 				int side = random.nextInt(4);
 
-				if (side == 0 && world.getFluidState(pos.north()).is(Fluids.WATER)) {
+				if (side == 0 && world.getFluidState(pos.north()).is(hereType)) {
 					x += random.nextDouble();
 					z += 0.5 + (random.nextDouble() * 0.25 - 0.5) * 1.5;
-				} else if (side == 1 && world.getFluidState(pos.east()).is(Fluids.WATER)) {
+				} else if (side == 1 && world.getFluidState(pos.east()).is(hereType)) {
 					x += 0.5 + (0.25 + random.nextDouble() * 0.25) * 1.5;
 					z += random.nextDouble();
-				} else if (side == 2 && world.getFluidState(pos.south()).is(Fluids.WATER)) {
+				} else if (side == 2 && world.getFluidState(pos.south()).is(hereType)) {
 					x += random.nextDouble();
 					z += 0.5 + (0.25 + random.nextDouble() * 0.25) * 1.5;
-				} else if (world.getFluidState(pos.west()).is(Fluids.WATER)) {
+				} else if (world.getFluidState(pos.west()).is(hereType)) {
 					x += 0.5 + (random.nextDouble() * 0.25 - 0.5) * 1.5;
 					z += random.nextDouble();
 				} else if (random.nextBoolean()) {
@@ -421,9 +451,7 @@ public class CommonClass {
 
 		CascadeCache.getChunk(world, chunk).forEach((pos, strength) -> {
 			if (cascades.containsKey(pos)) return;
-			if (world.getFluidState(pos).is(Fluids.WATER) &&
-					world.getFluidState(pos.above()).is(Fluids.FLOWING_WATER) &&
-					world.getFluidState(pos.below()).is(Fluids.WATER)) {
+			if (isCascadeLocation(world, pos)) {
 				cascades.put(pos, new CascadeData(strength, world.getGameTime() - 101));
 			} else {
 				CascadeCache.remove(world, pos);
@@ -468,13 +496,7 @@ public class CommonClass {
 				return true;
 			}
 
-			FluidState currentState = world.getFluidState(pos);
-			FluidState aboveState = world.getFluidState(pos.above());
-			FluidState belowState = world.getFluidState(pos.below());
-
-			boolean isValid = currentState.is(Fluids.WATER) &&
-					aboveState.is(Fluids.FLOWING_WATER) &&
-					belowState.is(Fluids.WATER);
+			boolean isValid = isCascadeLocation(world, pos);
 
 			if (!isValid) {
 				CascadeCache.remove(world, pos);

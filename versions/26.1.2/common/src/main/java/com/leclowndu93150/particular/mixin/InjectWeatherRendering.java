@@ -2,6 +2,7 @@ package com.leclowndu93150.particular.mixin;
 
 import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
+import com.leclowndu93150.particular.utils.CustomFluidSupport;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.renderer.WeatherEffectRenderer;
@@ -22,7 +23,7 @@ public class InjectWeatherRendering
 			)
 	)
 	private SimpleParticleType modifyParticleEffect(SimpleParticleType original, @Local FluidState fluidState) {
-		if (fluidState.is(FluidTags.WATER) && ParticularConfig.rainRipples())
+		if ((fluidState.is(FluidTags.WATER) || CustomFluidSupport.isWaterLike(fluidState)) && ParticularConfig.rainRipples())
 		{
 			return Particles.WATER_RIPPLE();
 		}

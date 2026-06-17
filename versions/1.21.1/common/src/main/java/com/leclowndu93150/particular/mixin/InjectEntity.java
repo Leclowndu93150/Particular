@@ -3,6 +3,7 @@ package com.leclowndu93150.particular.mixin;
 import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
 import com.leclowndu93150.particular.particles.CuboidParticle;
+import com.leclowndu93150.particular.utils.CustomFluidSupport;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -85,7 +86,7 @@ public abstract class InjectEntity
 		for (int i = 0; i < 5; ++i)
 		{
 			FluidState nextState = level().getFluidState(blockPosition().offset(0, i, 0));
-			if (prevState.is(Fluids.WATER) && nextState.is(Fluids.EMPTY))
+			if ((prevState.is(Fluids.WATER) || CustomFluidSupport.isWaterLike(prevState)) && nextState.is(Fluids.EMPTY))
 			{
 				baseY += i - 1;
 				foundSurface = true;
