@@ -5,6 +5,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,20 +42,26 @@ public final class CustomFluidSupport {
         int wh = waterList.hashCode();
         if (wh != lastWaterHash) {
             Set<Fluid> set = new HashSet<>();
+            boolean allResolved = true;
             for (String id : waterList) {
                 ResourceLocation rl = ResourceLocation.tryParse(id);
                 if (rl == null) continue;
                 Fluid f = BuiltInRegistries.FLUID.get(rl);
-                if (f != null) set.add(f);
+                if (f == null || f == Fluids.EMPTY) {
+                    allResolved = false;
+                    continue;
+                }
+                set.add(f);
             }
             waterLike = set;
-            lastWaterHash = wh;
+            if (allResolved) lastWaterHash = wh;
         }
 
         List<? extends String> pairs = ParticularConfig.COMMON.cascadeFluidPairs.get();
         int ph = pairs.hashCode();
         if (ph != lastPairHash) {
             Map<Fluid, Fluid> map = new HashMap<>();
+            boolean allResolved = true;
             for (String entry : pairs) {
                 String[] parts = entry.split(",");
                 if (parts.length != 2) continue;
@@ -63,11 +70,15 @@ public final class CustomFluidSupport {
                 if (flowingId == null || sourceId == null) continue;
                 Fluid flowing = BuiltInRegistries.FLUID.get(flowingId);
                 Fluid source = BuiltInRegistries.FLUID.get(sourceId);
-                if (flowing != null && source != null) map.put(flowing, source);
+                if (flowing == null || flowing == Fluids.EMPTY || source == null || source == Fluids.EMPTY) {
+                    allResolved = false;
+                    continue;
+                }
+                map.put(flowing, source);
             }
             flowingToSource = map;
             flowingCascades = Set.copyOf(map.keySet());
-            lastPairHash = ph;
+            if (allResolved) lastPairHash = ph;
         }
     }
 }
