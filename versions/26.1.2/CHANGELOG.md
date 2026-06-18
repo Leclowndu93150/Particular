@@ -1,5 +1,9 @@
 # Particular Reforged 26.1
 
+## 1.5.5
+
+- **Fix.** Fireflies now spawn on modded plants (TFC, etc.) that override `animateTick` without calling super. Switched the hook from `Block.animateTick` to `ClientLevel.doAnimateTick` so coverage is consistent across blocks.
+
 ## 1.5.4
 
 - **Fix.** Cascade particles no longer accumulate while the game is paused (closes #43).
