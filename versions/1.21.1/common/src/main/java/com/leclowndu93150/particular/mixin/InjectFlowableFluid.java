@@ -24,7 +24,7 @@ public class InjectFlowableFluid
 	{
 		if (!ParticularConfig.cascades()) { return; }
 
-		if (random.nextInt(10) == 0 && (state.is(Fluids.WATER) || CustomFluidSupport.isWaterLike(state))) {
+		if (random.nextInt(10) == 0 && (state.is(Fluids.WATER) || state.is(Fluids.FLOWING_WATER) || CustomFluidSupport.isWaterLike(state))) {
 			CommonClass.updateCascade(level, pos, state);
 		}
 	}
