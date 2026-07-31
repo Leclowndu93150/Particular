@@ -1,6 +1,5 @@
 package com.leclowndu93150.particular;
 
-import com.leclowndu93150.particular.utils.IrisCompat;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
@@ -218,19 +217,8 @@ public class ParticularConfig {
     public static boolean cakeEatingParticles() { return COMMON.cakeEatingParticles.get(); }
     public static boolean emissiveLavaDrips() { return COMMON.emissiveLavaDrips.get(); }
 
-    public static boolean rainRipples() {
-        if (IrisCompat.areShadersEnabled()) {
-            return false; // Override: Disable if shaders are on
-        }
-        return COMMON.rainRipples.get();
-    }
-
-    public static boolean waterDripRipples() {
-        if (IrisCompat.areShadersEnabled()) {
-            return false; // Override: Disable if shaders are on
-        }
-        return COMMON.waterDripRipples.get();
-    }
+    public static boolean rainRipples() { return COMMON.rainRipples.get(); }
+    public static boolean waterDripRipples() { return COMMON.waterDripRipples.get(); }
 
     // Helper methods to convert biome string list to ResourceLocation list
     public static List<Identifier> getCaveDustExcludeBiomes() {
