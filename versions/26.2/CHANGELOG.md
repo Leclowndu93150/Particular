@@ -1,5 +1,5 @@
 # Particular Reforged 26.2
 
-## 1.5.6
+## 1.5.7
 
-- **Fix.** Crash (`Ticking Particle`) when water drip or rain ripple particles ticked while Iris was installed but its config had not initialized. Removed the Iris compat check entirely — ripples are no longer force-disabled when shaders are enabled. ([#56](https://github.com/Leclowndu93150/Particular/issues/56), [#57](https://github.com/Leclowndu93150/Particular/issues/57))
+- **Fix.** Cave dust exclude biomes list now actually works. Thanks to @johnhoffm for the report and the fix ([#42](https://github.com/Leclowndu93150/Particular/issues/42), [#54](https://github.com/Leclowndu93150/Particular/pull/54)).

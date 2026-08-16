@@ -52,6 +52,9 @@
   "particular.configuration.lavaSplash": "Lava Splash",
   "particular.configuration.lavaSplash.tooltip": "Enable lava splash particles when entities hit lava",
 
+  "particular.configuration.sableSplashes": "Sable Ship Splashes",
+  "particular.configuration.sableSplashes.tooltip": "Enable water splash and wake particles for Sable sub-levels (ships, boats, vehicles)\n\nOnly applies when Sable is installed",
+
   "particular.configuration.startTime": "Start Time",
   "particular.configuration.startTime.tooltip": "Game time when fireflies begin spawning (in ticks)\n\n12000 = sunset (6:00 PM)\nRange: 0 to 23999",
 

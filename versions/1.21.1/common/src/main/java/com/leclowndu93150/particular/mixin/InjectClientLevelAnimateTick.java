@@ -69,6 +69,6 @@ public abstract class InjectClientLevelAnimateTick {
 
 	private static boolean particular$isValidBiomeForDust(Level world, BlockPos pos) {
 		var key = world.getBiome(pos).unwrapKey();
-		return key.map(k -> !ParticularConfig.COMMON.caveDustExcludeBiomes.get().contains(k.location())).orElse(true);
+		return key.map(k -> !ParticularConfig.getCaveDustExcludeBiomes().contains(k.location())).orElse(true);
 	}
 }

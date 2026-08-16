@@ -34,6 +34,7 @@ public class ParticularConfig {
 		public final ModConfigSpec.BooleanValue cakeEatingParticles;
 		public final ModConfigSpec.BooleanValue emissiveLavaDrips;
 		public final ModConfigSpec.BooleanValue lavaSplash;
+		public final ModConfigSpec.BooleanValue sableSplashes;
 
 		public final ModConfigSpec.IntValue fireflyStartTime;
 		public final ModConfigSpec.IntValue fireflyEndTime;
@@ -96,6 +97,7 @@ public class ParticularConfig {
 			cakeEatingParticles = builder.comment("Enable cake eating particles").define("cakeEatingParticles", true);
 			emissiveLavaDrips = builder.comment("Enable emissive lava drips").define("emissiveLavaDrips", true);
 			lavaSplash = builder.comment("Enable lava splash particles when entities hit lava").define("lavaSplash", true);
+			sableSplashes = builder.comment("Enable water splash and wake particles for Sable sub-levels (ships, boats, vehicles)").define("sableSplashes", true);
 			builder.pop();
 
 			builder.comment("Advanced Particle Settings").push("advancedSettings");
@@ -211,6 +213,7 @@ public class ParticularConfig {
 	public static boolean cakeEatingParticles() { return COMMON.cakeEatingParticles.get(); }
 	public static boolean emissiveLavaDrips() { return COMMON.emissiveLavaDrips.get(); }
 	public static boolean lavaSplash() { return COMMON.lavaSplash.get(); }
+	public static boolean sableSplashes() { return COMMON.sableSplashes.get(); }
 
 	public static boolean rainRipples() {
 		if (IrisCompat.areShadersEnabled()) {

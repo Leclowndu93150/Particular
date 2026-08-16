@@ -46,6 +46,8 @@ public class SableCompat {
     private static final double FOOTPRINT_SWEEP_MARGIN = 0.75;
     private static final double MIN_SPLASH_SPEED = 0.04;
     private static final double MIN_TRAIL_SPEED = 0.06;
+    private static final double HARD_SPLASH_MIN_VERTICAL_SPEED = 0.35;
+    private static final int SOFT_ENTRY_PARTICLE_CAP = 24;
 
     private static final int ENTRY_SPLASH_COOLDOWN = 15;
     private static final int TRAIL_SPLASH_COOLDOWN = 20;
@@ -61,7 +63,7 @@ public class SableCompat {
     }
 
     public static void tickSubLevelWake(SubLevel subLevel) {
-        if (!LOADED || !ParticularConfig.waterSplash() || subLevel.isRemoved()) return;
+        if (!LOADED || !ParticularConfig.waterSplash() || !ParticularConfig.sableSplashes() || subLevel.isRemoved()) return;
 
         Level level = subLevel.getLevel();
         if (!level.isClientSide) return;
@@ -85,9 +87,9 @@ public class SableCompat {
                 return;
             }
 
-            double centerYDelta = Double.isNaN(state.lastCenterY) ? 0.0 : Math.abs(centerY - state.lastCenterY);
+            double centerYDrop = Double.isNaN(state.lastCenterY) ? 0.0 : state.lastCenterY - centerY;
             boolean shapeChanged = checkShapeChanged(subLevel, state, gameTime);
-            Motion centerMotion = sampleCenterMotion(level, subLevel).withVerticalAtLeast(centerYDelta);
+            Motion centerMotion = sampleCenterMotion(level, subLevel).withFallAtLeast(centerYDrop);
 
             FluidSurface surface = findFluidSurfaceNearBounds(level, bounds, state);
             if (surface == null) {
@@ -142,14 +144,10 @@ public class SableCompat {
             }
 
             Motion motion = sampleMotion(level, subLevel, sampleBlocks(state), centerMotion);
-            double impactSpeed = Math.max(motion.verticalSpeed, motion.horizontalSpeed);
-            boolean justEnteredWater = !state.touchingWater;
+            double fallSpeed = centerMotion.downwardSpeed;
 
-            if (justEnteredWater && impactSpeed >= MIN_SPLASH_SPEED && gameTime >= state.nextEntrySplashTime) {
-                spawnSplashBurst(level, positions, surface.height, impactSpeed, footprintSize);
-                state.nextEntrySplashTime = gameTime + ENTRY_SPLASH_COOLDOWN;
-            } else if (motion.verticalSpeed >= MIN_SPLASH_SPEED && gameTime >= state.nextEntrySplashTime) {
-                spawnSplashBurst(level, positions, surface.height, motion.verticalSpeed, footprintSize);
+            if (fallSpeed >= MIN_SPLASH_SPEED && gameTime >= state.nextEntrySplashTime) {
+                spawnImpact(level, positions, surface.height, fallSpeed, footprintSize);
                 state.nextEntrySplashTime = gameTime + ENTRY_SPLASH_COOLDOWN;
             }
 
@@ -180,14 +178,13 @@ public class SableCompat {
     private static void handleNoWaterContact(Level level, SubLevel subLevel, BoundingBox3dc bounds, SubLevelSplashState state, long gameTime, double fallbackWaterY) {
         double waterY = Double.isNaN(state.lastWaterY) ? fallbackWaterY : state.lastWaterY;
         if (state.touchingWater && !Double.isNaN(waterY) && gameTime >= state.nextExitSplashTime) {
-            Motion motion = sampleMotion(level, subLevel, sampleBlocks(state), sampleCenterMotion(level, subLevel));
-            double exitSpeed = Math.max(motion.verticalSpeed, motion.horizontalSpeed);
+            double exitSpeed = sampleCenterMotion(level, subLevel).verticalSpeed;
             if (exitSpeed >= MIN_SPLASH_SPEED) {
                 List<Vec3> positions = state.lastPositions.isEmpty()
                         ? List.of(boundsCenter(bounds, waterY))
                         : state.lastPositions;
                 int footprintSize = state.footprintSize > 0 ? state.footprintSize : estimateFootprintFromBounds(bounds);
-                spawnSplashBurst(level, positions, waterY, exitSpeed, footprintSize);
+                spawnImpact(level, positions, waterY, exitSpeed, footprintSize);
                 state.nextExitSplashTime = gameTime + ENTRY_SPLASH_COOLDOWN;
             }
         }
@@ -216,6 +213,7 @@ public class SableCompat {
 
         double horizontalSpeed = fallback.horizontalSpeed;
         double verticalSpeed = fallback.verticalSpeed;
+        double downwardSpeed = fallback.downwardSpeed;
         double totalSpeed = fallback.totalSpeed;
         int step = Math.max(1, blocks.size() / MAX_VELOCITY_SAMPLES);
         int samples = 0;
@@ -224,11 +222,12 @@ public class SableCompat {
             Vec3 velocityPerTick = Sable.HELPER.getVelocity(level, subLevel, Vec3.atCenterOf(blocks.get(i))).scale(1.0 / 20.0);
             horizontalSpeed = Math.max(horizontalSpeed, velocityPerTick.horizontalDistance());
             verticalSpeed = Math.max(verticalSpeed, Math.abs(velocityPerTick.y));
+            downwardSpeed = Math.max(downwardSpeed, -velocityPerTick.y);
             totalSpeed = Math.max(totalSpeed, velocityPerTick.length());
             samples++;
         }
 
-        return new Motion(horizontalSpeed, verticalSpeed, totalSpeed);
+        return new Motion(horizontalSpeed, verticalSpeed, downwardSpeed, totalSpeed);
     }
 
     private static List<BlockPos> sampleBlocks(SubLevelSplashState state) {
@@ -295,6 +294,40 @@ public class SableCompat {
         state.lastMaxY = bounds.maxY();
     }
 
+    private static void spawnImpact(Level level, List<Vec3> positions, double waterY, double speed, int footprintSize) {
+        if (speed >= HARD_SPLASH_MIN_VERTICAL_SPEED) {
+            spawnSplashBurst(level, positions, waterY, speed, footprintSize);
+        } else if (ParticularConfig.COMMON.waterSplashSoftEntryParticles.get()) {
+            spawnSoftEntry(level, positions, waterY, speed);
+        }
+    }
+
+    private static void spawnSoftEntry(Level level, List<Vec3> positions, double waterY, double speed) {
+        if (positions.isEmpty()) return;
+
+        boolean useCuboid = ParticularConfig.COMMON.cuboidSplashDroplets.get();
+        var random = level.random;
+        int step = Math.max(1, positions.size() / SOFT_ENTRY_PARTICLE_CAP);
+        int spawned = 0;
+
+        for (int i = 0; i < positions.size() && spawned < SOFT_ENTRY_PARTICLE_CAP; i += step) {
+            Vec3 pos = positions.get(i);
+            double xOffset = random.triangle(0.0, 0.25);
+            double zOffset = random.triangle(0.0, 0.25);
+            double x = pos.x + xOffset;
+            double z = pos.z + zOffset;
+
+            if (random.nextBoolean()) {
+                level.addParticle(ParticleTypes.BUBBLE, x, waterY - 0.08, z, xOffset * 0.04, 0.02 + random.nextDouble() * 0.03, zOffset * 0.04);
+            } else {
+                double dropletSpeed = 0.02 + Math.min(speed, 0.25) * 0.08;
+                level.addParticle(useCuboid ? CuboidParticle.whiteSplash() : ParticleTypes.FALLING_WATER,
+                        x, waterY + 0.02, z, xOffset * 0.02, dropletSpeed, zOffset * 0.02);
+            }
+            spawned++;
+        }
+    }
+
     private static void spawnSplashBurst(Level level, List<Vec3> positions, double waterY, double speed, int footprintSize) {
         if (positions.isEmpty()) return;
 
@@ -314,10 +347,11 @@ public class SableCompat {
         if (positions.isEmpty()) return;
 
         float syntheticWidth = footprintToWidth(footprintSize) * 0.5f;
-        float velocity = (float) Math.min(1.5, speed * 3.0);
+        float height = (float) Math.min(0.5, speed * 1.5);
 
         Vec3 center = footprintCenter(positions, waterY);
-        level.addParticle(Particles.WATER_SPLASH_EMITTER(), center.x, waterY, center.z, syntheticWidth, velocity, 0.0);
+        level.addParticle(Particles.WATER_SPLASH_FOAM(), center.x, waterY, center.z, syntheticWidth, height, 0.0);
+        level.addParticle(Particles.WATER_SPLASH_RING(), center.x, waterY, center.z, syntheticWidth, 0.0, 0.0);
     }
 
     private static Vec3 footprintCenter(List<Vec3> positions, double waterY) {
@@ -713,21 +747,24 @@ public class SableCompat {
     private static class Motion {
         final double horizontalSpeed;
         final double verticalSpeed;
+        final double downwardSpeed;
         final double totalSpeed;
 
-        Motion(double horizontalSpeed, double verticalSpeed, double totalSpeed) {
+        Motion(double horizontalSpeed, double verticalSpeed, double downwardSpeed, double totalSpeed) {
             this.horizontalSpeed = horizontalSpeed;
             this.verticalSpeed = verticalSpeed;
+            this.downwardSpeed = downwardSpeed;
             this.totalSpeed = totalSpeed;
         }
 
         static Motion fromVelocity(Vec3 velocity) {
-            return new Motion(velocity.horizontalDistance(), Math.abs(velocity.y), velocity.length());
+            return new Motion(velocity.horizontalDistance(), Math.abs(velocity.y), -velocity.y, velocity.length());
         }
 
-        Motion withVerticalAtLeast(double verticalSpeed) {
-            if (this.verticalSpeed >= verticalSpeed) return this;
-            return new Motion(this.horizontalSpeed, verticalSpeed, Math.max(this.totalSpeed, verticalSpeed));
+        Motion withFallAtLeast(double drop) {
+            if (this.verticalSpeed >= Math.abs(drop) && this.downwardSpeed >= drop) return this;
+            double vertical = Math.max(this.verticalSpeed, Math.abs(drop));
+            return new Motion(this.horizontalSpeed, vertical, Math.max(this.downwardSpeed, drop), Math.max(this.totalSpeed, vertical));
         }
     }
 
