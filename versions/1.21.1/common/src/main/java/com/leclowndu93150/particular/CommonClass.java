@@ -159,6 +159,19 @@ public class CommonClass {
 		if (state.is(Fluids.WATER) && above.is(Fluids.FLOWING_WATER) && below.is(Fluids.WATER)) {
 			return true;
 		}
+
+		// Spilled / flowing water that drops a block in elevation: emit a cascade where a
+		// falling water column lands (a pool, a flowing puddle, or bare ground). The FALLING
+		// property means the water above is dropping straight down, and we only fire at the
+		// base of the drop (where the fall doesn't continue) so a tall column isn't spammed.
+		if ((state.is(Fluids.WATER) || state.is(Fluids.FLOWING_WATER))
+				&& above.is(Fluids.FLOWING_WATER) && above.getValue(BlockStateProperties.FALLING)) {
+			boolean continuesDown = below.is(Fluids.FLOWING_WATER) && below.getValue(BlockStateProperties.FALLING);
+			if (!continuesDown) {
+				return true;
+			}
+		}
+
 		Fluid sourceForAbove = CustomFluidSupport.sourceFor(above);
 		return sourceForAbove != null && state.is(sourceForAbove) && below.is(sourceForAbove);
 	}
