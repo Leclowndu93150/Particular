@@ -61,6 +61,13 @@ public class FabricClientEvents {
         registry.register(Particles.FIREFLY(), FireflyParticle.Factory::new);
         registry.register(Particles.WATERFALL_SPRAY(), WaterfallSprayParticle.Factory::new);
         registry.register(Particles.CASCADE(), CascadeParticle.Factory::new);
+        registry.register(Particles.CASCADE_MIST(), CascadeMistParticle.Factory::new);
+        registry.register(Particles.SNOW_PUFF(), SnowPuffParticle.Factory::new);
+        registry.register(Particles.SNOW_FLECK(), SnowFleckParticle.Factory::new);
+        registry.register(Particles.BREATH(), BreathParticle.Factory::new);
+        registry.register(Particles.DUST_PUFF(), DustPuffParticle.Factory::new);
+        registry.register(Particles.MOTE(), MoteParticle.Factory::new);
+        registry.register(Particles.EMBER(), EmberParticle.Factory::new);
 
         registry.register(Particles.WATER_SPLASH_EMITTER(), WaterSplashEmitterParticle.Factory::new);
         registry.register(Particles.WATER_SPLASH(), WaterSplashParticle.Factory::new);

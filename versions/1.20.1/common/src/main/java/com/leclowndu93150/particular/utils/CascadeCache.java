@@ -40,7 +40,8 @@ public class CascadeCache {
 
     public static void add(Level world, BlockPos pos, int strength) {
         ResourceLocation dim = world.dimension().location();
-        cache.computeIfAbsent(dim, k -> new ConcurrentHashMap<>()).put(pos.immutable(), strength);
+        Integer previous = cache.computeIfAbsent(dim, k -> new ConcurrentHashMap<>()).put(pos.immutable(), strength);
+        if (previous != null && previous == strength) return;
         dirty.add(dim);
         scheduleSave(dim);
     }
@@ -152,7 +153,7 @@ public class CascadeCache {
                 .resolve(sanitize(dim.getPath()) + ".dat");
     }
 
-    private static String resolveWorldKey() {
+    static String resolveWorldKey() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.getSingleplayerServer() != null) {
             return "sp_" + mc.getSingleplayerServer().getWorldData().getLevelName();
@@ -164,7 +165,7 @@ public class CascadeCache {
         return "unknown";
     }
 
-    private static String sanitize(String s) {
+    static String sanitize(String s) {
         return s.replaceAll("[^a-zA-Z0-9_\\-.]", "_");
     }
 }

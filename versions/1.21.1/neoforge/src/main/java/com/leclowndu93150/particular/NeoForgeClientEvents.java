@@ -69,6 +69,13 @@ public class NeoForgeClientEvents {
         event.registerSpriteSet(NeoForgeParticles.FIREFLY.get(), FireflyParticle.Factory::new);
         event.registerSpriteSet(NeoForgeParticles.WATERFALL_SPRAY.get(), WaterfallSprayParticle.Factory::new);
         event.registerSpriteSet(NeoForgeParticles.CASCADE.get(), CascadeParticle.Factory::new);
+        event.registerSpriteSet(NeoForgeParticles.CASCADE_MIST.get(), CascadeMistParticle.Factory::new);
+        event.registerSpriteSet(NeoForgeParticles.SNOW_PUFF.get(), SnowPuffParticle.Factory::new);
+        event.registerSpriteSet(NeoForgeParticles.SNOW_FLECK.get(), SnowFleckParticle.Factory::new);
+        event.registerSpriteSet(NeoForgeParticles.BREATH.get(), BreathParticle.Factory::new);
+        event.registerSpriteSet(NeoForgeParticles.DUST_PUFF.get(), DustPuffParticle.Factory::new);
+        event.registerSpriteSet(NeoForgeParticles.MOTE.get(), MoteParticle.Factory::new);
+        event.registerSpriteSet(NeoForgeParticles.EMBER.get(), EmberParticle.Factory::new);
 
         event.registerSpriteSet(NeoForgeParticles.WATER_SPLASH_EMITTER.get(), WaterSplashEmitterParticle.Factory::new);
         event.registerSpriteSet(NeoForgeParticles.WATER_SPLASH.get(), WaterSplashParticle.Factory::new);
@@ -106,7 +113,7 @@ public class NeoForgeClientEvents {
         public static void onRenderHUD(RenderGuiEvent.Post event) {
             if (FMLLoader.isProduction()) return;
             Minecraft mc = Minecraft.getInstance();
-            if (mc.player == null || mc.level == null) return;
+            if (mc.player == null || mc.level == null || mc.options.hideGui) return;
 
             GuiGraphics guiGraphics = event.getGuiGraphics();
             Font font = mc.font;

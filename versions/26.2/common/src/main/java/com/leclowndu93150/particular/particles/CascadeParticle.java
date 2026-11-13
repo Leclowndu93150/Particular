@@ -9,18 +9,24 @@ import net.minecraft.world.phys.Vec3;
 
 public class CascadeParticle extends SingleQuadParticle
 {
+	private static final int LAST_GROWING_FRAME = 7;
+	private static final int LAST_FRAME = 11;
+	private static final float SHRINK_START = 0.65f;
+
 	protected final SpriteSet provider;
 
 	protected CascadeParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider)
 	{
 		super(clientWorld, x, y, z, provider.get(0, 9));
 		this.provider = provider;
-		lifetime = 18;
-		quadSize = 0.7f;
+		lifetime = 14 + random.nextInt(9);
+		quadSize = 0.3f * (0.6f + random.nextFloat() * 0.8f);
+		float brightness = 0.85f + random.nextFloat() * 0.15f;
+		setColor(brightness, brightness, brightness);
 		gravity = 0.12f;
 		friction = 0.92f;
 		setParticleSpeed(random.nextDouble() * 0.1f - 0.05f, 0, random.nextDouble() * 0.1f - 0.05f);
-		setSpriteFromAge(provider);
+		setGrowingSprite();
 		removeIfInsideSolidBlock();
 	}
 
@@ -31,7 +37,25 @@ public class CascadeParticle extends SingleQuadParticle
 
 		removeIfInsideSolidBlock();
 
-		setSpriteFromAge(provider);
+		setGrowingSprite();
+	}
+
+	@Override
+	public float getQuadSize(float partialTicks)
+	{
+		float progress = Math.min(1f, (age + partialTicks) / lifetime);
+		if (progress < SHRINK_START)
+		{
+			return quadSize;
+		}
+
+		float shrink = (progress - SHRINK_START) / (1f - SHRINK_START);
+		return quadSize * (1f - shrink * shrink);
+	}
+
+	private void setGrowingSprite()
+	{
+		setSprite(provider.get(age * LAST_GROWING_FRAME, lifetime * LAST_FRAME));
 	}
 
 	private void removeIfInsideSolidBlock()

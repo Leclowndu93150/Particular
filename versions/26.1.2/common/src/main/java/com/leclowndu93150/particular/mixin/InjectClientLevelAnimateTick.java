@@ -3,7 +3,9 @@ package com.leclowndu93150.particular.mixin;
 import com.leclowndu93150.particular.CommonClass;
 import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
+import com.leclowndu93150.particular.utils.AmbientMotes;
 import com.leclowndu93150.particular.utils.CustomFireflySupport;
+import com.leclowndu93150.particular.utils.Embers;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -37,6 +39,9 @@ public abstract class InjectClientLevelAnimateTick {
             @Local BlockState state) {
         Level world = (Level) (Object) this;
         Block block = state.getBlock();
+
+        AmbientMotes.onAnimateTick(world, pos, state, random);
+        Embers.onAnimateTick(pos, state, random);
 
         if (ParticularConfig.fireflies()) {
             double val = random.nextDouble();

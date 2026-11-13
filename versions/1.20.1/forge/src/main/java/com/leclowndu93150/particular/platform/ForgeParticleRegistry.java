@@ -49,6 +49,13 @@ public class ForgeParticleRegistry implements IParticleRegistry {
         PARTICLES.put("firefly", ForgeParticles.FIREFLY);
         PARTICLES.put("waterfall_spray", ForgeParticles.WATERFALL_SPRAY);
         PARTICLES.put("cascade", ForgeParticles.CASCADE);
+        PARTICLES.put("cascade_mist", ForgeParticles.CASCADE_MIST);
+        PARTICLES.put("snow_puff", ForgeParticles.SNOW_PUFF);
+        PARTICLES.put("snow_fleck", ForgeParticles.SNOW_FLECK);
+        PARTICLES.put("breath", ForgeParticles.BREATH);
+        PARTICLES.put("dust_puff", ForgeParticles.DUST_PUFF);
+        PARTICLES.put("mote", ForgeParticles.MOTE);
+        PARTICLES.put("ember", ForgeParticles.EMBER);
         PARTICLES.put("water_splash_emitter", ForgeParticles.WATER_SPLASH_EMITTER);
         PARTICLES.put("water_splash", ForgeParticles.WATER_SPLASH);
         PARTICLES.put("water_splash_foam", ForgeParticles.WATER_SPLASH_FOAM);

@@ -1,19 +1,31 @@
 package com.leclowndu93150.particular;
 
+import com.leclowndu93150.particular.api.ParticularApi;
 import com.leclowndu93150.particular.mixin.AccessorBiome;
+import com.leclowndu93150.particular.particles.TumbleweedParticle;
 import com.leclowndu93150.particular.platform.Services;
 import com.leclowndu93150.particular.utils.CascadeCache;
 import com.leclowndu93150.particular.utils.CascadeData;
+import com.leclowndu93150.particular.utils.ColdBreath;
 import com.leclowndu93150.particular.utils.CustomFireflySupport;
 import com.leclowndu93150.particular.utils.CustomFluidSupport;
+import com.leclowndu93150.particular.utils.FootstepDust;
 import com.leclowndu93150.particular.utils.LeafColorUtil;
+import com.leclowndu93150.particular.utils.Rainbow;
+import com.leclowndu93150.particular.utils.ScreenShake;
 import com.leclowndu93150.particular.utils.TextureCache;
+import com.leclowndu93150.particular.utils.Tumbleweeds;
+import com.leclowndu93150.particular.utils.UpdateNotice;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.ChunkPos;
@@ -25,17 +37,21 @@ import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
 public class CommonClass {
+	private static final int LEAF_SNOW_MAX_CANOPY_DEPTH = 12;
 	public static ResourceLocation currentDimension;
 	public static ConcurrentHashMap<BlockPos, CascadeData> cascades = new ConcurrentHashMap<>();
 	private static float fireflyFrequency = 1f;
@@ -151,16 +167,62 @@ public class CommonClass {
 		}
 	}
 
+	private static boolean hasSnowToShed(Level world, BlockPos pos) {
+		BlockPos.MutableBlockPos cursor = pos.mutable();
+		for (int i = 0; i < LEAF_SNOW_MAX_CANOPY_DEPTH; i++) {
+			cursor.move(Direction.UP);
+			BlockState state = world.getBlockState(cursor);
+			if (state.getBlock() instanceof LeavesBlock) continue;
+			if (state.is(BlockTags.SNOW)) return true;
+
+			return world.isRaining()
+					&& world.getBiome(cursor).value().coldEnoughToSnow(cursor)
+					&& world.getHeight(Heightmap.Types.MOTION_BLOCKING, cursor.getX(), cursor.getZ()) <= cursor.getY();
+		}
+		return false;
+	}
+
+	public static void shedLeafSnow(Level world, BlockPos pos, RandomSource random) {
+		if (!ParticularConfig.leafSnow()) return;
+
+		int chance = ParticularConfig.COMMON.leafSnowSpawnChance.get();
+		if (world.isRaining()) {
+			chance = Math.max(1, chance / 2);
+		}
+		if (random.nextInt(chance) != 0) return;
+
+		if (!hasSnowToShed(world, pos)) return;
+
+		BlockPos below = pos.below();
+		if (Block.isFaceFull(world.getBlockState(below).getCollisionShape(world, below), Direction.UP)) return;
+
+		double x = pos.getX() + 0.2 + random.nextDouble() * 0.6;
+		double y = pos.getY() - 0.1;
+		double z = pos.getZ() + 0.2 + random.nextDouble() * 0.6;
+		world.addParticle(Particles.SNOW_PUFF(), x, y, z, random.nextDouble() * 0.02 - 0.01, -0.02, random.nextDouble() * 0.02 - 0.01);
+
+		int flecks = 2 + random.nextInt(4);
+		for (int i = 0; i < flecks; i++) {
+			world.addParticle(Particles.SNOW_FLECK(),
+					x + random.nextDouble() * 0.6 - 0.3,
+					y - random.nextDouble() * 0.2,
+					z + random.nextDouble() * 0.6 - 0.3,
+					random.nextDouble() * 0.04 - 0.02,
+					-0.01 - random.nextDouble() * 0.04,
+					random.nextDouble() * 0.04 - 0.02);
+		}
+	}
+
 	public static boolean isCascadeLocation(Level world, BlockPos pos) {
 		FluidState state = world.getFluidState(pos);
 		FluidState above = world.getFluidState(pos.above());
 		FluidState below = world.getFluidState(pos.below());
 
 		if (state.is(Fluids.WATER) && above.is(Fluids.FLOWING_WATER) && below.is(Fluids.WATER)) {
-			return true;
+			return ParticularApi.allowsCascade(world, pos);
 		}
 		Fluid sourceForAbove = CustomFluidSupport.sourceFor(above);
-		return sourceForAbove != null && state.is(sourceForAbove) && below.is(sourceForAbove);
+		return sourceForAbove != null && state.is(sourceForAbove) && below.is(sourceForAbove) && ParticularApi.allowsCascade(world, pos);
 	}
 
 	public static int cascadeStrength(Level world, BlockPos pos) {
@@ -171,6 +233,37 @@ public class CommonClass {
 		if (world.getFluidState(pos.south()).is(state.getType())) { ++strength; }
 		if (world.getFluidState(pos.west()).is(state.getType())) { ++strength; }
 		return strength;
+	}
+
+	public static int cascadeFallHeight(Level world, BlockPos pos) {
+		BlockPos.MutableBlockPos cursor = pos.mutable();
+		int maxFallHeight = ParticularConfig.COMMON.cascadeMaxFallHeight.get();
+		int fallHeight = 0;
+		while (fallHeight < maxFallHeight) {
+			cursor.move(Direction.UP);
+			FluidState fluid = world.getFluidState(cursor);
+			if (fluid.isEmpty() || fluid.isSource()) {
+				break;
+			}
+			fallHeight++;
+		}
+		return fallHeight;
+	}
+
+	public static float cascadeIntensity(int fallHeight) {
+		if (!ParticularConfig.COMMON.cascadeHeightScaling.get()) {
+			return 1f;
+		}
+
+		float minIntensity = ParticularConfig.COMMON.cascadeMinIntensity.get().floatValue();
+		float maxIntensity = ParticularConfig.COMMON.cascadeMaxIntensity.get().floatValue();
+		int maxFallHeight = ParticularConfig.COMMON.cascadeMaxFallHeight.get();
+		if (maxFallHeight <= 1) {
+			return maxIntensity;
+		}
+
+		float progress = Mth.clamp((fallHeight - 1) / (float) (maxFallHeight - 1), 0f, 1f);
+		return Mth.lerp(progress, minIntensity, maxIntensity);
 	}
 
 	public static void updateCascade(Level world, BlockPos pos, FluidState state) {
@@ -194,7 +287,7 @@ public class CommonClass {
 				!world.getBlockState(pos.above().west()).isAir();
 
 		if (!isEncased) {
-			cascades.put(immutablePos, new CascadeData(strength, world.getGameTime() - 101));
+			cascades.put(immutablePos, new CascadeData(strength, cascadeFallHeight(world, immutablePos), world.getGameTime() - 101));
 			CascadeCache.add(world, immutablePos, strength);
 		}
 	}
@@ -343,6 +436,15 @@ public class CommonClass {
 	public static void onClientTick(Level world) {
 		if (world == null) return;
 
+		ScreenShake.tick();
+		if (world instanceof ClientLevel clientLevel) {
+			ColdBreath.tick(clientLevel);
+			FootstepDust.tick(clientLevel);
+			Tumbleweeds.tick(clientLevel);
+			Rainbow.tick(clientLevel);
+			UpdateNotice.tick();
+		}
+
 		RandomSource random = world.random;
 
 		long timeOfDay = world.getDayTime() % 24000;
@@ -358,6 +460,11 @@ public class CommonClass {
 		int renderDistance = mc.options.renderDistance().get();
 		BlockPos playerPos = mc.player.blockPosition();
 		long currentTime = world.getGameTime();
+		List<BlockPos> expired = new ArrayList<>();
+		float foamDensity = ParticularConfig.COMMON.cascadeFoamDensity.get().floatValue();
+		float puffSize = ParticularConfig.COMMON.cascadePuffSize.get().floatValue();
+		boolean mistEnabled = ParticularConfig.COMMON.cascadeMist.get();
+		float mistDensity = ParticularConfig.COMMON.cascadeMistDensity.get().floatValue();
 
 		cascades.entrySet().removeIf(entry -> {
 			BlockPos pos = entry.getKey();
@@ -373,21 +480,7 @@ public class CommonClass {
 			}
 
 			if (currentTime - cascadeData.createdTime > 100) {
-				if (isCascadeLocation(world, pos)) {
-					int strength = cascadeStrength(world, pos);
-					if (strength > 0) {
-						boolean isEncased = !world.getBlockState(pos.above().north()).isAir() &&
-								!world.getBlockState(pos.above().east()).isAir() &&
-								!world.getBlockState(pos.above().south()).isAir() &&
-								!world.getBlockState(pos.above().west()).isAir();
-
-						if (!isEncased) {
-							cascades.put(pos, new CascadeData(strength, currentTime));
-							return false;
-						}
-					}
-				}
-				CascadeCache.remove(world, pos);
+				expired.add(pos);
 				return true;
 			}
 
@@ -398,7 +491,8 @@ public class CommonClass {
 
 			Fluid hereType = world.getFluidState(pos).getType();
 			float height = world.getFluidState(pos.above()).getOwnHeight();
-			int particles = 2 + cascadeData.strength;
+			float intensity = cascadeIntensity(cascadeData.fallHeight);
+			int particles = Math.max(1, Math.round((2 + cascadeData.strength) * 2 * intensity * foamDensity));
 			for (int i = 0; i < particles; i++) {
 				double x = pos.getX();
 				double y = (double) pos.getY() + random.nextDouble() * height + 1;
@@ -425,15 +519,39 @@ public class CommonClass {
 					z += random.nextDouble();
 				}
 
+				double outX = x - (pos.getX() + 0.5);
+				double outZ = z - (pos.getZ() + 0.5);
+				double length = Math.max(0.001, Math.sqrt(outX * outX + outZ * outZ));
+
 				var cascade = mc.particleEngine.createParticle(Particles.CASCADE(), x, y, z, 0, 0, 0);
 				if (cascade != null) {
 					float size = Math.max(0.75f, cascadeData.strength / 4f * height);
-					cascade.scale(1f - (1f - size) / 2f);
+					cascade.scale((1f - (1f - size) / 2f) * (0.8f + 0.2f * intensity) * puffSize);
+					double burst = (0.02 + random.nextDouble() * 0.07) * intensity;
+					cascade.setParticleSpeed(
+							outX / length * burst + random.nextDouble() * 0.04 - 0.02,
+							(0.02 + random.nextDouble() * 0.08) * intensity,
+							outZ / length * burst + random.nextDouble() * 0.04 - 0.02);
+				}
+
+				if (i == 0 && mistEnabled && random.nextFloat() < 0.5f * intensity * mistDensity) {
+					double speed = (0.02 + random.nextDouble() * 0.03) * intensity;
+					world.addParticle(Particles.CASCADE_MIST(), x, y, z, outX / length * speed, 0.01 + random.nextDouble() * 0.03, outZ / length * speed);
 				}
 			}
 
 			return false;
 		});
+
+		for (BlockPos pos : expired) {
+			updateCascade(world, pos, world.getFluidState(pos));
+			CascadeData refreshed = cascades.get(pos);
+			if (refreshed == null) {
+				CascadeCache.remove(world, pos);
+			} else {
+				cascades.put(pos, new CascadeData(refreshed.strength, refreshed.fallHeight, currentTime));
+			}
+		}
 	}
 
 	public static void onChunkLoad(Level world, ChunkPos chunk) {
@@ -451,9 +569,8 @@ public class CommonClass {
 
 		CascadeCache.getChunk(world, chunk).forEach((pos, strength) -> {
 			if (cascades.containsKey(pos)) return;
-			if (isCascadeLocation(world, pos)) {
-				cascades.put(pos, new CascadeData(strength, world.getGameTime() - 101));
-			} else {
+			updateCascade(world, pos, world.getFluidState(pos));
+			if (!cascades.containsKey(pos)) {
 				CascadeCache.remove(world, pos);
 			}
 		});
@@ -473,6 +590,10 @@ public class CommonClass {
 		if (world.isClientSide()) {
 			cascades.clear();
 			CascadeCache.onLevelUnload();
+			ScreenShake.clear();
+			TumbleweedParticle.reset();
+			Rainbow.clear();
+			UpdateNotice.reset();
 		}
 	}
 

@@ -27,6 +27,13 @@ public class NeoForgeParticles {
     public static final Supplier<SimpleParticleType> FIREFLY = PARTICLE_TYPES.register("firefly", () -> new SimpleParticleType(false));
     public static final Supplier<SimpleParticleType> WATERFALL_SPRAY = PARTICLE_TYPES.register("waterfall_spray", () -> new SimpleParticleType(false));
     public static final Supplier<SimpleParticleType> CASCADE = PARTICLE_TYPES.register("cascade", () -> new SimpleParticleType(true));
+    public static final Supplier<SimpleParticleType> CASCADE_MIST = PARTICLE_TYPES.register("cascade_mist", () -> new SimpleParticleType(false));
+    public static final Supplier<SimpleParticleType> SNOW_PUFF = PARTICLE_TYPES.register("snow_puff", () -> new SimpleParticleType(false));
+    public static final Supplier<SimpleParticleType> SNOW_FLECK = PARTICLE_TYPES.register("snow_fleck", () -> new SimpleParticleType(false));
+    public static final Supplier<SimpleParticleType> BREATH = PARTICLE_TYPES.register("breath", () -> new SimpleParticleType(false));
+    public static final Supplier<SimpleParticleType> DUST_PUFF = PARTICLE_TYPES.register("dust_puff", () -> new SimpleParticleType(false));
+    public static final Supplier<SimpleParticleType> MOTE = PARTICLE_TYPES.register("mote", () -> new SimpleParticleType(false));
+    public static final Supplier<SimpleParticleType> EMBER = PARTICLE_TYPES.register("ember", () -> new SimpleParticleType(false));
 
     public static final Supplier<SimpleParticleType> WATER_SPLASH_EMITTER = PARTICLE_TYPES.register("water_splash_emitter", () -> new SimpleParticleType(true));
     public static final Supplier<SimpleParticleType> WATER_SPLASH = PARTICLE_TYPES.register("water_splash", () -> new SimpleParticleType(true));

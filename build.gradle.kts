@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "com.leclowndu93150"
-version = "1.5.7"
+version = "1.6.0"
 
 prism {
     curseMaven()
@@ -63,8 +63,6 @@ prism {
 
             dependencies {
                 modCompileOnly("curse.maven:terrafirmacraft-302973:8242625")
-                modRuntimeOnly("curse.maven:terrafirmacraft-302973:8242625")
-                modRuntimeOnly("curse.maven:patchouli-306770:7731017")
                 annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
                 compileOnly("io.github.llamalad7:mixinextras-common:0.4.1")
                 annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1")
@@ -130,8 +128,6 @@ prism {
                 runtimeOnly("curse.maven:create-328085:7963363")
                 runtimeOnly("curse.maven:wakes-reforged-1223529:8144268")
                 compileOnly("curse.maven:terrafirmacraft-302973:8249859")
-                runtimeOnly("curse.maven:terrafirmacraft-302973:8249859")
-                runtimeOnly("curse.maven:patchouli-306770:7730942")
             }
 
             publishingDependencies {
@@ -183,7 +179,7 @@ prism {
         }
 
         neoforge {
-            loaderVersion = "26.1.2.7-beta"
+            loaderVersion = "26.1.2.10-beta"
             loaderVersionRange = "[4,)"
 
             dependencies {
@@ -219,8 +215,8 @@ prism {
                 implementation("com.electronwill.night-config:json:3.8.3")
                 implementation("com.electronwill.night-config:hocon:3.8.3")
                 implementation("com.electronwill.night-config:yaml:3.8.3")
-                modImplementation("curse.maven:baguettelib-1264423:8010960")
-                implementation("curse.maven:forge-config-api-port-547434:7986992")
+                modImplementation("curse.maven:baguettelib-1264423:8887470")
+                implementation("curse.maven:forge-config-api-port-547434:8292030")
                 implementation("com.terraformersmc:modmenu:18.0.0-alpha.8")
             }
 
@@ -279,7 +275,7 @@ prism {
         }
 
         neoforge {
-            loaderVersion = "26.3.0.8-beta"
+            loaderVersion = "26.3.0.102"
             loaderVersionRange = "[4,)"
 
             dependencies {

@@ -25,6 +25,14 @@ public class InjectLeavesBlock
 	@Inject(
 		method = "animateTick",
 		at = @At("HEAD"))
+	private void shedSnow(BlockState state, Level world, BlockPos pos, RandomSource random, CallbackInfo ci)
+	{
+		CommonClass.shedLeafSnow(world, pos, random);
+	}
+
+	@Inject(
+		method = "animateTick",
+		at = @At("HEAD"))
 	private void dropLeaves(BlockState state, Level world, BlockPos pos, RandomSource random, CallbackInfo ci)
 	{
 		if (!ParticularConfig.fallingLeaves()) { return; }

@@ -3,6 +3,8 @@ package com.leclowndu93150.particular.mixin;
 import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
 import com.leclowndu93150.particular.utils.CustomFluidSupport;
+import com.leclowndu93150.particular.utils.Rainbow;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -10,6 +12,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.tags.FluidTags;
+import org.joml.Matrix4f;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
@@ -18,6 +21,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LevelRenderer.class)
 public class InjectLevelRenderer
 {
+	@Inject(
+		method = "renderSky",
+		at = @At("TAIL"))
+	private void renderRainbow(PoseStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean isFoggy, Runnable skyFogSetup, CallbackInfo ci)
+	{
+		Rainbow.render(poseStack.last().pose(), partialTick, camera, isFoggy);
+	}
+
 	@Inject(
 			method = "tickRain",
 			slice = @Slice(

@@ -4,6 +4,7 @@ import com.leclowndu93150.particular.Particles;
 import com.leclowndu93150.particular.ParticularConfig;
 import com.leclowndu93150.particular.particles.CuboidParticle;
 import com.leclowndu93150.particular.utils.CustomFluidSupport;
+import com.leclowndu93150.particular.utils.FootstepDust;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -43,6 +44,22 @@ public abstract class InjectEntity
 	@Unique private int particular$velIdx = 0;
 	@Unique private double particular$accumulatedFallDistance = 0.0;
 	@Unique private boolean particular$wasInLava = false;
+	@Unique private final double[] particular$drops = new double[4];
+	@Unique private int particular$dropIdx = 0;
+	@Unique private double particular$lastY = Double.NaN;
+
+	@Inject(
+		method = "spawnSprintParticle",
+		at = @At("HEAD"),
+		cancellable = true
+	)
+	private void replaceSprintParticle(CallbackInfo ci)
+	{
+		if (FootstepDust.replaceSprintParticle((Entity) (Object) this))
+		{
+			ci.cancel();
+		}
+	}
 
 	@Inject(
 		method = "tick",
@@ -54,6 +71,11 @@ public abstract class InjectEntity
 
 		particular$vel[particular$velIdx % particular$velArraySize] = Math.abs(deltaMovement.y());
 		particular$velIdx = (particular$velIdx + 1) % particular$velArraySize;
+
+		double currentY = getY();
+		particular$drops[particular$dropIdx] = Double.isNaN(particular$lastY) ? 0.0 : particular$lastY - currentY;
+		particular$dropIdx = (particular$dropIdx + 1) % particular$drops.length;
+		particular$lastY = currentY;
 
 		if (deltaMovement.y() < 0.0) {
 			particular$accumulatedFallDistance += Math.abs(deltaMovement.y());
@@ -98,11 +120,12 @@ public abstract class InjectEntity
 
 		if (!foundSurface) { return; }
 
-		double velocityValue = Math.max(Math.max(particular$vel[0], particular$vel[1]), Math.max(particular$vel[2], particular$vel[3]));
+		double recentDrop = Math.max(Math.max(particular$drops[0], particular$drops[1]), Math.max(particular$drops[2], particular$drops[3]));
+		double velocityValue = Math.max(recentDrop, Math.max(Math.max(particular$vel[0], particular$vel[1]), Math.max(particular$vel[2], particular$vel[3])));
 
 		double actualFallDistance = fallDistance > 0.0 ? fallDistance : particular$accumulatedFallDistance;
 		double surfaceY = baseY + prevState.getOwnHeight();
-		double downwardSpeed = -deltaMovement.y();
+		double downwardSpeed = Math.max(-deltaMovement.y(), recentDrop);
 
 		double minFallDistance = Math.max(ParticularConfig.COMMON.waterSplashMinFallDistance.get(), LARGE_WATER_SPLASH_MIN_FALL_DISTANCE);
 		if (actualFallDistance < minFallDistance || downwardSpeed < LARGE_WATER_SPLASH_MIN_DOWNWARD_SPEED) {

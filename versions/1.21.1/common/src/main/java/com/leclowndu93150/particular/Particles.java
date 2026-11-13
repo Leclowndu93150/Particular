@@ -40,6 +40,13 @@ public class Particles {
     private static SimpleParticleType firefly;
     private static SimpleParticleType waterfallSpray;
     private static SimpleParticleType cascade;
+    private static SimpleParticleType cascadeMist;
+    private static SimpleParticleType snowPuff;
+    private static SimpleParticleType snowFleck;
+    private static SimpleParticleType breath;
+    private static SimpleParticleType dustPuff;
+    private static SimpleParticleType mote;
+    private static SimpleParticleType ember;
     private static SimpleParticleType waterSplashEmitter;
     private static SimpleParticleType waterSplash;
     private static SimpleParticleType waterSplashFoam;
@@ -80,6 +87,13 @@ public class Particles {
     public static SimpleParticleType FIREFLY() { if (firefly == null) firefly = Services.PARTICLES.getParticle("firefly"); return firefly; }
     public static SimpleParticleType WATERFALL_SPRAY() { if (waterfallSpray == null) waterfallSpray = Services.PARTICLES.getParticle("waterfall_spray"); return waterfallSpray; }
     public static SimpleParticleType CASCADE() { if (cascade == null) cascade = Services.PARTICLES.getParticle("cascade"); return cascade; }
+    public static SimpleParticleType CASCADE_MIST() { if (cascadeMist == null) cascadeMist = Services.PARTICLES.getParticle("cascade_mist"); return cascadeMist; }
+    public static SimpleParticleType SNOW_PUFF() { if (snowPuff == null) snowPuff = Services.PARTICLES.getParticle("snow_puff"); return snowPuff; }
+    public static SimpleParticleType SNOW_FLECK() { if (snowFleck == null) snowFleck = Services.PARTICLES.getParticle("snow_fleck"); return snowFleck; }
+    public static SimpleParticleType BREATH() { if (breath == null) breath = Services.PARTICLES.getParticle("breath"); return breath; }
+    public static SimpleParticleType DUST_PUFF() { if (dustPuff == null) dustPuff = Services.PARTICLES.getParticle("dust_puff"); return dustPuff; }
+    public static SimpleParticleType MOTE() { if (mote == null) mote = Services.PARTICLES.getParticle("mote"); return mote; }
+    public static SimpleParticleType EMBER() { if (ember == null) ember = Services.PARTICLES.getParticle("ember"); return ember; }
     public static SimpleParticleType WATER_SPLASH_EMITTER() { if (waterSplashEmitter == null) waterSplashEmitter = Services.PARTICLES.getParticle("water_splash_emitter"); return waterSplashEmitter; }
     public static SimpleParticleType WATER_SPLASH() { if (waterSplash == null) waterSplash = Services.PARTICLES.getParticle("water_splash"); return waterSplash; }
     public static SimpleParticleType WATER_SPLASH_FOAM() { if (waterSplashFoam == null) waterSplashFoam = Services.PARTICLES.getParticle("water_splash_foam"); return waterSplashFoam; }
@@ -121,6 +135,13 @@ public class Particles {
         Services.PARTICLES.registerParticle("firefly", false);
         Services.PARTICLES.registerParticle("waterfall_spray", false);
         Services.PARTICLES.registerParticle("cascade", true);
+        Services.PARTICLES.registerParticle("cascade_mist", false);
+        Services.PARTICLES.registerParticle("snow_puff", false);
+        Services.PARTICLES.registerParticle("snow_fleck", false);
+        Services.PARTICLES.registerParticle("breath", false);
+        Services.PARTICLES.registerParticle("dust_puff", false);
+        Services.PARTICLES.registerParticle("mote", false);
+        Services.PARTICLES.registerParticle("ember", false);
         Services.PARTICLES.registerParticle("water_splash_emitter", true);
         Services.PARTICLES.registerParticle("water_splash", true);
         Services.PARTICLES.registerParticle("water_splash_foam", true);

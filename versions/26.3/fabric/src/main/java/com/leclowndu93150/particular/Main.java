@@ -9,7 +9,7 @@ public class Main implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitialize() {
-        ConfigRegistry.INSTANCE.register(Constants.MOD_ID, ModConfig.Type.COMMON, ParticularConfig.COMMON_SPEC);
+        ConfigRegistry.INSTANCE.register(Constants.MOD_ID, ModConfig.Type.CLIENT, ParticularConfig.COMMON_SPEC, Constants.MOD_ID + "-common.toml");
         Particles.init();
         CommonClass.init();
     }

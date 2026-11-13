@@ -18,6 +18,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -36,10 +37,10 @@ public class SableCompat {
     private static final int SHAPE_SIGNATURE_INTERVAL = 40;
     private static final int CENTER_FALLBACK_MAX_FOOTPRINT = 4;
     private static final int MAX_VELOCITY_SAMPLES = 24;
+    private static final int MAX_SURFACE_PROBE_COLUMNS = 1024;
 
     private static final double LOCAL_SCAN_INFLATE = 0.35;
     private static final double SURFACE_SCAN_MARGIN = 0.65;
-    // A full block's center is half a block above the water when its bottom face first touches the surface.
     private static final double CONTACT_ABOVE_WATERLINE = 0.55;
     private static final double CONTACT_BELOW_WATERLINE = 1.05;
     private static final double CENTER_FALLBACK_TOLERANCE = 0.6;
@@ -569,8 +570,11 @@ public class SableCompat {
         int minZ = (int) Math.floor(bounds.minZ());
         int maxZ = (int) Math.ceil(bounds.maxZ());
 
-        for (int x = minX; x <= maxX; x++) {
-            for (int z = minZ; z <= maxZ; z++) {
+        double columns = (double) (maxX - minX + 1) * (maxZ - minZ + 1);
+        int step = Math.max(1, (int) Math.ceil(Math.sqrt(columns / MAX_SURFACE_PROBE_COLUMNS)));
+
+        for (int x = minX; x <= maxX; x += step) {
+            for (int z = minZ; z <= maxZ; z += step) {
                 FluidSurface surface = probeFluidAt(level, x + 0.5, z + 0.5, minY, maxY);
                 if (surface != null) return surface;
             }
@@ -580,11 +584,17 @@ public class SableCompat {
     }
 
     private static FluidSurface probeFluidAt(Level level, double x, double z, double minY, double maxY) {
+        int blockX = (int) Math.floor(x);
+        int blockZ = (int) Math.floor(z);
+        int bottomY = (int) Math.floor(minY);
+        int topY = Math.min((int) Math.ceil(maxY), level.getHeight(Heightmap.Types.WORLD_SURFACE, blockX, blockZ) - 1);
+        if (topY < bottomY) return null;
+
         if (Sable.HELPER.getContaining(level, x, z) != null) return null;
 
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-        for (int y = (int) Math.ceil(maxY); y >= (int) Math.floor(minY); y--) {
-            pos.set((int) Math.floor(x), y, (int) Math.floor(z));
+        for (int y = topY; y >= bottomY; y--) {
+            pos.set(blockX, y, blockZ);
             FluidSurface surface = getFluidSurface(level, pos);
             if (surface != null) return surface;
         }

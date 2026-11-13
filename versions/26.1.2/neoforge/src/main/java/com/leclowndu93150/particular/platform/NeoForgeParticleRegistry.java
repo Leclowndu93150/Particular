@@ -29,6 +29,13 @@ public class NeoForgeParticleRegistry implements IParticleRegistry {
         PARTICLES.put("firefly", NeoForgeParticles.FIREFLY);
         PARTICLES.put("waterfall_spray", NeoForgeParticles.WATERFALL_SPRAY);
         PARTICLES.put("cascade", NeoForgeParticles.CASCADE);
+        PARTICLES.put("cascade_mist", NeoForgeParticles.CASCADE_MIST);
+        PARTICLES.put("snow_puff", NeoForgeParticles.SNOW_PUFF);
+        PARTICLES.put("snow_fleck", NeoForgeParticles.SNOW_FLECK);
+        PARTICLES.put("breath", NeoForgeParticles.BREATH);
+        PARTICLES.put("dust_puff", NeoForgeParticles.DUST_PUFF);
+        PARTICLES.put("mote", NeoForgeParticles.MOTE);
+        PARTICLES.put("ember", NeoForgeParticles.EMBER);
         PARTICLES.put("water_splash_emitter", NeoForgeParticles.WATER_SPLASH_EMITTER);
         PARTICLES.put("water_splash", NeoForgeParticles.WATER_SPLASH);
         PARTICLES.put("water_splash_foam", NeoForgeParticles.WATER_SPLASH_FOAM);

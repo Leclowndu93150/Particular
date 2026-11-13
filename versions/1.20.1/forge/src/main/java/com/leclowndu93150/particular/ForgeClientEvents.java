@@ -69,6 +69,13 @@ public class ForgeClientEvents {
         event.registerSpriteSet(ForgeParticles.FIREFLY.get(), FireflyParticle.Factory::new);
         event.registerSpriteSet(ForgeParticles.WATERFALL_SPRAY.get(), WaterfallSprayParticle.Factory::new);
         event.registerSpriteSet(ForgeParticles.CASCADE.get(), CascadeParticle.Factory::new);
+        event.registerSpriteSet(ForgeParticles.CASCADE_MIST.get(), CascadeMistParticle.Factory::new);
+        event.registerSpriteSet(ForgeParticles.SNOW_PUFF.get(), SnowPuffParticle.Factory::new);
+        event.registerSpriteSet(ForgeParticles.SNOW_FLECK.get(), SnowFleckParticle.Factory::new);
+        event.registerSpriteSet(ForgeParticles.BREATH.get(), BreathParticle.Factory::new);
+        event.registerSpriteSet(ForgeParticles.DUST_PUFF.get(), DustPuffParticle.Factory::new);
+        event.registerSpriteSet(ForgeParticles.MOTE.get(), MoteParticle.Factory::new);
+        event.registerSpriteSet(ForgeParticles.EMBER.get(), EmberParticle.Factory::new);
 
         event.registerSpriteSet(ForgeParticles.WATER_SPLASH_EMITTER.get(), WaterSplashEmitterParticle.Factory::new);
         event.registerSpriteSet(ForgeParticles.WATER_SPLASH.get(), WaterSplashParticle.Factory::new);

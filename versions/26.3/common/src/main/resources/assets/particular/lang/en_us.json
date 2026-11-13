@@ -12,6 +12,35 @@
 
   "particular.configuration.cascades": "Cascades",
   "particular.configuration.cascades.tooltip": "Enable cascade particles for flowing water",
+  "particular.configuration.cascadeMist": "Cascade Mist",
+  "particular.configuration.cascadeMist.tooltip": "Enable the translucent mist that drifts off cascades",
+
+  "particular.configuration.leafSnow": "Leaf Snow",
+  "particular.configuration.leafSnow.tooltip": "Enable snow falling off leaves that have snow on top or while it is snowing",
+
+  "particular.configuration.coldBreath": "Cold Breath",
+  "particular.configuration.coldBreath.tooltip": "Enable visible breath from players and mobs in cold places",
+
+  "particular.configuration.footstepDust": "Footstep Dust",
+  "particular.configuration.footstepDust.tooltip": "Kick up dust when running or landing on loose ground such as sand, dirt, gravel and snow",
+
+  "particular.configuration.pollen": "Pollen",
+  "particular.configuration.pollen.tooltip": "Pollen drifts off flowers during the day",
+
+  "particular.configuration.spores": "Spores",
+  "particular.configuration.spores.tooltip": "Spores drift off moss and mushrooms",
+
+  "particular.configuration.embers": "Embers",
+  "particular.configuration.embers.tooltip": "Glowing embers rise from campfires and spit from lit furnaces",
+
+  "particular.configuration.tumbleweeds": "Tumbling Bushes",
+  "particular.configuration.tumbleweeds.tooltip": "Bushes tumble across dry sandy biomes",
+
+  "particular.configuration.rainbows": "Rainbows",
+  "particular.configuration.rainbows.tooltip": "A rainbow appears in the sky after it stops raining during the day",
+
+  "particular.configuration.screenShake": "Screen Shake",
+  "particular.configuration.screenShake.tooltip": "Shake the camera for loud nearby sounds such as explosions and Warden roars",
 
   "particular.configuration.waterfallSpray": "Waterfall Spray",
   "particular.configuration.waterfallSpray.tooltip": "Enable spray particles at the bottom of waterfalls",
@@ -130,8 +159,131 @@
   "particular.configuration.fallingLeavesSettings": "Falling Leaves Settings",
   "particular.configuration.fallingLeavesSettings.tooltip": "Configure falling leaf particle behavior",
 
+  "particular.configuration.leafSnowSettings": "Leaf Snow Settings",
+  "particular.configuration.leafSnowSettings.tooltip": "Configure how often snow falls off leaves",
+
+  "particular.configuration.coldBreathSettings": "Cold Breath Settings",
+  "particular.configuration.coldBreathSettings.tooltip": "Configure who breathes visibly in the cold",
+
+  "particular.configuration.firstPersonBreath": "First Person Breath",
+  "particular.configuration.firstPersonBreath.tooltip": "See your own breath in first person",
+
+  "particular.configuration.mobBreath": "Mob Breath",
+  "particular.configuration.mobBreath.tooltip": "Mobs breathe visibly as well as players\n\nUndead, golems and water creatures never do",
+
+  "particular.configuration.pollenAndSporeSettings": "Pollen and Spore Settings",
+  "particular.configuration.pollenAndSporeSettings.tooltip": "Configure how much pollen and how many spores are released",
+
+  "particular.configuration.pollenFrequency": "Pollen Frequency",
+  "particular.configuration.pollenFrequency.tooltip": "Chance for a flower to release pollen each time it is ticked\n\nRange: 0.0 to 1.0",
+
+  "particular.configuration.sporeFrequency": "Moss Spore Frequency",
+  "particular.configuration.sporeFrequency.tooltip": "Chance for a moss block to release a spore each time it is ticked\n\nRange: 0.0 to 1.0",
+
+  "particular.configuration.mushroomSporeFrequency": "Mushroom Spore Frequency",
+  "particular.configuration.mushroomSporeFrequency.tooltip": "Chance for a mushroom to release a spore each time it is ticked\n\nRange: 0.0 to 1.0",
+
+  "particular.configuration.lushCaveSporeChance": "Lush Cave Spore Chance",
+  "particular.configuration.lushCaveSporeChance.tooltip": "Inverse chance of a spore appearing in open air in lush caves\n\nHigher values = fewer spores",
+
+  "particular.configuration.emberSettings": "Ember Settings",
+  "particular.configuration.emberSettings.tooltip": "Configure which blocks give off embers and how many",
+
+  "particular.configuration.campfireEmbers": "Campfire Embers",
+  "particular.configuration.campfireEmbers.tooltip": "Lit campfires and soul campfires give off embers",
+
+  "particular.configuration.furnaceEmbers": "Furnace Embers",
+  "particular.configuration.furnaceEmbers.tooltip": "Lit furnaces, blast furnaces and smokers spit embers",
+
+  "particular.configuration.emberAmount": "Ember Amount",
+  "particular.configuration.emberAmount.tooltip": "Multiplier for the number of embers\n\nRange: 0.0 to 3.0",
+
+  "particular.configuration.rainbowSettings": "Rainbow Settings",
+  "particular.configuration.rainbowSettings.tooltip": "Configure how often rainbows appear, how long they last and how strong they are",
+
+  "particular.configuration.rainbowDuration": "Duration",
+  "particular.configuration.rainbowDuration.tooltip": "How long a rainbow stays in the sky, in seconds\n\nRange: 10 to 3600",
+
+  "particular.configuration.rainbowChance": "Chance",
+  "particular.configuration.rainbowChance.tooltip": "Chance for a rainbow to appear when rain stops\n\nRange: 0.0 to 1.0",
+
+  "particular.configuration.rainbowOpacity": "Opacity",
+  "particular.configuration.rainbowOpacity.tooltip": "Opacity of the rainbow\n\nRange: 0.0 to 1.0",
+
+  "particular.configuration.tumbleweedSettings": "Tumbling Bush Settings",
+  "particular.configuration.tumbleweedSettings.tooltip": "Configure where, how often and how tumbling bushes move",
+
+  "particular.configuration.tumbleweedFrequency": "Frequency",
+  "particular.configuration.tumbleweedFrequency.tooltip": "Chance per tick for a tumbling bush to appear near you in a dry sandy biome\n\nRange: 0.0 to 1.0",
+
+  "particular.configuration.stormBoost": "Storm Boost",
+  "particular.configuration.stormBoost.tooltip": "Multiplier for the chance while the weather is stormy\n\nRange: 1.0 to 50.0",
+
+  "particular.configuration.stormsOnly": "Storms Only",
+  "particular.configuration.stormsOnly.tooltip": "Tumbling bushes only appear while the weather is stormy",
+
+  "particular.configuration.groundTag": "Ground Tag",
+  "particular.configuration.groundTag.tooltip": "Block tag the ground must have for tumbling bushes to appear",
+
+  "particular.configuration.tumbleweedGravity": "Gravity",
+  "particular.configuration.tumbleweedGravity.tooltip": "Gravity of tumbling bushes",
+
+  "particular.configuration.rotationAmount": "Rotation Amount",
+  "particular.configuration.rotationAmount.tooltip": "How fast tumbling bushes roll",
+
+  "particular.configuration.bounciness": "Bounciness",
+  "particular.configuration.bounciness.tooltip": "How high tumbling bushes bounce off the ground",
+
+  "particular.configuration.footstepDustSettings": "Footstep Dust Settings",
+  "particular.configuration.footstepDustSettings.tooltip": "Configure who kicks up dust and on which blocks",
+
+  "particular.configuration.mobDust": "Mob Dust",
+  "particular.configuration.mobDust.tooltip": "Mobs kick up dust as well as players",
+
+  "particular.configuration.replaceSprintParticles": "Replace Sprint Particles",
+  "particular.configuration.replaceSprintParticles.tooltip": "Dust replaces the vanilla block chips thrown up when sprinting on dusty blocks",
+
+  "particular.configuration.replaceLandingParticles": "Replace Landing Particles",
+  "particular.configuration.replaceLandingParticles.tooltip": "Dust replaces the vanilla block chips thrown up when landing from a fall on dusty blocks",
+
+  "particular.configuration.dustBlocks": "Dust Blocks",
+  "particular.configuration.dustBlocks.tooltip": "Blocks that produce footstep dust\n\nUse a block id or a #tag\nExample: minecraft:gravel, #minecraft:sand",
+
+  "particular.configuration.screenShakeSettings": "Screen Shake Settings",
+  "particular.configuration.screenShakeSettings.tooltip": "Configure which sounds shake the camera and how strongly",
+
+  "particular.configuration.shakeIntensity": "Shake Intensity",
+  "particular.configuration.shakeIntensity.tooltip": "Multiplier for the strength of all camera shake\n\n0.0 = no shake\nRange: 0.0 to 3.0",
+
+  "particular.configuration.shakeSounds": "Shake Sounds",
+  "particular.configuration.shakeSounds.tooltip": "Sounds that shake the camera\n\nFormat: soundId|intensity|durationTicks|radius\nExample: minecraft:entity.generic.explode|0.8|12|16",
+
   "particular.configuration.caveDustSettings": "Cave Dust Settings",
   "particular.configuration.caveDustSettings.tooltip": "Configure cave dust particle properties",
+
+  "particular.configuration.cascadeSettings": "Cascade Settings",
+  "particular.configuration.cascadeSettings.tooltip": "Configure cascade foam and mist",
+
+  "particular.configuration.heightScaling": "Height Scaling",
+  "particular.configuration.heightScaling.tooltip": "Cascades get stronger the further the water falls\n\nWhen disabled every cascade uses normal intensity",
+
+  "particular.configuration.minIntensity": "Minimum Intensity",
+  "particular.configuration.minIntensity.tooltip": "Cascade intensity for a 1 block fall\n\n1.0 = normal\nRange: 0.0 to 5.0",
+
+  "particular.configuration.maxIntensity": "Maximum Intensity",
+  "particular.configuration.maxIntensity.tooltip": "Cascade intensity once the fall reaches Max Fall Height\n\n1.0 = normal\nRange: 0.0 to 5.0",
+
+  "particular.configuration.maxFallHeight": "Max Fall Height",
+  "particular.configuration.maxFallHeight.tooltip": "Fall height (in blocks) at which a cascade reaches its maximum intensity\n\nRange: 1 to 64",
+
+  "particular.configuration.foamDensity": "Foam Density",
+  "particular.configuration.foamDensity.tooltip": "Multiplier for the amount of cascade foam\n\nRange: 0.1 to 4.0",
+
+  "particular.configuration.puffSize": "Foam Puff Size",
+  "particular.configuration.puffSize.tooltip": "Multiplier for the size of cascade foam puffs\n\nRange: 0.25 to 4.0",
+
+  "particular.configuration.mistDensity": "Mist Density",
+  "particular.configuration.mistDensity.tooltip": "Multiplier for the amount of cascade mist\n\nRange: 0.0 to 2.0",
 
   "particular.configuration.waterSplashSettings": "Water Splash Settings",
   "particular.configuration.waterSplashSettings.tooltip": "Configure water splash particle behavior",
@@ -161,5 +313,6 @@
   "particular.configuration.waterCuboidColor.tooltip": "Fallback RGB color for cuboid waterfall spray when biome tinting is disabled\n\n0xFFFFFF = white\nRange: 0x000000 to 0xFFFFFF",
 
   "particular.configuration.lavaCuboidColor": "Lava Cuboid Color",
-  "particular.configuration.lavaCuboidColor.tooltip": "RGB color for cuboid lava droplets\n\n0xFF681F = orange lava\nRange: 0x000000 to 0xFFFFFF"
+  "particular.configuration.lavaCuboidColor.tooltip": "RGB color for cuboid lava droplets\n\n0xFF681F = orange lava\nRange: 0x000000 to 0xFFFFFF",
+  "particular.notice.1_6_0": "[Particular] 1.6.0 adds new effects: leaf snow, cold breath, footstep dust, pollen, spores, embers, tumbling bushes, rainbows, cascade mist and screen shake. If you see one of these twice, another mod or resource pack adds it too, and you can turn ours off in the Particular config. This message won't show again in this world."
 }
