@@ -38,6 +38,8 @@
 
   "particular.configuration.rainbows": "Rainbows",
   "particular.configuration.rainbows.tooltip": "A rainbow appears in the sky after it stops raining during the day",
+  "particular.configuration.updateNotice": "Update Notice",
+  "particular.configuration.updateNotice.tooltip": "Show a one-time chat message listing the effects added by an update when you open a world that existed before it",
 
   "particular.configuration.screenShake": "Screen Shake",
   "particular.configuration.screenShake.tooltip": "Shake the camera for loud nearby sounds such as explosions and Warden roars",

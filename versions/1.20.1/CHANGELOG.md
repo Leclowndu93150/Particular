@@ -1,5 +1,10 @@
 # Particular Reforged 1.20.1
 
+## 1.6.1
+
+- **Update notice.** The one-time chat message about new effects now only shows in worlds that existed before the update, not in newly created ones.
+- **Config.** New `enabledEffects.updateNotice` option to turn that message off.
+
 ## 1.6.0
 
 - **Cascade foam overhaul.** Waterfall foam is now made of many small puffs instead of a few huge ones. Puffs vary in size and brightness, burst outward from the base of the fall, and grow then shrink away smoothly instead of popping.

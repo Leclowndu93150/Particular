@@ -30,6 +30,7 @@ public class ParticularConfig {
 		public final ForgeConfigSpec.BooleanValue embers;
 		public final ForgeConfigSpec.BooleanValue tumbleweeds;
 		public final ForgeConfigSpec.BooleanValue rainbows;
+		public final ForgeConfigSpec.BooleanValue updateNotice;
 		public final ForgeConfigSpec.BooleanValue waterfallSpray;
 		public final ForgeConfigSpec.BooleanValue fireflies;
 		public final ForgeConfigSpec.BooleanValue fallingLeaves;
@@ -139,6 +140,7 @@ public class ParticularConfig {
 			embers = builder.comment("Enable glowing embers rising from campfires and spitting from lit furnaces").define("embers", true);
 			tumbleweeds = builder.comment("Enable bushes tumbling across dry sandy biomes").define("tumbleweeds", true);
 			rainbows = builder.comment("Enable a rainbow in the sky after it stops raining during the day").define("rainbows", true);
+			updateNotice = builder.comment("Show a one-time chat message listing the effects added by an update when you open a world that existed before it").define("updateNotice", true);
 			waterfallSpray = builder.comment("Enable waterfall spray particles").define("waterfallSpray", true);
 			fireflies = builder.comment("Enable firefly particles").define("fireflies", true);
 			fallingLeaves = builder.comment("Enable falling leaves particles").define("fallingLeaves", true);
